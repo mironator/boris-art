@@ -4,7 +4,11 @@
 //
 // import User from 'path/to/interfaces';
 
-export type User = {
+export type Artist = {
   id: number
   name: string
+  birth?: Date
+  death?: Date
+  qualifier?: string
+  lotsCost?: number
 }

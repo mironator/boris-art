@@ -1,7 +1,7 @@
-import { User } from '../interfaces'
+import { Artist } from '../interfaces'
 
-/** Dummy user data. */
-export const sampleUserData: User[] = [
+/** Dummy artist data. */
+export const sampleArtistData: Artist[] = [
   { id: 101, name: 'Alice' },
   { id: 102, name: 'Bob' },
   { id: 103, name: 'Caroline' },
