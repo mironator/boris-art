@@ -2,11 +2,15 @@
   "compilerOptions": {
     "allowJs": true,
     "alwaysStrict": true,
+    "baseUrl": ".",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "lib": ["dom", "es2017"],
+    "lib": [
+      "dom",
+      "es2017"
+    ],
     "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
@@ -16,8 +20,59 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "esnext"
+    "target": "esnext",
+    "paths": {
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@api/*": [
+        "src/api/*"
+      ],
+      "@models/*": [
+        "src/models/*"
+      ],
+      "@screens/*": [
+        "src/screens/*"
+      ],
+      "@hooks/*": [
+        "src/hooks/*"
+      ],
+      "@services/*": [
+        "src/services/*"
+      ],
+      "@constants/*": [
+        "src/constants/*"
+      ],
+      "@context/*": [
+        "src/context/*"
+      ],
+      "@queries/*": [
+        "src/queries/*"
+      ],
+      "@data/*": [
+        "src/data/*"
+      ],
+      "@typeDefs/*": [
+        "src/types/*"
+      ],
+      "@generated/*": [
+        "src/generated/*"
+      ],
+      "@public/*": [
+        "./public/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ]
+    },
   },
-  "exclude": ["node_modules"],
-  "include": ["**/*.ts", "**/*.tsx"]
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "next-env.d.ts",
+    "next.config.js"
+  ]
 }

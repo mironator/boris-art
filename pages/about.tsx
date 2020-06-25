@@ -1,16 +1,20 @@
-import Link from 'next/link'
-import Layout from '../components/Layout'
+import React from 'react'
+import Container from '@material-ui/core/Container'
+import Typography from '@material-ui/core/Typography'
+import Box from '@material-ui/core/Box'
 
-const AboutPage = () => (
-  <Layout title="About | Artists DB">
-    <h1>About</h1>
-    <p>This is the about page</p>
-    <p>
-      <Link href="/">
-        <a>Go home</a>
+import Link from '@components/Link'
+
+const AboutPage: React.FC<unknown> = () => (
+  <Container maxWidth="sm">
+    <Box my={4}>
+      <Typography>About this website</Typography>
+
+      <Link href="/" color="secondary">
+        Go to Home page
       </Link>
-    </p>
-  </Layout>
+    </Box>
+  </Container>
 )
 
 export default AboutPage

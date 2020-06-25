@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { sampleArtistData } from '../../../utils/sample-data'
+import { sampleArtistData } from '@utils/sample-data'
 
-const handler = (_req: NextApiRequest, res: NextApiResponse) => {
+const handler: (req: NextApiRequest, res: NextApiResponse) => void = (_req, res) => {
   try {
     if (!Array.isArray(sampleArtistData)) {
       throw new Error('Cannot find user data')

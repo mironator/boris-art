@@ -1,15 +1,27 @@
-import Link from 'next/link'
-import Layout from '../components/Layout'
+import React from 'react'
+import Container from '@material-ui/core/Container'
+import Typography from '@material-ui/core/Typography'
+import Box from '@material-ui/core/Box'
 
-const IndexPage = () => (
-  <Layout title="Home | Next.js + TypeScript Example">
-    <h1>Artists DB</h1>
-    <p>
-      <Link href="/about">
-        <a>About</a>
-      </Link>
-    </p>
-  </Layout>
-)
+// import ProTip from '../src/ProTip';
+import Link from '@components/Link'
+import Copyright from '@components/Copyright'
 
-export default IndexPage
+const Index: React.FC<unknown> = () => {
+  return (
+    <Container maxWidth="sm">
+      <Box my={4}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Boris Art
+        </Typography>
+
+        <Link href="/about" color="secondary">
+          Go to the about page
+        </Link>
+        <Copyright />
+      </Box>
+    </Container>
+  )
+}
+
+export default Index
