@@ -1,26 +1,68 @@
 import React from 'react'
-import Container from '@material-ui/core/Container'
-import Typography from '@material-ui/core/Typography'
-import Box from '@material-ui/core/Box'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import { Grid, TextField, Typography } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 
-// import ProTip from '../src/ProTip';
-import Link from '@components/Link'
-import Copyright from '@components/Copyright'
+import Layout from '@components/Layout'
+
+const options: Array<Record<string, string>> = [
+  {
+    label: 'Option 1',
+  },
+  {
+    label: 'Option 2',
+  },
+]
+const useStyles = makeStyles(() => ({}))
 
 const Index: React.FC<unknown> = () => {
-  return (
-    <Container maxWidth="sm">
-      <Box my={4}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Boris Art
-        </Typography>
+  const classes = useStyles()
 
-        <Link href="/about" color="secondary">
-          Go to the about page
-        </Link>
-        <Copyright />
-      </Box>
-    </Container>
+  return (
+    <Layout>
+      <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justify="center"
+        style={{ minHeight: '100vh' }}
+      >
+        <Grid item xs={3}>
+          <Autocomplete
+            id="autocomplete"
+            // classes={{
+            // }}
+            getOptionLabel={(option) => option.label || option.value || ''}
+            options={options}
+            autoComplete
+            // value={value}
+            includeInputInList
+            // onFocus={onFocus}
+            // freeSolo
+            // onChange={(e, va) => { }}
+            // disableOpenOnFocus
+            // popupIcon={<ChevronDown />}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                fullWidth
+                placeholder="Placeholder"
+                // autoComplete="new-password"
+                variant="outlined"
+                inputProps={{
+                  ...params.inputProps,
+                  autocomplete: 'off',
+                  form: {
+                    autocomplete: 'off',
+                  },
+                }}
+              />
+            )}
+          />
+        </Grid>
+      </Grid>
+    </Layout>
   )
 }
 
