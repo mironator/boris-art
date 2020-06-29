@@ -4,12 +4,14 @@ module.exports = {
     browser: true,
     node: true,
     es2020: true,
+    es6: true,
+    jest: true
   },
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: "module",
-    ecmaFeatures: { jsx: true },
+    ecmaFeatures: { jsx: true, impliedStrict: true, },
     project: "./tsconfig.json",
     tsconfigRootDir: "./"
   },
@@ -17,15 +19,12 @@ module.exports = {
   extends: [
     "airbnb",
     "plugin:@typescript-eslint/recommended",
-    "import",
     "plugin:react/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:import/typescript",
-
     "plugin:jsx-a11y/recommended",
 
-    // Prettier plugin and recommended rules
     "plugin:prettier/recommended",
     "prettier",
     "prettier/@typescript-eslint",
@@ -33,12 +32,9 @@ module.exports = {
   ],
   rules: {
     "react/jsx-filename-extension": [1, { extensions: [".ts", ".tsx"] }],
-    // "import/extensions": "off",
     "import/no-unresolved": "error",
     "react/prop-types": "off",
-    "react/jsx-props-no-spreading": ["error", { custom: "ignore" }],
-    // Include .prettierrc.js rules
-    "prettier/prettier": ["error" /* , {}, { usePrettierrc: true } */],
+    "react/jsx-props-no-spreading": ["error", { custom: "ignore" }]
   },
   settings: {
     "import/parsers": {
