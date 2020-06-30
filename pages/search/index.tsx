@@ -1,0 +1,106 @@
+import React, { useCallback, useState, useEffect } from 'react'
+import fetch from 'cross-fetch'
+import { useRouter } from 'next/router'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import { Grid, TextField } from '@material-ui/core'
+import CircularProgress from '@material-ui/core/CircularProgress'
+
+import Layout from '@components/Layout'
+import { Artist } from '../../interfaces'
+
+import useStyles from './styles'
+
+const Search: React.FC<unknown> = () => {
+  const classes = useStyles()
+  const router = useRouter()
+  const [open, setOpen] = useState(false)
+  const [options, setOptions] = useState<Artist[]>([])
+  const loading = open && options.length === 0
+
+  const onArtistSelected = useCallback(
+    (_, value, reason) => {
+      if (reason === 'select-option') router.push(`/artists/${value.name}`)
+    },
+    [router]
+  )
+
+  useEffect(() => {
+    let active = true
+
+    if (!loading) {
+      return undefined
+    }
+
+    ;(async () => {
+      const response = await fetch('https://country.register.gov.uk/records.json?page-size=5000')
+      const countries = await response.json()
+
+      if (active) {
+        setOptions(Object.keys(countries).map((key) => countries[key].item[0]) as Artist[])
+      }
+    })()
+
+    return () => {
+      active = false
+    }
+  }, [loading])
+
+  useEffect(() => {
+    if (!open) {
+      setOptions([])
+    }
+  }, [open])
+
+  return (
+    <Layout>
+      <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justify="center"
+        style={{ minHeight: '100vh' }}
+      >
+        <Autocomplete
+          id="autocomplete"
+          classes={{
+            root: classes.root,
+            inputRoot: classes.inputRoot,
+            paper: classes.paper,
+          }}
+          open={open}
+          onOpen={() => {
+            setOpen(true)
+          }}
+          onClose={() => {
+            setOpen(false)
+          }}
+          getOptionSelected={(option, value) => option.name === value.name}
+          getOptionLabel={(option) => option.name}
+          options={options}
+          loading={loading}
+          onChange={onArtistSelected}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              fullWidth
+              placeholder="Search"
+              variant="outlined"
+              inputProps={{
+                ...params.inputProps,
+                endadornment: (
+                  <>
+                    {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                    {params.InputProps.endAdornment}
+                  </>
+                ),
+              }}
+            />
+          )}
+        />
+      </Grid>
+    </Layout>
+  )
+}
+
+export default Search

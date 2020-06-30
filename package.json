@@ -12,6 +12,7 @@
     "@material-ui/core": "latest",
     "@material-ui/lab": "4.0.0-alpha.56",
     "clsx": "latest",
+    "cross-fetch": "^3.0.5",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest"
