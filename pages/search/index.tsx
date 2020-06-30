@@ -3,12 +3,36 @@ import fetch from 'cross-fetch'
 import { useRouter } from 'next/router'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Grid, TextField } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 import Layout from '@components/Layout'
 import { Artist } from '../../interfaces'
 
-import useStyles from './styles'
+const useStyles = makeStyles({
+  root: {
+    width: '100%',
+    borderRadius: 0,
+    border: '1px solid rgb(0, 0, 0)',
+    '& *': {
+      border: 0,
+      outline: 0,
+    },
+  },
+  inputRoot: {
+    padding: '6px !important',
+  },
+  paper: {
+    borderRadius: 0,
+    boxShadow: '0px 8px 12px 0px rgba(0, 0, 0, 0.05)',
+    color: 'rgb(184, 184, 184)',
+  },
+  input: {
+    '&::placeholder': {
+      color: 'rgb(184, 184, 184)',
+    },
+  },
+})
 
 const Search: React.FC<unknown> = () => {
   const classes = useStyles()
