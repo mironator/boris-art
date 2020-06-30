@@ -1,15 +1,10 @@
 import React from 'react'
 import { Grid } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
 import Link from 'next/link'
 
 import Layout from '@components/Layout'
 
-const useStyles = makeStyles(() => ({}))
-
 const Index: React.FC<unknown> = () => {
-  const classes = useStyles()
-
   return (
     <Layout>
       <Grid
