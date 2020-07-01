@@ -5,6 +5,7 @@ import { Artist } from '@interfaces/index'
 // import useStyles, { StyleProps } from './ArtistDetails.styles'
 import ArtistInfo from '../artist-info'
 import ArtistLots from '../artist-lots'
+import ArtistAnalytics from '../artist-analytics'
 
 interface OwnProps {
   artist: Artist
@@ -60,6 +61,9 @@ const ArtistDetails: React.FC<Props> = (props) => {
       <TabPanel value={value} index={0}>
         <ArtistInfo artist={artist} />
         <ArtistLots />
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <ArtistAnalytics />
       </TabPanel>
     </>
   )
