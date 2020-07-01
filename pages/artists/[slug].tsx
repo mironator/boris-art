@@ -31,7 +31,7 @@ const ArtistPage: NextPage<Props> = (props) => {
     <Layout>
       <Link href="/">&lt; Back to Search</Link>
       <ArtistDetails artist={data as Artist} />
-      <pre>{JSON.stringify(props, undefined, 2)}</pre>
+      {/* <pre>{JSON.stringify(props, undefined, 2)}</pre> */}
     </Layout>
   )
 }
