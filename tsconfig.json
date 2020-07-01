@@ -32,11 +32,20 @@
       "@models/*": [
         "src/models/*"
       ],
+      "@entities/*": [
+        "src/entities/*"
+      ],
       "@screens/*": [
         "src/screens/*"
       ],
       "@hooks/*": [
         "src/hooks/*"
+      ],
+      "@interfaces/*": [
+        "src/interfaces/*"
+      ],
+      "@mocks/*": [
+        "src/mocks/*"
       ],
       "@services/*": [
         "src/services/*"
@@ -62,18 +71,22 @@
       "@public/*": [
         "./public/*"
       ],
+      "@theme/*": [
+        "src/theme/*"
+      ],
       "@utils/*": [
         "src/utils/*"
       ]
     },
   },
   "exclude": [
-    "node_modules"
+    "interfaces/node_modules"
   ],
   "include": [
     "**/*.ts",
     "**/*.tsx",
     "next-env.d.ts",
-    "next.config.js"
+    "next.config.js",
+    "src/components/Link.tsx"
   ]
 }
