@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
-import * as React from 'react'
+import React from 'react'
 import clsx from 'clsx'
 // tslint:disable-next-line: no-submodule-imports
 import { useRouter } from 'next/router'
@@ -10,6 +10,7 @@ import MuiLink, { LinkProps as MuiLinkProps } from '@material-ui/core/Link'
 
 type NextComposedProps = Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & NextLinkProps
 
+// eslint-disable-next-line react/display-name
 const NextComposed = React.forwardRef<HTMLAnchorElement, NextComposedProps>((props, ref) => {
   const { as, href, replace, scroll, passHref, shallow, prefetch, ...other } = props
 
@@ -23,6 +24,7 @@ const NextComposed = React.forwardRef<HTMLAnchorElement, NextComposedProps>((pro
       shallow={shallow}
       passHref={passHref}
     >
+      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <a ref={ref} {...other} />
     </NextLink>
   )
@@ -69,6 +71,7 @@ function Link(props: LinkProps) {
   )
 }
 
+// eslint-disable-next-line react/display-name
 export default React.forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => (
   <Link {...props} innerRef={ref} />
 ))

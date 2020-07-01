@@ -32,11 +32,17 @@
       "@models/*": [
         "src/models/*"
       ],
+      "@entities/*": [
+        "src/entities/*"
+      ],
       "@screens/*": [
         "src/screens/*"
       ],
       "@hooks/*": [
         "src/hooks/*"
+      ],
+      "@interfaces/*": [
+        "src/interfaces/*"
       ],
       "@mocks/*": [
         "src/mocks/*"

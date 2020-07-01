@@ -1,9 +1,13 @@
 import React from 'react'
 import Document, { Html, Head, Main, NextScript } from 'next/document'
 import { ServerStyleSheets } from '@material-ui/core/styles'
-import theme from '@theme/index'
+import theme from '@theme/theme'
+
+import artists from '@mocks/artists'
 
 export default class MyDocument extends Document<unknown> {
+  foo = artists
+
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   render() {
     return (
