@@ -7,9 +7,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 import Layout from '@components/Layout'
-<<<<<<< HEAD
-import Lightbox from '@components/Lightbox'
-=======
 import { Artist as IArtist } from '@interfaces/index'
 
 import artists from '@mocks/artists'
@@ -61,12 +58,12 @@ const Search: React.FC<unknown> = () => {
       return undefined
     }
 
-    ; (async () => {
+    ;(async () => {
       // const response = await fetch('https://country.register.gov.uk/records.json?page-size=5000')
       // const countries = await response.json()
 
       if (active) {
-        setOptions(artists.map(entity => Artist.fromEntity(entity)))
+        setOptions(artists.map((entity) => Artist.fromEntity(entity)))
       }
     })()
 
@@ -80,7 +77,6 @@ const Search: React.FC<unknown> = () => {
       setOptions([])
     }
   }, [open])
->>>>>>> 0d49aba5467efdbf1117884286ac5b6d329ebc5f
 
   return (
     <Layout>
@@ -92,16 +88,6 @@ const Search: React.FC<unknown> = () => {
         justify="center"
         style={{ minHeight: '100vh' }}
       >
-<<<<<<< HEAD
-        <Grid item style={{ height: '300px' }}>
-          <Lightbox src="https://i.imgur.com/fsyrScY.jpg" name="Test" />
-        </Grid>
-        <Grid item xs={3}>
-          <Link href="/search">
-            <a>Search</a>
-          </Link>
-        </Grid>
-=======
         <Autocomplete
           id="autocomplete"
           classes={{
@@ -139,7 +125,6 @@ const Search: React.FC<unknown> = () => {
             />
           )}
         />
->>>>>>> 0d49aba5467efdbf1117884286ac5b6d329ebc5f
       </Grid>
     </Layout>
   )

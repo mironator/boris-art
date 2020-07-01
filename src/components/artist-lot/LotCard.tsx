@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import FsLightbox from 'fslightbox-react'
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardActionArea from '@material-ui/core/CardActionArea'
@@ -17,9 +18,10 @@ const useStyles = makeStyles({
 
 const LotCard: React.FC<unknown> = () => {
   const classes = useStyles()
+  const [toggler, setToggler] = useState(false)
 
   return (
-    <Card className={classes.root} variant="outlined">
+    <Card className={classes.root} variant="outlined" onClick={() => setToggler(!toggler)}>
       <CardActionArea>
         <CardMedia
           className={classes.media}
@@ -38,6 +40,12 @@ const LotCard: React.FC<unknown> = () => {
           </Typography>
         </CardContent>
       </CardActionArea>
+      <FsLightbox
+        toggler={toggler}
+        sources={[
+          'https://uploads6.wikiart.org/images/pablo-picasso/portrait-of-suzanne-bloch-1904.jpg',
+        ]}
+      />
     </Card>
   )
 }
