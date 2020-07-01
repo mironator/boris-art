@@ -6,7 +6,7 @@ import Highcharts from 'highcharts/highstock'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
 
-//import { Artist } from '@interfaces/index'
+// import { Artist } from '@interfaces/index'
 
 if (typeof Highcharts === 'object') {
   HighchartsExporting(Highcharts)
@@ -22,7 +22,8 @@ const ArtistAnalytics: React.FC<unknown> = () => {
   const [options, setOptions] = useState<Highcharts.Options>()
 
   useEffect(() => {
-    ;(async () => {
+    // eslint-disable-next-line
+    ; (async () => {
       const res = await fetch('https://demo-live-data.highcharts.com/aapl-ohlcv.json')
       if (res.status >= 400) {
         throw new Error('Bad response from server')
@@ -30,10 +31,10 @@ const ArtistAnalytics: React.FC<unknown> = () => {
 
       const data = await res.json()
 
-      let ohlc = [],
-        volume = [],
-        dataLength = data.length,
-        i = 0
+      const ohlc = []
+      const volume = []
+      const dataLength = data.length
+      let i = 0
 
       for (i; i < dataLength; i += 1) {
         ohlc.push([
@@ -107,7 +108,7 @@ const ArtistAnalytics: React.FC<unknown> = () => {
         </Typography>
       </Grid>
       <Grid item>
-        <HighchartsReact highcharts={Highcharts} options={options} constructorType={'stockChart'} />
+        <HighchartsReact highcharts={Highcharts} options={options} constructorType="stockChart" />
       </Grid>
     </Grid>
   )
