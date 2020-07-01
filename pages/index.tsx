@@ -58,12 +58,12 @@ const Search: React.FC<unknown> = () => {
       return undefined
     }
 
-    ; (async () => {
+    ;(async () => {
       // const response = await fetch('https://country.register.gov.uk/records.json?page-size=5000')
       // const countries = await response.json()
 
       if (active) {
-        setOptions(artists.map(entity => Artist.fromEntity(entity)))
+        setOptions(artists.map((entity) => Artist.fromEntity(entity)))
       }
     })()
 
