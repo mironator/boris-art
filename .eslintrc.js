@@ -18,6 +18,7 @@ module.exports = {
   plugins: ["@typescript-eslint", "react", "prettier", "import"],
   extends: [
     "airbnb",
+    "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
     "plugin:import/errors",
@@ -25,14 +26,24 @@ module.exports = {
     "plugin:import/typescript",
     "plugin:jsx-a11y/recommended",
 
-    "plugin:prettier/recommended",
     "prettier",
+    "plugin:prettier/recommended",
     "prettier/@typescript-eslint",
     "prettier/react",
   ],
   rules: {
     "react/jsx-filename-extension": [1, { extensions: [".ts", ".tsx"] }],
     "import/no-unresolved": "error",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": ["error", { custom: "ignore" }]
   },
