@@ -1,6 +1,6 @@
 import React from 'react'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import { Grid, TextField, Typography } from '@material-ui/core'
+import { Grid, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Layout from '@components/Layout'
@@ -16,8 +16,7 @@ const options: Array<Record<string, string>> = [
 const useStyles = makeStyles(() => ({}))
 
 const Index: React.FC<unknown> = () => {
-  const classes = useStyles()
-
+  // const classes = useStyles()
   return (
     <Layout>
       <Grid
