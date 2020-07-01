@@ -1,26 +1,27 @@
 import React from 'react'
-import Container from '@material-ui/core/Container'
-import Typography from '@material-ui/core/Typography'
-import Box from '@material-ui/core/Box'
+import { Grid } from '@material-ui/core'
+import Link from 'next/link'
 
-// import ProTip from '../src/ProTip';
-import Link from '@components/Link'
-import Copyright from '@components/Copyright'
+import Layout from '@components/Layout'
 
 const Index: React.FC<unknown> = () => {
   return (
-    <Container maxWidth="sm">
-      <Box my={4}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Boris Art
-        </Typography>
-
-        <Link href="/about" color="secondary">
-          Go to the about page
-        </Link>
-        <Copyright />
-      </Box>
-    </Container>
+    <Layout>
+      <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justify="center"
+        style={{ minHeight: '100vh' }}
+      >
+        <Grid item xs={3}>
+          <Link href="/search">
+            <a>Search</a>
+          </Link>
+        </Grid>
+      </Grid>
+    </Layout>
   )
 }
 
