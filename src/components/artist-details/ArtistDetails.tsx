@@ -2,7 +2,7 @@ import React from 'react'
 import { Box, Tab, Tabs, Typography } from '@material-ui/core'
 
 import { Artist } from '@interfaces/index'
-import useStyles, { StyleProps } from './ArtistDetails.styles'
+// import useStyles, { StyleProps } from './ArtistDetails.styles'
 import ArtistInfo from '../artist-info'
 import ArtistLots from '../artist-lots'
 
@@ -16,7 +16,7 @@ interface TabPanelProps {
   value: unknown
 }
 
-type PropsClasses = Record<StyleProps, string>
+// type PropsClasses = Record<StyleProps, string>
 
 type Props = OwnProps
 
@@ -29,7 +29,6 @@ function TabPanel(props: TabPanelProps) {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...other}
     >
       {value === index && (
@@ -42,8 +41,7 @@ function TabPanel(props: TabPanelProps) {
 }
 
 const ArtistDetails: React.FC<Props> = (props) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const classes: PropsClasses = useStyles({})
+  // const classes: PropsClasses = useStyles({})
   const [value, setValue] = React.useState(0)
 
   const handleChange = (_event: React.ChangeEvent<unknown>, newValue: number) => {
