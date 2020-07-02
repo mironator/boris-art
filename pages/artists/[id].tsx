@@ -10,7 +10,7 @@ import ArtistDetails from '@components/artist-details'
 import { Artist } from '@interfaces/index'
 
 interface Props {
-  slug: string
+  id: string
   data: unknown
 }
 
@@ -39,8 +39,8 @@ const ArtistPage: NextPage<Props> = (props) => {
 // This gets called on every request
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // Fetch artist data
-  const { slug } = context.params || {}
-  const data = artists.find((artist) => artist.id.toString() === (slug as string))
+  const { id } = context.params || {}
+  const data = artists.find((artist) => artist.id.toString() === (id as string))
 
   if (!data && context.res) {
     context.res.statusCode = 404
