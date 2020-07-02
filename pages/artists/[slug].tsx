@@ -40,9 +40,7 @@ const ArtistPage: NextPage<Props> = (props) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // Fetch artist data
   const { slug } = context.params || {}
-  const data = artists.find(
-    (artist) => artist.name.toLowerCase() === (slug as string).replace('_', ' ').toLowerCase()
-  )
+  const data = artists.find((artist) => artist.id.toString() === (slug as string))
 
   if (!data && context.res) {
     context.res.statusCode = 404

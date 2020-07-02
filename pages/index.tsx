@@ -46,7 +46,7 @@ const Search: React.FC<unknown> = () => {
 
   const onArtistSelected = useCallback(
     (_, value, reason) => {
-      if (reason === 'select-option') router.push(`/artists/${value.name}`)
+      if (reason === 'select-option') router.push(`/artists/${value.id}`)
     },
     [router]
   )
