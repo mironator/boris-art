@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Grid, Typography } from '@material-ui/core'
-import fetch from 'cross-fetch'
-
 import Highcharts from 'highcharts/highstock'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
+import { Artist } from '@interfaces/index'
+import useChartData from '@hooks/useChartData'
 
 // import { Artist } from '@interfaces/index'
 
@@ -12,94 +12,83 @@ if (typeof Highcharts === 'object') {
   HighchartsExporting(Highcharts)
 }
 
-// interface OwnProps {
-//   artist: Artist
-// }
+interface OwnProps {
+  artistInfo: Artist
+}
 
-// type Props = OwnProps
+type Props = OwnProps
 
-const ArtistAnalytics: React.FC<unknown> = () => {
-  const [options, setOptions] = useState<Highcharts.Options>()
+const ArtistAnalytics: React.FC<Props> = ({ artistInfo }) => {
+  let options: Highcharts.Options | null = null
 
-  useEffect(() => {
-    // eslint-disable-next-line
-    ; (async () => {
-      const res = await fetch('https://demo-live-data.highcharts.com/aapl-ohlcv.json')
-      if (res.status >= 400) {
-        throw new Error('Bad response from server')
-      }
+  const { data, isLoading, isError } = useChartData(artistInfo.id)
 
-      const data = await res.json()
+  const ohlc = []
+  const volume = []
+  const dataLength = data.length
+  let i = 0
 
-      const ohlc = []
-      const volume = []
-      const dataLength = data.length
-      let i = 0
+  for (i; i < dataLength; i += 1) {
+    ohlc.push([data[i].date.getTime(), Math.round(data[i].priceMomentum * 100)])
 
-      for (i; i < dataLength; i += 1) {
-        ohlc.push([
-          data[i][0], // the date
-          data[i][1], // open
-          data[i][2], // high
-          data[i][3], // low
-          data[i][4], // close
-        ])
+    volume.push([
+      data[i].date.getTime(), // the date
+      data[i].volume, // the volume
+    ])
+  }
 
-        volume.push([
-          data[i][0], // the date
-          data[i][4], // the volume
-        ])
-      }
-
-      setOptions({
-        yAxis: [
-          {
-            labels: {
-              align: 'left',
-            },
-            height: '80%',
-            resize: {
-              enabled: true,
-            },
+  if (data && !isLoading && !isError) {
+    options = {
+      yAxis: [
+        {
+          labels: {
+            align: 'left',
           },
-          {
-            labels: {
-              align: 'left',
-            },
-            top: '80%',
-            height: '20%',
-            offset: 0,
+          height: '80%',
+          resize: {
+            enabled: true,
           },
-        ],
-        rangeSelector: {
-          selected: 1,
         },
-
-        title: {
-          text: '',
+        {
+          labels: {
+            align: 'left',
+          },
+          top: '80%',
+          height: '20%',
+          offset: 0,
         },
+      ],
+      rangeSelector: {
+        allButtonsEnabled: true,
+        selected: 6,
+      },
 
-        series: [
-          {
-            type: 'ohlc',
-            name: 'AAPL',
-            data: ohlc,
-            tooltip: {
-              valueDecimals: 2,
-            },
-          },
-          {
-            type: 'column',
-            id: 'aapl-volume',
-            name: 'AAPL Volume',
-            data: volume,
-            yAxis: 1,
-          },
-        ],
-      })
-    })()
-  }, [])
+      title: {
+        text: '',
+      },
 
+      series: [
+        {
+          type: 'line',
+          name: 'Price Momentum',
+          data: ohlc,
+          tooltip: {
+            valueDecimals: 2,
+          },
+        },
+        {
+          type: 'column',
+          id: 'aapl-volume',
+          name: 'Volume',
+          data: volume,
+          yAxis: 1,
+        },
+      ],
+    }
+  }
+  if (!options || isLoading || !ohlc.length || !volume.length) {
+    return <div>Loading...</div>
+  }
   return (
     <Grid container direction="column">
       <Grid item>

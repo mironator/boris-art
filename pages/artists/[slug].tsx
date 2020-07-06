@@ -7,16 +7,17 @@ import Link from '@components/Link'
 import Layout from '@components/Layout'
 import artists from '@mocks/artists'
 import ArtistDetails from '@components/artist-details'
-import { Artist } from '@interfaces/index'
+import { Artist, PriceMomentumChartDatum } from '@interfaces/index'
 
 interface Props {
   slug: string
-  data: unknown
+  artistInfo: Artist
+  priceMomentumData: PriceMomentumChartDatum[]
 }
 
 const ArtistPage: NextPage<Props> = (props) => {
-  const { data } = props
-  if (!data) {
+  const { artistInfo } = props
+  if (!artistInfo) {
     return (
       <>
         <Head>
@@ -30,7 +31,7 @@ const ArtistPage: NextPage<Props> = (props) => {
   return (
     <Layout>
       <Link href="/">&lt; Back to Search</Link>
-      <ArtistDetails artist={data as Artist} />
+      <ArtistDetails artist={artistInfo as Artist} />
       {/* <pre>{JSON.stringify(props, undefined, 2)}</pre> */}
     </Layout>
   )
@@ -40,17 +41,17 @@ const ArtistPage: NextPage<Props> = (props) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // Fetch artist data
   const { slug } = context.params || {}
-  const data = artists.find(
+  const artistInfo = artists.find(
     (artist) => artist.name.toLowerCase() === (slug as string).replace('_', ' ').toLowerCase()
   )
 
-  if (!data && context.res) {
+  if (!artistInfo && context.res) {
     context.res.statusCode = 404
-    return { props: { data: null } }
+    return { props: { artistInfo: null } }
   }
 
   // Pass data to the page via props
-  return { props: { data } }
+  return { props: { artistInfo } }
 }
 
 export default ArtistPage

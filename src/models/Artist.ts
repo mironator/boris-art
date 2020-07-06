@@ -2,13 +2,25 @@ import { Artist as IArtist, ArtistEntity } from '@interfaces/index'
 
 export default class Artist implements IArtist {
   id: number
+
   name: string
+
   birth?: Date | undefined
+
   death?: Date | undefined
-  qualifier?: string 
+
+  qualifier?: string
+
   lotsCost?: number
 
-  constructor (id: number, name: string, birth: Date, death: Date, qualifier: string, lotsCost: number) {
+  constructor(
+    id: number,
+    name: string,
+    birth: Date,
+    death: Date,
+    qualifier: string,
+    lotsCost: number
+  ) {
     this.id = id
     this.name = name
     this.birth = birth
