@@ -19,16 +19,17 @@
     "lodash": "4.17.15",
     "next": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "swr": "0.2.3"
   },
   "devDependencies": {
+    "@types/lodash": "4.14.157",
     "@types/next": "9.0.0",
     "@types/node": "12.12.47",
     "@types/react": "16.9.41",
     "@types/react-dom": "16.9.8",
     "@typescript-eslint/eslint-plugin": "3.4.0",
     "@typescript-eslint/parser": "3.4.0",
-    "fslightbox-react": "^1.4.9",
     "eslint": "7.3.1",
     "eslint-config-airbnb": "18.2.0",
     "eslint-config-prettier": "6.11.0",
@@ -38,6 +39,7 @@
     "eslint-plugin-prettier": "3.1.4",
     "eslint-plugin-react": "7.20.0",
     "eslint-plugin-react-hooks": "4.0.4",
+    "fslightbox-react": "^1.4.9",
     "prettier": "2.0.5",
     "typescript": "3.7.3"
   },

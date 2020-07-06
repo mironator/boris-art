@@ -7,9 +7,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 import Layout from '@components/Layout'
-import { Artist as IArtist } from '@interfaces/index'
+import { Artist as IArtist, ArtistEntity } from '@interfaces/index'
 
-import artists from '@mocks/artists'
 import Artist from '@models/Artist'
 
 const useStyles = makeStyles({
@@ -58,12 +57,13 @@ const Search: React.FC<unknown> = () => {
       return undefined
     }
 
-    ;(async () => {
-      // const response = await fetch('https://country.register.gov.uk/records.json?page-size=5000')
-      // const countries = await response.json()
+    // eslint-disable-next-line
+    ; (async () => {
+      const response = await fetch('/api/artists')
+      const artists = await response.json()
 
       if (active) {
-        setOptions(artists.map((entity) => Artist.fromEntity(entity)))
+        setOptions(artists.map((entity: ArtistEntity) => Artist.fromEntity(entity)))
       }
     })()
 

@@ -1,8 +1,4 @@
-// You can include shared interfaces/types in a separate file
-// and then use them in any component by importing them. For
-// example, to import the interface below do:
-//
-// import User from 'path/to/interfaces';
+/* eslint-disable camelcase */
 
 export type Artist = {
   id: number
@@ -11,7 +7,6 @@ export type Artist = {
   death?: Date
   qualifier?: string
   lotsCost?: number
-
 }
 
 export type ArtistEntity = {
@@ -22,4 +17,16 @@ export type ArtistEntity = {
   death: number
   qualifier: string | 'NULL'
   lots_cost: number
+}
+
+export type PriceMomentumChartDatum = {
+  volume: number
+  priceMomentum: number
+  date: Date
+}
+
+export type PriceMomentumChartDatumEntity = {
+  volume: number
+  price_momentum: number
+  date: string
 }

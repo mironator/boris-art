@@ -17,19 +17,11 @@ const ArtistInfo: React.FC<Props> = ({ artist }) => {
         </Typography>
       </Grid>
       <Grid item>
-        ({artist.birth}-{artist.death})
+        ({artist.birth?.getFullYear()}-{artist.death?.getFullYear()})
       </Grid>
       <Grid item>145 lots</Grid>
       <Divider />
-      <Grid item>
-        Pablo Ruiz Picasso was a Spanish painter, sculptor, printmaker, ceramicist and theatre
-        designer who spent most of his adult life in France. Regarded as one of the most influential
-        artists of the 20th century, he is known for co-founding the Cubist movement, the invention
-        of constructed sculpture, the co-invention of collage, and for the wide variety of styles
-        that he helped develop and explore. Among his most famous works are the proto-Cubist
-        Demoiselles d&apos;Avignon (1907), and Guernica (1937), a dramatic portrayal of the bombing
-        of of Guernica by German and Italian airforces during the Spanish Civil War.
-      </Grid>
+      <Grid item>%Artist Info%</Grid>
     </Grid>
   )
 }

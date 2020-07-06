@@ -29,6 +29,9 @@
       "@api/*": [
         "src/api/*"
       ],
+      "@config/*": [
+        "src/config/*"
+      ],
       "@models/*": [
         "src/models/*"
       ],

@@ -5,18 +5,22 @@ import DefaultErrorPage from 'next/error'
 
 import Link from '@components/Link'
 import Layout from '@components/Layout'
-import artists from '@mocks/artists'
 import ArtistDetails from '@components/artist-details'
-import { Artist } from '@interfaces/index'
+import { PriceMomentumChartDatum, ArtistEntity } from '@interfaces/index'
+import { server } from '@config/index'
+import Artist from '@models/Artist'
 
 interface Props {
   id: string
-  data: unknown
+  artistEntity: ArtistEntity
+  priceMomentumData: PriceMomentumChartDatum[]
 }
 
 const ArtistPage: NextPage<Props> = (props) => {
-  const { data } = props
-  if (!data) {
+  const { artistEntity } = props
+  const artist = Artist.fromEntity(artistEntity)
+
+  if (!artist) {
     return (
       <>
         <Head>
@@ -30,7 +34,7 @@ const ArtistPage: NextPage<Props> = (props) => {
   return (
     <Layout>
       <Link href="/">&lt; Back to Search</Link>
-      <ArtistDetails artist={data as Artist} />
+      <ArtistDetails artist={artist as Artist} />
       {/* <pre>{JSON.stringify(props, undefined, 2)}</pre> */}
     </Layout>
   )
@@ -40,15 +44,19 @@ const ArtistPage: NextPage<Props> = (props) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // Fetch artist data
   const { id } = context.params || {}
-  const data = artists.find((artist) => artist.id.toString() === (id as string))
+  // Fetch data from external API
 
-  if (!data && context.res) {
+  const res = await fetch(`${server}/api/artists/${id}`)
+  const artistEntity: ArtistEntity = (await res.json()) as ArtistEntity
+  // const artist = Artist.fromEntity(artistEntity)
+
+  if (!artistEntity && context.res) {
     context.res.statusCode = 404
-    return { props: { data: null } }
+    return { props: { artist: null } }
   }
 
   // Pass data to the page via props
-  return { props: { data } }
+  return { props: { artistEntity } }
 }
 
 export default ArtistPage
