@@ -45,7 +45,7 @@ const Search: React.FC<unknown> = () => {
 
   const onArtistSelected = useCallback(
     (_, value, reason) => {
-      if (reason === 'select-option') router.push(`/artists/${value.name}`)
+      if (reason === 'select-option') router.push(`/artists/${value.id}`)
     },
     [router]
   )
@@ -60,10 +60,10 @@ const Search: React.FC<unknown> = () => {
     // eslint-disable-next-line
     ; (async () => {
       const response = await fetch('/api/artists')
-      const artistss = await response.json()
+      const artists = await response.json()
 
       if (active) {
-        setOptions(artistss.map((entity: ArtistEntity) => Artist.fromEntity(entity)))
+        setOptions(artists.map((entity: ArtistEntity) => Artist.fromEntity(entity)))
       }
     })()
 

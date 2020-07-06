@@ -33,8 +33,8 @@ export default class Artist implements IArtist {
     return new Artist(
       entity.id,
       entity.name,
-      new Date(entity.birth),
-      new Date(entity.death),
+      new Date(entity.birth, 0),
+      new Date(entity.death, 0),
       entity.qualifier,
       entity.lots_cost
     )

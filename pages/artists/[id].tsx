@@ -5,19 +5,22 @@ import DefaultErrorPage from 'next/error'
 
 import Link from '@components/Link'
 import Layout from '@components/Layout'
-import artists from '@mocks/artists'
 import ArtistDetails from '@components/artist-details'
-import { Artist, PriceMomentumChartDatum } from '@interfaces/index'
+import { PriceMomentumChartDatum, ArtistEntity } from '@interfaces/index'
+import { server } from '@config/index'
+import Artist from '@models/Artist'
 
 interface Props {
-  slug: string
-  artistInfo: Artist
+  id: string
+  artistEntity: ArtistEntity
   priceMomentumData: PriceMomentumChartDatum[]
 }
 
 const ArtistPage: NextPage<Props> = (props) => {
-  const { artistInfo } = props
-  if (!artistInfo) {
+  const { artistEntity } = props
+  const artist = Artist.fromEntity(artistEntity)
+
+  if (!artist) {
     return (
       <>
         <Head>
@@ -31,7 +34,7 @@ const ArtistPage: NextPage<Props> = (props) => {
   return (
     <Layout>
       <Link href="/">&lt; Back to Search</Link>
-      <ArtistDetails artist={artistInfo as Artist} />
+      <ArtistDetails artist={artist as Artist} />
       {/* <pre>{JSON.stringify(props, undefined, 2)}</pre> */}
     </Layout>
   )
@@ -40,18 +43,20 @@ const ArtistPage: NextPage<Props> = (props) => {
 // This gets called on every request
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // Fetch artist data
-  const { slug } = context.params || {}
-  const artistInfo = artists.find(
-    (artist) => artist.name.toLowerCase() === (slug as string).replace('_', ' ').toLowerCase()
-  )
+  const { id } = context.params || {}
+  // Fetch data from external API
 
-  if (!artistInfo && context.res) {
+  const res = await fetch(`${server}/api/artists/${id}`)
+  const artistEntity: ArtistEntity = (await res.json()) as ArtistEntity
+  // const artist = Artist.fromEntity(artistEntity)
+
+  if (!artistEntity && context.res) {
     context.res.statusCode = 404
-    return { props: { artistInfo: null } }
+    return { props: { artist: null } }
   }
 
   // Pass data to the page via props
-  return { props: { artistInfo } }
+  return { props: { artistEntity } }
 }
 
 export default ArtistPage
