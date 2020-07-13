@@ -10,7 +10,7 @@ type Props = OwnProps
 
 const ArtistInfo: React.FC<Props> = ({ artist }) => {
   return (
-    <Grid container direction="column">
+    <Grid container direction="column" style={{ marginBottom: 20 }}>
       <Grid item>
         <Typography variant="h5" component="h2">
           {artist.name}

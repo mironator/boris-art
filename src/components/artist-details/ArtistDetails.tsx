@@ -63,6 +63,7 @@ const ArtistDetails: React.FC<Props> = (props) => {
         <ArtistLots />
       </TabPanel>
       <TabPanel value={value} index={1}>
+        <ArtistInfo artist={artist} />
         <ArtistAnalytics artistInfo={artist} />
       </TabPanel>
     </>
