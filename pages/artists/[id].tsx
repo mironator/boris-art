@@ -4,7 +4,7 @@ import Head from 'next/head'
 import DefaultErrorPage from 'next/error'
 
 import Link from '@components/Link'
-import Layout from '@components/Layout'
+import Layout from '@components/layout/Layout'
 import ArtistDetails from '@components/artist-details'
 import { PriceMomentumChartDatum, ArtistEntity } from '@interfaces/index'
 import { server } from '@config/index'
