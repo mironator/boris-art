@@ -7,15 +7,24 @@ const handler: (_req: NextApiRequest, res: NextApiResponse) => Promise<void> = a
   try {
     const { artistId } = _req.query
     const apiRes = await fetch(
-      `http://54.156.225.113:8000/v1/price-momentum-chart/?artist_id%5Beq%5D=${artistId}&medium%5Beq%5D=works%20on%20paper&date%5Blte%5D=2012-01-01&date%5Bgte%5D=1990-01-01`
+      `http://54.156.225.113:8000/v1/artwork-index-chart/?artist_id[eq]=${artistId}`
     )
     const data = await apiRes.json()
+
+    // {
+    //   "payload": {
+    //     "artwork_index_chart": [
+    //       {
+    //         "index": 1,
+    //         "date": "1986-02-22"
+    //       },
+
     const {
-      payload: { price_momentum_chart: chartData },
+      payload: { artwork_index_chart: chartData },
     } = data
 
     if (!Array.isArray(chartData)) {
-      throw new Error('Cannot find user data')
+      throw new Error('Cannot find chart data')
     }
 
     res.status(200).json(chartData)

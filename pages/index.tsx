@@ -6,7 +6,7 @@ import { Grid, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
-import Layout from '@components/Layout'
+import Layout from '@components/layout/Layout'
 import { Artist as IArtist, ArtistEntity } from '@interfaces/index'
 
 import Artist from '@models/Artist'
