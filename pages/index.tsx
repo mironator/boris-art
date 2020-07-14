@@ -5,6 +5,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Grid, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import { useDebounce } from 'use-debounce'
 
 import Layout from '@components/layout/Layout'
 import { Artist as IArtist, ArtistEntity } from '@interfaces/index'
@@ -39,9 +40,11 @@ const useStyles = makeStyles({
 const Search: React.FC<unknown> = () => {
   const classes = useStyles()
   const router = useRouter()
-  const [open, setOpen] = useState(false)
+  const [inputText, setInputText] = useState<string>('')
+  const [debouncedInputText] = useDebounce(inputText, 300)
+
   const [options, setOptions] = useState<IArtist[]>([])
-  const loading = open && options.length === 0
+  const [loading, setLoading] = useState<boolean>(false)
 
   const onArtistSelected = useCallback(
     (_, value, reason) => {
@@ -50,33 +53,28 @@ const Search: React.FC<unknown> = () => {
     [router]
   )
 
-  useEffect(() => {
-    let active = true
-
-    if (!loading) {
-      return undefined
+  const onInputChange = useCallback((_, value, reason) => {
+    if (reason === 'input') {
+      // if (value.length > 2) {
+      setInputText(value)
+      // }
     }
+  }, [])
 
+  useEffect(() => {
     // eslint-disable-next-line
     ; (async () => {
-      const response = await fetch('/api/artists')
-      const artists = await response.json()
+      setLoading(true)
+      try {
+        const response = await fetch(`/api/artists?query=${debouncedInputText}`)
+        const artists = await response.json()
 
-      if (active) {
         setOptions(artists.map((entity: ArtistEntity) => Artist.fromEntity(entity)))
+      } finally {
+        setLoading(false)
       }
     })()
-
-    return () => {
-      active = false
-    }
-  }, [loading])
-
-  useEffect(() => {
-    if (!open) {
-      setOptions([])
-    }
-  }, [open])
+  }, [debouncedInputText])
 
   return (
     <Layout>
@@ -95,18 +93,12 @@ const Search: React.FC<unknown> = () => {
             inputRoot: classes.inputRoot,
             paper: classes.paper,
           }}
-          open={open}
-          onOpen={() => {
-            setOpen(true)
-          }}
-          onClose={() => {
-            setOpen(false)
-          }}
           getOptionSelected={(option, value) => option.name === value.name}
           getOptionLabel={(option) => option.name}
           options={options}
           loading={loading}
           onChange={onArtistSelected}
+          onInputChange={onInputChange}
           renderInput={(params) => (
             <TextField
               {...params}

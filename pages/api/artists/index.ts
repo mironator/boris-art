@@ -5,7 +5,11 @@ const handler: (_req: NextApiRequest, res: NextApiResponse) => Promise<void> = a
   res
 ) => {
   try {
-    const apiRes = await fetch('http://54.156.225.113:8000/v1/artist/?limit=100&sort=-lots_count')
+    const { query } = _req.query
+
+    const apiRes = await fetch(
+      `http://54.156.225.113:8000/v1/artist/?name[ilike]=${query}&limit=10&sort=-lots_count`
+    )
     const data = await apiRes.json()
     const {
       payload: { artist: sampleUserData },
