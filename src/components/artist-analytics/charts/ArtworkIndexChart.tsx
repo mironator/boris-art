@@ -21,7 +21,7 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
   let i = 0
 
   for (i; i < dataLength; i += 1) {
-    lineData.push([data[i].date.getTime(), Math.round(data[i].index * 100)])
+    lineData.push([data[i].date.getTime(), data[i].index])
   }
 
   let options: Highcharts.Options | null = null
