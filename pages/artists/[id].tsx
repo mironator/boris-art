@@ -16,8 +16,7 @@ interface Props {
   priceMomentumData: PriceMomentumChartDatum[]
 }
 
-const ArtistPage: NextPage<Props> = (props) => {
-  const { artistEntity } = props
+const ArtistPage: NextPage<Props> = ({ artistEntity }) => {
   const artist = Artist.fromEntity(artistEntity)
 
   if (!artist) {

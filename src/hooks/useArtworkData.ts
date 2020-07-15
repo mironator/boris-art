@@ -15,7 +15,11 @@ export type ChartData = {
 type ListInputType = { artistId: number; offset: number; limit: number }
 type SearchListInputType = { artistId: number; query: string; offset: number; limit: number }
 
-const useArtworkListData: (params: ListInputType) => ChartData = ({ artistId, offset, limit }) => {
+export const useArtworkListData: (params: ListInputType) => ChartData = ({
+  artistId,
+  offset,
+  limit,
+}) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: artworkData, error } = useSWR<ArtworkListEntity>(
     `/api/artworks?${queryString.stringify({ artistId, offset, limit })}`,
@@ -25,13 +29,13 @@ const useArtworkListData: (params: ListInputType) => ChartData = ({ artistId, of
   return {
     data: (artworkData?.data || []).map((d: ArtworkEntity) => Artwork.fromEntity(d)),
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    ...artworkData!.meta,
+    ...artworkData?.meta,
     isLoading: !error && !artworkData?.data,
     isError: error,
   }
 }
 
-const useArtworkSearchListData: (params: SearchListInputType) => ChartData = ({
+export const useArtworkSearchListData: (params: SearchListInputType) => ChartData = ({
   artistId,
   query,
   offset,

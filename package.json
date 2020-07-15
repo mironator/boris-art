@@ -21,6 +21,7 @@
     "query-string": "6.13.1",
     "react": "latest",
     "react-dom": "latest",
+    "react-infinite-scroller": "^1.2.4",
     "swr": "0.2.3",
     "use-debounce": "3.4.3"
   },

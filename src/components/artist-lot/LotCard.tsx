@@ -8,6 +8,8 @@ import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography'
 
+import { Artwork } from '@interfaces/index'
+
 const useStyles = makeStyles({
   root: {
     maxWidth: 280,
@@ -40,42 +42,39 @@ const useStyles = makeStyles({
   },
 })
 
-const LotCard: React.FC<unknown> = () => {
+interface OwnProps {
+  artwork: Artwork
+}
+
+type Props = OwnProps
+
+const LotCard: React.FC<Props> = ({
+  artwork: { id, name, lotImagePresignedUrl, markings, creationYear },
+}) => {
   const classes = useStyles()
   const [toggler, setToggler] = useState(false)
 
   return (
     <Card className={classes.root} variant="outlined" onClick={() => setToggler(!toggler)}>
       <CardActionArea>
-        <CardMedia
-          className={classes.media}
-          image="https://uploads6.wikiart.org/images/pablo-picasso/portrait-of-suzanne-bloch-1904.jpg"
-          title="Portrait of Suzanne Bloch"
-        />
+        <CardMedia className={classes.media} image={lotImagePresignedUrl} title={name} />
         <CardContent>
           <Typography gutterBottom variant="body1" component="h4">
-            Portrait of Suzanne Bloch, 1904
+            {name}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            Painting
+            {markings}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            $ 150,000
+            {creationYear}
           </Typography>
         </CardContent>
       </CardActionArea>
       <FsLightbox
         toggler={toggler}
         customSources={[
-          <div
-            className={classes.imageContainer}
-            key="https://uploads6.wikiart.org/images/pablo-picasso/portrait-of-suzanne-bloch-1904.jpg"
-          >
-            <img
-              className={classes.image}
-              src="https://uploads6.wikiart.org/images/pablo-picasso/portrait-of-suzanne-bloch-1904.jpg"
-              alt="Snow"
-            />
+          <div className={classes.imageContainer} key={id}>
+            <img className={classes.image} src={lotImagePresignedUrl} alt="Snow" />
             <Grid
               container
               direction="column"
@@ -84,13 +83,13 @@ const LotCard: React.FC<unknown> = () => {
               className={classes.imageContent}
             >
               <Typography gutterBottom variant="body1" component="h4">
-                Portrait of Suzanne Bloch, 1904
+                {name}
               </Typography>
               <Typography variant="body2" component="p">
-                Painting
+                {markings}
               </Typography>
               <Typography variant="body2" component="p">
-                $ 150,000
+                {creationYear}
               </Typography>
             </Grid>
           </div>,
