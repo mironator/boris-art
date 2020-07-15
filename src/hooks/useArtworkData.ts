@@ -18,7 +18,7 @@ type SearchListInputType = { artistId: number; query: string; offset: number; li
 const useArtworkListData: (params: ListInputType) => ChartData = ({ artistId, offset, limit }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: artworkData, error } = useSWR<ArtworkListEntity>(
-    `/api/artworks${queryString.stringify({ artistId, offset, limit })}`,
+    `/api/artworks?${queryString.stringify({ artistId, offset, limit })}`,
     fetcher
   )
 
@@ -39,7 +39,7 @@ const useArtworkSearchListData: (params: SearchListInputType) => ChartData = ({
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: artworkData, error } = useSWR<ArtworkListEntity>(
-    `/api/artworks${queryString.stringify({ 'query[eq]': query, artistId, offset, limit })}`,
+    `/api/artworks?${queryString.stringify({ 'query[eq]': query, artistId, offset, limit })}`,
     fetcher
   )
 
