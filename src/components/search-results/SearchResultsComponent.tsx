@@ -1,15 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
 
+import { SearchContext } from '@components/layout/SearchLayout'
 import { useArtworkSearchListData } from '@hooks/useArtworkData'
 
 // import useStyles from './styles'
 
-type Props = {
-  query: string
-}
-
-const SearchResultsComponent: React.FC<Props> = ({ query }) => {
+const SearchResultsComponent: React.FC<unknown> = () => {
   // const classes = useStyles({})
+  const query = useContext<string>(SearchContext)
+  console.log('[INFO] SearchResultsComponent', query)
 
   console.log('[INFO] SearchResultsComponent:query', query)
 
