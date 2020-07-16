@@ -2,7 +2,7 @@ import useSWR from 'swr'
 import queryString from 'query-string'
 
 import fetcher from '@utils/fetcher'
-import { Artwork as IArtwork, ArtworkListEntity, ArtworkEntity, ListMeta } from '@interfaces/index'
+import { Artwork as IArtwork, ArtworkListEntity, ArtworkEntity } from '@interfaces/index'
 
 import Artwork from '@models/Artwork'
 
@@ -10,16 +10,14 @@ export type ChartData = {
   data: IArtwork[]
   isLoading: boolean
   isError: boolean
-} & ListMeta
+} & { // TODO: Make it to be ListMeta, but optional somehow
+  total?: number
+}
 
 type ListInputType = { artistId: number; offset: number; limit: number }
-type SearchListInputType = { artistId: number; query: string; offset: number; limit: number }
+type SearchListInputType = { artistId?: number; query: string; offset: number; limit: number }
 
-export const useArtworkListData: (params: ListInputType) => ChartData = ({
-  artistId,
-  offset,
-  limit,
-}) => {
+export const useArtworkListData: (params: ListInputType) => ChartData = ({ artistId, offset, limit }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: artworkData, error } = useSWR<ArtworkListEntity>(
     `/api/artworks?${queryString.stringify({ artistId, offset, limit })}`,
@@ -50,7 +48,7 @@ export const useArtworkSearchListData: (params: SearchListInputType) => ChartDat
   return {
     data: (artworkData?.data || []).map((d: ArtworkEntity) => Artwork.fromEntity(d)),
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    ...artworkData!.meta,
+    ...artworkData?.meta,
     isLoading: !error && !artworkData?.data,
     isError: error,
   }
