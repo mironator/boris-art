@@ -4,7 +4,6 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { useDebounce } from 'use-debounce'
 
-import SearchResults from '@components/search-results/SearchResultsComponent'
 import HeaderWithSearch from './header-with-search/HeaderWithSearch'
 import Footer from './Footer'
 
@@ -48,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-export const SearchContext = React.createContext({});
+export const SearchContext = React.createContext<string>('');
 
 const MainLayout: React.FC<unknown> = ({ children }) => {
   const [query, setQuery] = useState<string>('')

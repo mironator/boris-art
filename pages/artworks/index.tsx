@@ -1,15 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import SearchLayout from '@components/layout/SearchLayout'
 import SearchResultsComponent from '@components/search-results'
 
 import { SearchContext } from '@components/layout/SearchLayout'
 
 const Artworks: React.FC<unknown> = () => {
+  const query = useContext<string>(SearchContext)
   return (
     <SearchLayout>
-      <SearchContext.Consumer>
-        {(query: string) => <SearchResultsComponent query={query} />}
-      </SearchContext.Consumer>
+      <SearchResultsComponent query={query} />
     </SearchLayout>
   )
 }

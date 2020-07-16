@@ -13,7 +13,6 @@ import MenuIcon from '@material-ui/icons/Menu'
 import AccountCircle from '@material-ui/icons/AccountCircle'
 import MailIcon from '@material-ui/icons/Mail'
 import NotificationsIcon from '@material-ui/icons/Notifications'
-import MoreIcon from '@material-ui/icons/MoreVert'
 
 import useStyles from './styles'
 
@@ -38,9 +37,9 @@ const Header: React.FC<unknown> = ({ children }) => {
     handleMobileMenuClose()
   }
 
-  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setMobileMoreAnchorEl(event.currentTarget)
-  }
+  // const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+  //   setMobileMoreAnchorEl(event.currentTarget)
+  // }
 
   const menuId = 'primary-search-account-menu'
   const renderMenu = (

@@ -1,4 +1,4 @@
-import { fade, createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme: Theme) =>
     menuButton: {
       marginRight: theme.spacing(2),
     },
-    
+
     sectionDesktop: {
       display: 'none',
       [theme.breakpoints.up('md')]: {
