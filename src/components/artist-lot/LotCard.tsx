@@ -13,6 +13,7 @@ import { Artwork } from '@interfaces/index'
 const useStyles = makeStyles({
   root: {
     maxWidth: 280,
+    width: '100%',
   },
   media: {
     height: 280,

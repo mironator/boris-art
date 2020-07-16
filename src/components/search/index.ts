@@ -1,1 +1,1 @@
-export default from './SearchComponent'
+export { default } from './SearchComponent'

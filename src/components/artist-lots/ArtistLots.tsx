@@ -75,7 +75,7 @@ const ArtistLots: React.FC<Props> = ({ artist: { id } }) => {
         >
           <Grid container item spacing={5}>
             {artworks.map((artwork) => (
-              <Grid key={artwork.id} item xs={12} sm={6} md={4}>
+              <Grid key={artwork.id} item container justify="center" xs={12} sm={6} md={4}>
                 <Lot artwork={artwork} />
               </Grid>
             ))}
