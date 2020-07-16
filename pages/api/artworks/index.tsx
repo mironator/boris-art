@@ -1,15 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import queryString from 'query-string'
 
 const handler: (_req: NextApiRequest, res: NextApiResponse) => Promise<void> = async (
   _req,
   res
 ) => {
   try {
-    const offset: number = parseInt(_req.query.offset as string, 10) || 0
-    const limit: number = parseInt(_req.query.limit as string, 10) || 10
-
     const apiRes = await fetch(
-      `http://54.156.225.113:8000/v1/artwork/?limit=${limit}&offset=${offset}`
+      `http://54.156.225.113:8000/v1/artwork/?${queryString.stringify(_req.query)}`
     )
     const data = await apiRes.json()
     const {
@@ -20,7 +18,7 @@ const handler: (_req: NextApiRequest, res: NextApiResponse) => Promise<void> = a
       throw new Error('Cannot find user data')
     }
 
-    res.status(200).json({ data: artworkData, ...data.meta })
+    res.status(200).json({ data: artworkData, meta: data.meta })
   } catch (err) {
     res.status(500).json({ statusCode: 500, message: err.message })
   }

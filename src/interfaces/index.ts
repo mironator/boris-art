@@ -32,6 +32,7 @@ export type ArtistEntity = {
 }
 
 export type ArtistListEntity = ListEntity<ListMeta> & GenericList<ArtistEntity>
+export type ArtworkListEntity = ListEntity<ListMeta> & GenericList<ArtworkEntity>
 
 export type PriceMomentumChartDatum = {
   volume: number
