@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, Event } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { CircularProgress, Grid, MenuItem, Select, Typography } from '@material-ui/core'
 import { Container } from 'next/app'
@@ -63,7 +63,7 @@ const ArtistLots: React.FC<Props> = ({ artist: { id } }) => {
   )
 
   const updateSort = useCallback(
-    (event: Event) => {
+    (event: any) => {
       setSort(event.target.value)
       setArtworks([])
     },
@@ -91,12 +91,7 @@ const ArtistLots: React.FC<Props> = ({ artist: { id } }) => {
         </Grid>
       </Grid>
       <Grid container>
-        <InfiniteScroll
-          pageStart={0}
-          loadMore={loadItems}
-          hasMore={hasMoreItems && !isLoading}
-          loader={null}
-        >
+        <InfiniteScroll pageStart={0} loadMore={loadItems} hasMore={hasMoreItems && !isLoading}>
           <Grid container item spacing={5}>
             {artworks.map((artwork) => (
               <Grid key={artwork.id} item container justify="center" xs={12} sm={6} md={4}>
