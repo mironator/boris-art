@@ -1,16 +1,16 @@
-import React, { Fragment } from 'react'
+import React, { useState, useCallback } from 'react'
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
+import { useDebounce } from 'use-debounce'
 
-import Search from '@components/search/SearchComponent'
-import Header from './Header'
+import HeaderWithSearch from './header-with-search/HeaderWithSearch'
 import Footer from './Footer'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      margin: '0px 16px',
+      margin: 0,
       marginBottom:
         ((process.env.REACT_APP_NPM_REGISTRY_API_MOCKS_ENABLED === 'true' ||
           process.env.REACT_APP_NPM_API_MOCKS_ENABLED === 'true') &&
@@ -47,18 +47,24 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
+export const SearchContext = React.createContext<string>('');
+
 const MainLayout: React.FC<unknown> = ({ children }) => {
+  const [query, setQuery] = useState<string>('')
+  const [debouncedQuery] = useDebounce(query, 1e3)
+
+  const onInputChange = useCallback((query) => { setQuery(query) }, [])
+
   const classes = useStyles({})
   return (
     <>
       <CssBaseline />
       <div className={classes.root}>
-        <Header />
-        <Search className={classes.searchContainer} />
-        <div className={classes.content} data-section="content">
+        <SearchContext.Provider value={debouncedQuery}>
+          <HeaderWithSearch onInputChange={onInputChange} />
           {children}
-        </div>
-        <Footer data-section="footer" />
+          <Footer data-section="footer" />
+        </SearchContext.Provider>
       </div>
     </>
   )

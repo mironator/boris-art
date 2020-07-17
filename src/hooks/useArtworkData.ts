@@ -2,7 +2,7 @@ import useSWR from 'swr'
 import queryString from 'query-string'
 
 import fetcher from '@utils/fetcher'
-import { Artwork as IArtwork, ArtworkListEntity, ArtworkEntity, ListMeta } from '@interfaces/index'
+import { Artwork as IArtwork, ArtworkListEntity, ArtworkEntity } from '@interfaces/index'
 
 import Artwork from '@models/Artwork'
 
@@ -17,8 +17,10 @@ export type ChartData = {
   data: IArtwork[]
   isLoading: boolean
   isError: boolean
+} & {
+  // TODO: Make it to be ListMeta, but optional somehow
+  total?: number
 }
-// & ListMeta
 
 type ListInputType = {
   artistId: number
@@ -26,7 +28,7 @@ type ListInputType = {
   limit: number
   sort: keyof typeof sortTypes
 }
-type SearchListInputType = { artistId: number; query: string; offset: number; limit: number }
+type SearchListInputType = { artistId?: number; query: string; offset: number; limit: number }
 
 const getSort = (sort: keyof typeof sortTypes): string => {
   if (sort === sortTypes.featured) return ''
@@ -42,7 +44,9 @@ export const useArtworkListData: (params: ListInputType) => ChartData = ({
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: artworkData, error } = useSWR<ArtworkListEntity>(
-    `/api/artworks?${queryString.stringify({ artistId, offset, limit })}${getSort(sort)}`,
+    `/api/artworks?${queryString.stringify({ 'artist_id[eq]': artistId, offset, limit })}${getSort(
+      sort
+    )}`,
     fetcher
   )
 
@@ -63,14 +67,19 @@ export const useArtworkSearchListData: (params: SearchListInputType) => ChartDat
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: artworkData, error } = useSWR<ArtworkListEntity>(
-    `/api/artworks?${queryString.stringify({ 'query[eq]': query, artistId, offset, limit })}`,
+    `/api/artworks?${queryString.stringify({
+      'query[eq]': query,
+      'artist_id[eq]': artistId,
+      offset,
+      limit,
+    })}`,
     fetcher
   )
 
   return {
     data: (artworkData?.data || []).map((d: ArtworkEntity) => Artwork.fromEntity(d)),
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    ...artworkData!.meta,
+    ...artworkData?.meta,
     isLoading: !error && !artworkData?.data,
     isError: error,
   }
