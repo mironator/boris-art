@@ -44,7 +44,7 @@ export const useArtworkListData: (params: ListInputType) => ChartData = ({
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: artworkData, error } = useSWR<ArtworkListEntity>(
-    `/api/artworks?${queryString.stringify({ 'artist_id[eq]': artistId, offset, limit })}${getSort(
+    `/api/artworks?${queryString.stringify({ 'artist_id[eq]': artistId, offset, limit, 'lot_image_presigned_url[empty]': false })}${getSort(
       sort
     )}`,
     fetcher

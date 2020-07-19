@@ -45,6 +45,17 @@ export type ArtworkIndexChartDatum = {
   date: Date
 }
 
+export type CompoundAnnualReturnsChartDatum = {
+  car: number
+  date: Date
+}
+
+export type ReturnsVsPeriodChartDatum = {
+  period: number
+  car: number
+  artworkId: number
+}
+
 export type PriceMomentumChartDatumEntity = {
   volume: number
   price_momentum: number
@@ -54,6 +65,17 @@ export type PriceMomentumChartDatumEntity = {
 export type ArtworkIndexChartDatumEntity = {
   index: number
   date: string
+}
+
+export type CompoundAnnualReturnsChartDatumEntity = {
+  car: number
+  date: string
+}
+
+export type ReturnsVsPeriodChartDatumEntity = {
+  period: number
+  car: number
+  artwork_id: number
 }
 
 export type Artwork = {
