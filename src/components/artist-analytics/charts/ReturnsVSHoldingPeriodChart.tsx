@@ -54,10 +54,10 @@ const ReturnsVSHoldingPeriodChart: React.FC<Props> = ({ artistId }) => {
         type: 'linear',
         title: {
           // enabled: true,
-          text: 'Holding Period (Months)'
+          text: 'Holding Period (Years)'
         },
         labels: {
-          formatter: (x) => `${x.value}`
+          formatter: (x: any) => `${Math.round(x['value'] / 12)}`
         }
       },
       yAxis: {
