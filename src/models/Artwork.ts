@@ -53,6 +53,10 @@ export default class Artwork implements IArtwork {
 
   description: string
 
+  yearLastSold: number
+
+  lastPrice: number
+
   constructor(
     id: number,
     name: string,
@@ -79,7 +83,9 @@ export default class Artwork implements IArtwork {
     artistId: number,
     measurementsWidth: number,
     lotImageSize: number,
-    description: string
+    description: string,
+    yearLastSold: number,
+    lastPrice: number
   ) {
     this.id = id
     this.name = name
@@ -107,6 +113,8 @@ export default class Artwork implements IArtwork {
     this.measurementsWidth = measurementsWidth
     this.lotImageSize = lotImageSize
     this.description = description
+    this.yearLastSold = yearLastSold
+    this.lastPrice = lastPrice
   }
 
   static fromEntity(entity: ArtworkEntity): Artwork {
@@ -136,7 +144,9 @@ export default class Artwork implements IArtwork {
       entity.artist_id,
       entity.measurements_width,
       entity.lot_image_size,
-      entity.description
+      entity.description,
+      entity.year_last_sold,
+      entity.last_price
     )
   }
 }
