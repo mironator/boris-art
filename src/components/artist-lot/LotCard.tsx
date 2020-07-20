@@ -9,6 +9,7 @@ import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography'
 
 import { Artwork } from '@interfaces/index'
+import { priceFormatter } from '@utils/formatters'
 
 const useStyles = makeStyles({
   root: {
@@ -70,7 +71,7 @@ const LotCard: React.FC<Props> = ({
             {creationYear}
           </Typography>
           <Typography variant="body1" component="h4" style={{ bottom: 0 }}>
-            {lastPrice && `Price: $${lastPrice}`}
+            {lastPrice && `Price: ${priceFormatter(lastPrice)}`}
           </Typography>
         </CardContent>
       </CardActionArea>
@@ -96,7 +97,7 @@ const LotCard: React.FC<Props> = ({
                 {creationYear}
               </Typography>
               <Typography variant="body1" component="h4">
-                {lastPrice && `Price: $${lastPrice}`}
+                {lastPrice && `Price: ${priceFormatter(lastPrice)}`}
               </Typography>
             </Grid>
           </div>,
