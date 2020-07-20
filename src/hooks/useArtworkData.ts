@@ -8,11 +8,26 @@ import Artwork from '@models/Artwork'
 
 export enum sortTypes {
   featured = 'featured',
-  priceLowToHigh = 'sort=price',
-  priceHighToLow = 'sort=-price',
-  yearLowToHigh = 'sort=year',
-  yearHighToLow = 'sort=-year',
+  priceLowToHigh = 'price',
+  priceHighToLow = '-price',
+  yearLowToHigh = 'year',
+  yearHighToLow = '-year',
 }
+
+export enum mediumList {
+  all = 'all',
+  paintings = 'paintings',
+  prints = 'prints',
+  undetermined = 'undetermined',
+  photographs = 'photographs',
+  jewelry = 'jewelry',
+  sculpture = 'sculpture',
+  furniture = 'furniture',
+  ceramics = 'ceramics',
+  other = 'other',
+  worksOnPaper = 'works on paper',
+}
+
 export type ChartData = {
   data: IArtwork[]
   isLoading: boolean
@@ -27,13 +42,20 @@ type ListInputType = {
   offset: number
   limit: number
   sort: keyof typeof sortTypes
+  medium: keyof typeof mediumList
 }
 type SearchListInputType = { artistId?: number; query: string; offset: number; limit: number }
 
 const getSort = (sort: keyof typeof sortTypes): string => {
   if (sort === sortTypes.featured) return ''
 
-  return `&${sort}`
+  return `&sort=${sort}`
+}
+
+const getMedium = (medium: keyof typeof mediumList): string => {
+  if (medium === mediumList.all) return ''
+
+  return `&medium_final[eq]=${medium}`
 }
 
 export const useArtworkListData: (params: ListInputType) => ChartData = ({
@@ -41,12 +63,16 @@ export const useArtworkListData: (params: ListInputType) => ChartData = ({
   offset,
   limit,
   sort,
+  medium,
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: artworkData, error } = useSWR<ArtworkListEntity>(
-    `/api/artworks?${queryString.stringify({ 'artist_id[eq]': artistId, offset, limit, 'lot_image_presigned_url[empty]': false })}${getSort(
-      sort
-    )}`,
+    `/api/artworks?${queryString.stringify({
+      'artist_id[eq]': artistId,
+      offset,
+      limit,
+      'lot_image_presigned_url[empty]': false,
+    })}${getSort(sort)}${getMedium(medium)}`,
     fetcher
   )
 
