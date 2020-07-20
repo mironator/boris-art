@@ -42,6 +42,7 @@ export type PriceMomentumChartDatum = {
 
 export type ArtworkIndexChartDatum = {
   index: number
+  volume: number
   date: Date
 }
 
@@ -64,6 +65,7 @@ export type PriceMomentumChartDatumEntity = {
 
 export type ArtworkIndexChartDatumEntity = {
   index: number
+  volume: number
   date: string
 }
 

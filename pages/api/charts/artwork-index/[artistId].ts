@@ -1,4 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import _ from 'lodash'
+import queryString from 'query-string'
 
 const handler: (_req: NextApiRequest, res: NextApiResponse) => Promise<void> = async (
   _req,
@@ -6,8 +8,9 @@ const handler: (_req: NextApiRequest, res: NextApiResponse) => Promise<void> = a
 ) => {
   try {
     const { artistId } = _req.query
+
     const apiRes = await fetch(
-      `http://54.156.225.113:8000/v1/artwork-index-chart/?artist_id[eq]=${artistId}`
+      `http://54.156.225.113:8000/v1/artwork-index-chart/?artist_id[eq]=${artistId}&${queryString.stringify(_.omit(_req.query, 'artistId'))}`
     )
     const data = await apiRes.json()
 
@@ -16,7 +19,8 @@ const handler: (_req: NextApiRequest, res: NextApiResponse) => Promise<void> = a
     //     "artwork_index_chart": [
     //       {
     //         "index": 1,
-    //         "date": "1986-02-22"
+    //         "date": "1986-02-22",
+    //         "volume": 1
     //       },
 
     const {

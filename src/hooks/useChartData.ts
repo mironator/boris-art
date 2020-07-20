@@ -45,7 +45,6 @@ export const usePriceMomentumAndVolumeChartData: (
 export const useArtworkIndexChartData: (artistId: number) => ArtworkIndexChartData = (artistId) => {
   const { data, error } = useSWR(`/api/charts/artwork-index/${artistId}`, fetcher)
 
-  console.log('[FOO]', data, (data || []))
   return {
     data: (data || []).map((d: ArtworkIndexChartDatumEntity) =>
       ArtworkIndexChartDatum.fromEntity(d)

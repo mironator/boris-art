@@ -1,4 +1,5 @@
 import React from 'react'
+import _ from 'lodash'
 import Highcharts from 'highcharts/highstock'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
@@ -52,7 +53,7 @@ const ReturnsVSHoldingPeriodChart: React.FC<Props> = ({ artistId }) => {
         type: 'linear',
         title: {
           // enabled: true,
-          text: 'Holding Period (Years)'
+          text: 'Holding Period (Months)'
         },
         labels: {
           formatter: (x) => `${x.value}`
@@ -77,7 +78,7 @@ const ReturnsVSHoldingPeriodChart: React.FC<Props> = ({ artistId }) => {
           },
           tooltip: {
             // headerFormat: '<b>{series.name}</b><br>',
-            pointFormat: 'Holding Period (Years): <b>{point.x}</b><br/>Realized CAR (%): <b>{point.y}</b><br/>Index: <b>{point.label}</b>'
+            pointFormat: 'Holding Period (Months): <b>{point.x}</b><br/>Realized CAR (%): <b>{point.y}</b><br/>Index: <b>{point.label}</b>'
           },
         },
       },
@@ -86,7 +87,7 @@ const ReturnsVSHoldingPeriodChart: React.FC<Props> = ({ artistId }) => {
         type: 'scatter',
         color: 'rgba(223, 83, 83, .5)',
         // @ts-ignore
-        data: chartData
+        data: _.take(chartData, 1e3) /* TODO: fix performance issue & remove this limit */
       },]
     }
   }
