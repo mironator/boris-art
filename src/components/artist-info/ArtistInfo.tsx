@@ -5,7 +5,6 @@ import { Artist } from '@interfaces/index'
 interface OwnProps {
   artist: Artist
 }
-
 type Props = OwnProps
 
 const ArtistInfo: React.FC<Props> = ({ artist }) => {
@@ -16,10 +15,13 @@ const ArtistInfo: React.FC<Props> = ({ artist }) => {
           {artist.name}
         </Typography>
       </Grid>
-      <Grid item>
+      <Grid item style={{ marginBottom: 20 }}>
         ({artist.birth?.getFullYear()}-{artist.death?.getFullYear()})
       </Grid>
-      <Grid item>145 lots</Grid>
+      <Grid item container direction="column" spacing={1} style={{ marginBottom: 10 }}>
+        <Grid item>{artist.lotsCount} lots</Grid>
+        <Grid item>{artist.artworksCount} artworks</Grid>
+      </Grid>
       <Divider />
       <Grid item>%Artist Info%</Grid>
     </Grid>

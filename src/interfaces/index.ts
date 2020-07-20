@@ -19,6 +19,8 @@ export type Artist = {
   death?: Date
   qualifier?: string
   lotsCost?: number
+  artworksCount?: number
+  lotsCount?: number
 }
 
 export type ArtistEntity = {
@@ -29,6 +31,8 @@ export type ArtistEntity = {
   death: number
   qualifier: string | 'NULL'
   lots_cost: number
+  artworks_count: number
+  lots_count: number
 }
 
 export type ArtistListEntity = ListEntity<ListMeta> & GenericList<ArtistEntity>

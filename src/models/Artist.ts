@@ -13,13 +13,19 @@ export default class Artist implements IArtist {
 
   lotsCost?: number
 
+  artworksCount?: number
+
+  lotsCount?: number
+
   constructor(
     id: number,
     name: string,
     birth: Date,
     death: Date,
     qualifier: string,
-    lotsCost: number
+    lotsCost: number,
+    artworksCount: number,
+    lotsCount: number
   ) {
     this.id = id
     this.name = name
@@ -27,6 +33,8 @@ export default class Artist implements IArtist {
     this.death = death
     this.qualifier = qualifier
     this.lotsCost = lotsCost
+    this.artworksCount = artworksCount
+    this.lotsCount = lotsCount
   }
 
   static fromEntity(entity: ArtistEntity): Artist {
@@ -36,7 +44,9 @@ export default class Artist implements IArtist {
       new Date(entity.birth, 0),
       new Date(entity.death, 0),
       entity.qualifier,
-      entity.lots_cost
+      entity.lots_cost,
+      entity.artworks_count,
+      entity.lots_count
     )
   }
 }

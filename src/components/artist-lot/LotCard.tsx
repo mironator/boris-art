@@ -50,7 +50,7 @@ interface OwnProps {
 type Props = OwnProps
 
 const LotCard: React.FC<Props> = ({
-  artwork: { id, name, lotImagePresignedUrl, markings, creationYear },
+  artwork: { id, name, lotImagePresignedUrl, markings, creationYear, lastPrice },
 }) => {
   const classes = useStyles()
   const [toggler, setToggler] = useState(false)
@@ -68,6 +68,9 @@ const LotCard: React.FC<Props> = ({
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
             {creationYear}
+          </Typography>
+          <Typography variant="body1" component="h4" style={{ bottom: 0 }}>
+            {lastPrice && `Price: $${lastPrice}`}
           </Typography>
         </CardContent>
       </CardActionArea>
@@ -91,6 +94,9 @@ const LotCard: React.FC<Props> = ({
               </Typography>
               <Typography variant="body2" component="p">
                 {creationYear}
+              </Typography>
+              <Typography variant="body1" component="h4">
+                {lastPrice && `Price: $${lastPrice}`}
               </Typography>
             </Grid>
           </div>,
