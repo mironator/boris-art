@@ -112,8 +112,8 @@ const ArtistLots: React.FC<Props> = ({ artist: { id } }) => {
             <Typography className={classes.sortLabel}>Sort by:</Typography>
             <Select value={sort} onChange={updateSort}>
               <MenuItem value={sortTypes.featured}>Featured</MenuItem>
-              <MenuItem value={sortTypes.priceLowToHigh}>Price - Low to High</MenuItem>
-              <MenuItem value={sortTypes.priceHighToLow}>Price - High to Low</MenuItem>
+              <MenuItem value={sortTypes.lastPriceLowToHigh}>Price - Low to High</MenuItem>
+              <MenuItem value={sortTypes.lastPriceHighToLow}>Price - High to Low</MenuItem>
               <MenuItem value={sortTypes.creationYearLowToHigh}>
                 Year created - Low to High
               </MenuItem>
