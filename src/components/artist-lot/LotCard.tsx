@@ -9,6 +9,7 @@ import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography'
 
 import { Artwork } from '@interfaces/index'
+import { priceFormatter } from '@utils/formatters'
 
 const useStyles = makeStyles({
   root: {
@@ -50,7 +51,7 @@ interface OwnProps {
 type Props = OwnProps
 
 const LotCard: React.FC<Props> = ({
-  artwork: { id, name, lotImagePresignedUrl, markings, creationYear },
+  artwork: { id, name, lotImagePresignedUrl, markings, creationYear, lastPrice },
 }) => {
   const classes = useStyles()
   const [toggler, setToggler] = useState(false)
@@ -68,6 +69,9 @@ const LotCard: React.FC<Props> = ({
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
             {creationYear}
+          </Typography>
+          <Typography variant="body1" component="h4" style={{ bottom: 0 }}>
+            {lastPrice && `Price: ${priceFormatter(lastPrice)}`}
           </Typography>
         </CardContent>
       </CardActionArea>
@@ -91,6 +95,9 @@ const LotCard: React.FC<Props> = ({
               </Typography>
               <Typography variant="body2" component="p">
                 {creationYear}
+              </Typography>
+              <Typography variant="body1" component="h4">
+                {lastPrice && `Price: ${priceFormatter(lastPrice)}`}
               </Typography>
             </Grid>
           </div>,
