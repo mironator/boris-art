@@ -4,7 +4,7 @@ import { CircularProgress, Grid, MenuItem, Select, Typography } from '@material-
 import { Container } from 'next/app'
 import InfiniteScroll from 'react-infinite-scroller'
 
-import { useArtworkListData, sortTypes } from '@hooks/useArtworkData'
+import { useArtworkListData, sortTypes, mediumList } from '@hooks/useArtworkData'
 import { Artist, Artwork } from '@interfaces/index'
 import Lot from '@components/artist-lot'
 
@@ -24,6 +24,11 @@ const useStyles = makeStyles(() =>
     sortLabel: {
       marginRight: '7px',
     },
+    filtersContainer: {
+      '& > *:nth-child(2n):not(:last-child)': {
+        marginRight: '15px',
+      },
+    },
   })
 )
 
@@ -40,11 +45,13 @@ const ArtistLots: React.FC<Props> = ({ artist: { id } }) => {
   const [page, setPage] = useState<number>(0)
   const [artworks, setArtworks] = useState<Artwork[]>([])
   const [sort, setSort] = useState<keyof typeof sortTypes>(sortTypes.featured)
+  const [medium, setMedium] = useState<keyof typeof mediumList>(mediumList.all)
   const { data, isLoading } = useArtworkListData({
     artistId: Number(id),
     offset: page * limit,
     limit,
     sort,
+    medium,
   })
 
   useEffect(() => {
@@ -70,6 +77,14 @@ const ArtistLots: React.FC<Props> = ({ artist: { id } }) => {
     [setSort]
   )
 
+  const updateMedium = useCallback(
+    (event: any) => {
+      setMedium(event.target.value)
+      setArtworks([])
+    },
+    [setMedium]
+  )
+
   return (
     <Container>
       <Grid container className={classes.heading} justify="space-between">
@@ -78,7 +93,22 @@ const ArtistLots: React.FC<Props> = ({ artist: { id } }) => {
         </Typography>
 
         <Grid item>
-          <Grid container direction="row" alignItems="center">
+          <Grid className={classes.filtersContainer} container direction="row" alignItems="center">
+            <Typography className={classes.sortLabel}>Medium:</Typography>
+            <Select value={medium} onChange={updateMedium}>
+              <MenuItem value={mediumList.all}>All</MenuItem>
+              <MenuItem value={mediumList.paintings}>Paintings</MenuItem>
+              <MenuItem value={mediumList.prints}>Prints</MenuItem>
+              <MenuItem value={mediumList.undetermined}>Undetermined</MenuItem>
+              <MenuItem value={mediumList.photographs}>Photographs</MenuItem>
+              <MenuItem value={mediumList.jewelry}>Jewelry</MenuItem>
+              <MenuItem value={mediumList.sculpture}>Sculpture</MenuItem>
+              <MenuItem value={mediumList.furniture}>Furniture</MenuItem>
+              <MenuItem value={mediumList.ceramics}>Ceramics</MenuItem>
+              <MenuItem value={mediumList.other}>Other</MenuItem>
+              <MenuItem value={mediumList.worksOnPaper}>Works on paper</MenuItem>
+            </Select>
+
             <Typography className={classes.sortLabel}>Sort by:</Typography>
             <Select value={sort} onChange={updateSort}>
               <MenuItem value={sortTypes.featured}>Featured</MenuItem>
