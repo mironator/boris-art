@@ -29,6 +29,7 @@ const ReturnsVSHoldingPeriodChart: React.FC<Props> = ({ artistId }) => {
   let options: Highcharts.Options | null = null
 
   if (true /*data && !isLoading && !isError*/) {
+    // @ts-ignore
     options = {
       chart: {
         type: 'scatter',
