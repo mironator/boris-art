@@ -107,6 +107,8 @@ export type Artwork = {
   measurementsWidth: number
   lotImageSize: number
   description: string
+  yearLastSold: number
+  lastPrice: number
 }
 
 export type ArtworkEntity = {
@@ -136,4 +138,6 @@ export type ArtworkEntity = {
   measurements_width: number
   lot_image_size: number
   description: string
+  year_last_sold: number
+  last_price: number
 }

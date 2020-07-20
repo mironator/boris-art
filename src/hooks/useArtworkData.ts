@@ -12,6 +12,10 @@ export enum sortTypes {
   priceHighToLow = '-price',
   yearLowToHigh = 'year',
   yearHighToLow = '-year',
+  lastPriceLowToHigh = 'year_last_sold',
+  lastPriceHighToLow = '-year_last_sold',
+  yearLastSoldLowToHigh = 'last_price',
+  yearLastSoldHighToLow = '-last_price',
 }
 
 export enum mediumList {
