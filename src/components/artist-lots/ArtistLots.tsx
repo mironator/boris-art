@@ -62,17 +62,15 @@ const ArtistLots: React.FC<Props> = ({ artist: { id } }) => {
     if (!isLoading && data.length < limit) setHasMoreItems(false)
   }, [page, isLoading])
 
-  const loadItems = useCallback(
-    (nextPage) => {
-      setPage(nextPage)
-    },
-    [setPage]
-  )
+  const loadItems = useCallback(() => {
+    setPage(page + 1)
+  }, [page, setPage])
 
   const updateSort = useCallback(
     (event: any) => {
       setSort(event.target.value)
       setArtworks([])
+      setPage(0)
     },
     [setSort]
   )
