@@ -72,22 +72,25 @@ export const useArtworkListData: (params: ListInputType) => ChartData = ({
   medium,
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: artworkData, error } = useSWR<ArtworkListEntity>(
+  const { data: artworkData, error, isValidating } = useSWR<ArtworkListEntity>(
     `/api/artworks?${queryString.stringify({
       'artist_id[eq]': artistId,
       offset,
       limit,
       'lot_image_presigned_url[empty]': false,
     })}${getSort(sort)}${getMedium(medium)}`,
-    fetcher
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    }
   )
 
   return {
     data: (artworkData?.data || []).map((d: ArtworkEntity) => Artwork.fromEntity(d)),
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     // ...artworkData?.meta,
-    isLoading: !error && !artworkData?.data,
-    isError: error,
+    isLoading: isValidating,
+    isError: !!error,
   }
 }
 
@@ -98,21 +101,24 @@ export const useArtworkSearchListData: (params: SearchListInputType) => ChartDat
   limit,
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: artworkData, error } = useSWR<ArtworkListEntity>(
+  const { data: artworkData, error, isValidating } = useSWR<ArtworkListEntity>(
     `/api/artworks?${queryString.stringify({
       'query[eq]': query,
       'artist_id[eq]': artistId,
       offset,
       limit,
     })}`,
-    fetcher
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    }
   )
 
   return {
     data: (artworkData?.data || []).map((d: ArtworkEntity) => Artwork.fromEntity(d)),
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     ...artworkData?.meta,
-    isLoading: !error && !artworkData?.data,
+    isLoading: isValidating,
     isError: error,
   }
 }

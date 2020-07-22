@@ -55,33 +55,36 @@ const ArtistLots: React.FC<Props> = ({ artist: { id } }) => {
   })
 
   useEffect(() => {
-    setArtworks([...artworks, ...data])
+    if (data.length) {
+      // omit re-reder triggering on empty data delta
+      setArtworks([...artworks, ...data])
+
+      if (!isLoading && data.length < limit) {
+        setHasMoreItems(false)
+      } else {
+        // setHasMoreItems(true)
+      }
+    }
   }, [isLoading])
 
-  useEffect(() => {
-    if (!isLoading && data.length < limit) setHasMoreItems(false)
+  const loadItems = useCallback(() => {
+    if (!isLoading) {
+      setPage(page + 1)
+    }
   }, [page, isLoading])
 
-  const loadItems = useCallback(() => {
-    setPage(page + 1)
-  }, [page, setPage])
+  const updateSort = useCallback((event: any) => {
+    setHasMoreItems(true)
+    setSort(event.target.value)
+    setPage(0)
+    setArtworks([])
+  }, [])
 
-  const updateSort = useCallback(
-    (event: any) => {
-      setSort(event.target.value)
-      setArtworks([])
-      setPage(0)
-    },
-    [setSort]
-  )
-
-  const updateMedium = useCallback(
-    (event: any) => {
-      setMedium(event.target.value)
-      setArtworks([])
-    },
-    [setMedium]
-  )
+  const updateMedium = useCallback((event: any) => {
+    setHasMoreItems(true)
+    setMedium(event.target.value)
+    setArtworks([])
+  }, [])
 
   return (
     <Container>
@@ -135,7 +138,12 @@ const ArtistLots: React.FC<Props> = ({ artist: { id } }) => {
         </Grid>
       </Grid>
       <Grid container>
-        <InfiniteScroll pageStart={0} loadMore={loadItems} hasMore={hasMoreItems && !isLoading}>
+        <InfiniteScroll
+          pageStart={0}
+          loadMore={loadItems}
+          hasMore={hasMoreItems && !isLoading}
+          initialLoad={false}
+        >
           <Grid container item spacing={5}>
             {artworks.map((artwork) => (
               <Grid key={artwork.id} item container justify="center" xs={12} sm={6} md={4}>
