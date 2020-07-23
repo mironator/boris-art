@@ -34,8 +34,6 @@ export const useArtistsListData: (inputText: string) => ArtistsData = (inputText
     }
   }, [inputText])
 
-  useEffect(() => console.log('controller', controller), [controller])
-
   return {
     data: (artistsData || []).map((d: ArtistEntity) => Artist.fromEntity(d)),
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
