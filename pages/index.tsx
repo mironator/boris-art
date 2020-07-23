@@ -1,5 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react'
-// import fetch from 'cross-fetch'
+import React, { useCallback, useState } from 'react'
 import { useRouter } from 'next/router'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Grid, TextField } from '@material-ui/core'
@@ -8,9 +7,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import { useDebounce } from 'use-debounce'
 
 import Layout from '@components/layout/Layout'
-import { Artist as IArtist, ArtistEntity } from '@interfaces/index'
-
-import Artist from '@models/Artist'
+import { useArtistsListData } from '@hooks/useArtistsData'
 
 const useStyles = makeStyles({
   root: {
@@ -42,9 +39,7 @@ const Search: React.FC<unknown> = () => {
   const router = useRouter()
   const [inputText, setInputText] = useState<string>('')
   const [debouncedInputText] = useDebounce(inputText, 300)
-
-  const [options, setOptions] = useState<IArtist[]>([])
-  const [loading, setLoading] = useState<boolean>(false)
+  const { data, isLoading } = useArtistsListData(debouncedInputText)
 
   const onArtistSelected = useCallback(
     (_, value, reason) => {
@@ -60,21 +55,6 @@ const Search: React.FC<unknown> = () => {
       // }
     }
   }, [])
-
-  useEffect(() => {
-    // eslint-disable-next-line
-    ; (async () => {
-      setLoading(true)
-      try {
-        const response = await fetch(`/api/artists?query=${debouncedInputText}`)
-        const artists = await response.json()
-
-        setOptions(artists.map((entity: ArtistEntity) => Artist.fromEntity(entity)))
-      } finally {
-        setLoading(false)
-      }
-    })()
-  }, [debouncedInputText])
 
   return (
     <Layout>
@@ -95,8 +75,8 @@ const Search: React.FC<unknown> = () => {
           }}
           getOptionSelected={(option, value) => option.name === value.name}
           getOptionLabel={(option) => option.name}
-          options={options}
-          loading={loading}
+          options={data}
+          loading={isLoading}
           onChange={onArtistSelected}
           onInputChange={onInputChange}
           renderInput={(params) => (
@@ -109,7 +89,7 @@ const Search: React.FC<unknown> = () => {
                 ...params.inputProps,
                 endadornment: (
                   <>
-                    {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                    {isLoading ? <CircularProgress color="inherit" size={20} /> : null}
                     {params.InputProps.endAdornment}
                   </>
                 ),
