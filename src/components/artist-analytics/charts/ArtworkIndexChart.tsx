@@ -10,8 +10,8 @@ import mediumList from '@hooks/mediumList'
 
 const useStyles = makeStyles(() =>
   createStyles({
-    root: {
-      minHeight: '456px',
+    loading: {
+      height: '400px',
     },
     sortLabel: {
       marginRight: '7px',
@@ -101,18 +101,8 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
     }
   }
 
-  if (!options || isLoading || !lineData.length) {
-    return (
-      <Grid container justify="center" alignItems="center" className={classes.root}>
-        <Grid item>
-          <CircularProgress />
-        </Grid>
-      </Grid>
-    )
-  }
-
   return (
-    <div className={classes.root}>
+    <>
       <Grid container direction="row" alignItems="center" justify="flex-end">
         <Typography className={classes.sortLabel}>Medium:</Typography>
         <Select value={medium} onChange={updateMedium}>
@@ -129,9 +119,16 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
           <MenuItem value={mediumList.worksOnPaper}>Works on paper</MenuItem>
         </Select>
       </Grid>
-
-      <HighchartsReact highcharts={Highcharts} options={options} constructorType="stockChart" />
-    </div>
+      {isLoading || !options || !lineData.length ? (
+        <Grid container justify="center" alignItems="center" className={classes.loading}>
+          <Grid item>
+            <CircularProgress />
+          </Grid>
+        </Grid>
+      ) : (
+        <HighchartsReact highcharts={Highcharts} options={options} constructorType="stockChart" />
+      )}
+    </>
   )
 }
 
