@@ -113,7 +113,7 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
 
   return (
     <div className={classes.root}>
-      <Grid container direction="row" alignItems="center">
+      <Grid container direction="row" alignItems="center" justify="flex-end">
         <Typography className={classes.sortLabel}>Medium:</Typography>
         <Select value={medium} onChange={updateMedium}>
           <MenuItem value={mediumList.all}>All</MenuItem>

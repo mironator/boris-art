@@ -32,7 +32,7 @@ export type ReturnsVsPeriodChartData = ChartData<IReturnsVsPeriodChartDatum>
 const getMedium = (medium: keyof typeof mediumList): string => {
   if (medium === mediumList.all) return ''
 
-  return `&medium_final[eq]=${medium}`
+  return `?medium_final[eq]=${medium}`
 }
 
 export const usePriceMomentumAndVolumeChartData: (
