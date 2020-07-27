@@ -16,6 +16,7 @@ import ArtworkIndexChartDatum from '@models/ArtworkIndexChartDatum'
 import CompoundAnnualReturnsChartDatum from '@models/CompoundAnnualReturnsChartDatum'
 import ReturnsVsPeriodChartDatum from '@models/ReturnsVsPeriodChartDatum'
 
+import mediumList from './mediumList'
 
 export type ChartData<T> = {
   data: T[]
@@ -27,6 +28,12 @@ export type PriceMomentumAndVolumeChartData = ChartData<IPriceMomentumChartDatum
 export type ArtworkIndexChartData = ChartData<IArtworkIndexChartDatum>
 export type CompoundAnnualReturnsChartData = ChartData<ICompoundAnnualReturnsChartDatum>
 export type ReturnsVsPeriodChartData = ChartData<IReturnsVsPeriodChartDatum>
+
+const getMedium = (medium: keyof typeof mediumList): string => {
+  if (medium === mediumList.all) return ''
+
+  return `?medium[eq]=${medium}`
+}
 
 export const usePriceMomentumAndVolumeChartData: (
   artistId: number
@@ -42,8 +49,14 @@ export const usePriceMomentumAndVolumeChartData: (
   }
 }
 
-export const useArtworkIndexChartData: (artistId: number) => ArtworkIndexChartData = (artistId) => {
-  const { data, error } = useSWR(`/api/charts/artwork-index/${artistId}`, fetcher)
+export const useArtworkIndexChartData: (
+  artistId: number,
+  medium: keyof typeof mediumList
+) => ArtworkIndexChartData = (artistId, medium) => {
+  const { data, error } = useSWR(
+    `/api/charts/artwork-index/${artistId}${getMedium(medium)}`,
+    fetcher
+  )
 
   return {
     data: (data || []).map((d: ArtworkIndexChartDatumEntity) =>
@@ -54,7 +67,9 @@ export const useArtworkIndexChartData: (artistId: number) => ArtworkIndexChartDa
   }
 }
 
-export const useCompoundAnnualReturnsChartData: (artistId: number) => CompoundAnnualReturnsChartData = (artistId) => {
+export const useCompoundAnnualReturnsChartData: (
+  artistId: number
+) => CompoundAnnualReturnsChartData = (artistId) => {
   const { data, error } = useSWR(`/api/charts/compound-annual-returns/${artistId}`, fetcher)
 
   return {
@@ -78,4 +93,9 @@ export const useReturnVsPeriodData: (artistId: number) => ReturnsVsPeriodChartDa
   }
 }
 
-export default { usePriceMomentumAndVolumeChartData, useArtworkIndexChartData, useCompoundAnnualReturnsChartData, useReturnVsPeriodData }
+export default {
+  usePriceMomentumAndVolumeChartData,
+  useArtworkIndexChartData,
+  useCompoundAnnualReturnsChartData,
+  useReturnVsPeriodData,
+}
