@@ -22,6 +22,8 @@ import ReturnsVsPeriodChartDatum from '@models/ReturnsVsPeriodChartDatum'
 import ComparablesChartDatum from '@models/ComparablesChartDatum'
 import ArtworkValueChartDatum from '@models/ArtworkValueChartDatum'
 
+import mediumList from './mediumList'
+
 export type ChartData<T> = {
   data: T[]
   isLoading: boolean
@@ -34,6 +36,12 @@ export type CompoundAnnualReturnsChartData = ChartData<ICompoundAnnualReturnsCha
 export type ReturnsVsPeriodChartData = ChartData<IReturnsVsPeriodChartDatum>
 export type ComparablesChartData = ChartData<IComparablesChartDatum>
 export type ArtworkValueChartData = ChartData<IArtworkValueChartDatum>
+
+const getMedium = (medium: keyof typeof mediumList): string => {
+  if (medium === mediumList.all) return ''
+
+  return `?medium[eq]=${medium}`
+}
 
 export const usePriceMomentumAndVolumeChartData: (
   artistId: number
@@ -49,8 +57,14 @@ export const usePriceMomentumAndVolumeChartData: (
   }
 }
 
-export const useArtworkIndexChartData: (artistId: number) => ArtworkIndexChartData = (artistId) => {
-  const { data, error } = useSWR(`/api/charts/artwork-index/${artistId}`, fetcher)
+export const useArtworkIndexChartData: (
+  artistId: number,
+  medium: keyof typeof mediumList
+) => ArtworkIndexChartData = (artistId, medium) => {
+  const { data, error } = useSWR(
+    `/api/charts/artwork-index/${artistId}${getMedium(medium)}`,
+    fetcher
+  )
 
   return {
     data: (data || []).map((d: ArtworkIndexChartDatumEntity) =>

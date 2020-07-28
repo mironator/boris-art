@@ -6,33 +6,8 @@ import { Artwork as IArtwork, ArtworkListEntity, ArtworkEntity } from '@interfac
 
 import Artwork from '@models/Artwork'
 
-export enum sortTypes {
-  featured = 'featured',
-  priceLowToHigh = 'price',
-  priceHighToLow = '-price',
-  lastPriceLowToHigh = 'last_price',
-  lastPriceHighToLow = '-last_price',
-  yearLastSoldLowToHigh = 'year_last_sold',
-  yearLastSoldHighToLow = '-year_last_sold',
-  creationYearLowToHigh = 'creation_year',
-  creationYearHighToLow = '-creation_year',
-  nameLowToHigh = 'name',
-  nameHighToLow = '-name',
-}
-
-export enum mediumList {
-  all = 'all',
-  paintings = 'paintings',
-  prints = 'prints',
-  undetermined = 'undetermined',
-  photographs = 'photographs',
-  jewelry = 'jewelry',
-  sculpture = 'sculpture',
-  furniture = 'furniture',
-  ceramics = 'ceramics',
-  other = 'other',
-  worksOnPaper = 'works on paper',
-}
+import sortTypes from './sortTypes'
+import mediumList from './mediumList'
 
 export type ChartData = {
   data: IArtwork[]

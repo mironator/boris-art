@@ -4,7 +4,9 @@ import { CircularProgress, Grid, MenuItem, Select, Typography } from '@material-
 import { Container } from 'next/app'
 import InfiniteScroll from 'react-infinite-scroller'
 
-import { useArtworkListData, sortTypes, mediumList } from '@hooks/useArtworkData'
+import { useArtworkListData } from '@hooks/useArtworkData'
+import sortTypes from '@hooks/sortTypes'
+import mediumList from '@hooks/mediumList'
 import { Artist, Artwork } from '@interfaces/index'
 import Lot from '@components/artist-lot'
 
