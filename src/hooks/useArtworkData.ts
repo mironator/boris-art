@@ -7,7 +7,7 @@ import { Artwork as IArtwork, ArtworkListEntity, ArtworkEntity } from '@interfac
 import Artwork from '@models/Artwork'
 
 import sortTypes from './sortTypes'
-import mediumList from './mediumList'
+import mediumTypes from './mediumTypes'
 
 export type ChartData = {
   data: IArtwork[]
@@ -23,7 +23,7 @@ type ListInputType = {
   offset: number
   limit: number
   sort: keyof typeof sortTypes
-  medium: keyof typeof mediumList
+  medium: keyof typeof mediumTypes
 }
 type SearchListInputType = { artistId?: number; query: string; offset: number; limit: number }
 
@@ -33,8 +33,8 @@ const getSort = (sort: keyof typeof sortTypes): string => {
   return `&sort=${sort}`
 }
 
-const getMedium = (medium: keyof typeof mediumList): string => {
-  if (medium === mediumList.all) return ''
+const getMedium = (medium: keyof typeof mediumTypes): string => {
+  if (medium === mediumTypes.all) return ''
 
   return `&medium_final[eq]=${medium}`
 }

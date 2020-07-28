@@ -3,6 +3,7 @@ import { Grid, Typography } from '@material-ui/core'
 
 import { Artist } from '@interfaces/index'
 import ArtworkIndexChart from './charts/ArtworkIndexChart'
+import ArtworkIndexAllCharts from './charts/ArtworkIndexAllCharts'
 import ReturnsVSHoldingPeriodChart from './charts/ReturnsVSHoldingPeriodChart'
 import CompoundAnnualReturns from './charts/CompoundAnnualReturns'
 
@@ -20,12 +21,20 @@ const ArtistAnalytics: React.FC<Props> = ({ artistInfo }) => {
     <Grid container direction="column" spacing={5}>
       <Grid item>
         <Typography variant="h5" component="h2">
+          Artwork All Index
+        </Typography>
+      </Grid>
+      <Grid item>
+        <ArtworkIndexAllCharts artistId={artistInfo.id} />
+      </Grid>
+      {/* <Grid item>
+        <Typography variant="h5" component="h2">
           Artwork Index
         </Typography>
       </Grid>
       <Grid item>
         <ArtworkIndexChart artistId={artistInfo.id} />
-      </Grid>
+      </Grid> */}
       <Grid item>
         <Typography variant="h5" component="h2">
           Annual Returns vs Holding Period

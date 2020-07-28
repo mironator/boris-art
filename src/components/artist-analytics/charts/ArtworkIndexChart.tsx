@@ -6,7 +6,7 @@ import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { CircularProgress, Grid, MenuItem, Select, Typography } from '@material-ui/core'
 
 import { useArtworkIndexChartData } from '@hooks/useChartData'
-import mediumList from '@hooks/mediumList'
+import mediumTypes from '@hooks/mediumTypes'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -29,7 +29,7 @@ type Props = {
 
 const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
   const classes = useStyles()
-  const [medium, setMedium] = useState<keyof typeof mediumList>(mediumList.all)
+  const [medium, setMedium] = useState<keyof typeof mediumTypes>(mediumTypes.all)
   const { data, isLoading, isError } = useArtworkIndexChartData(artistId, medium)
 
   const lineData = []
@@ -106,17 +106,17 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
       <Grid container direction="row" alignItems="center" justify="flex-end">
         <Typography className={classes.sortLabel}>Medium:</Typography>
         <Select value={medium} onChange={updateMedium}>
-          <MenuItem value={mediumList.all}>All</MenuItem>
-          <MenuItem value={mediumList.paintings}>Paintings</MenuItem>
-          <MenuItem value={mediumList.prints}>Prints</MenuItem>
-          <MenuItem value={mediumList.undetermined}>Undetermined</MenuItem>
-          <MenuItem value={mediumList.photographs}>Photographs</MenuItem>
-          <MenuItem value={mediumList.jewelry}>Jewelry</MenuItem>
-          <MenuItem value={mediumList.sculpture}>Sculpture</MenuItem>
-          <MenuItem value={mediumList.furniture}>Furniture</MenuItem>
-          <MenuItem value={mediumList.ceramics}>Ceramics</MenuItem>
-          <MenuItem value={mediumList.other}>Other</MenuItem>
-          <MenuItem value={mediumList.worksOnPaper}>Works on paper</MenuItem>
+          <MenuItem value={mediumTypes.all}>All</MenuItem>
+          <MenuItem value={mediumTypes.paintings}>Paintings</MenuItem>
+          <MenuItem value={mediumTypes.prints}>Prints</MenuItem>
+          <MenuItem value={mediumTypes.undetermined}>Undetermined</MenuItem>
+          <MenuItem value={mediumTypes.photographs}>Photographs</MenuItem>
+          <MenuItem value={mediumTypes.jewelry}>Jewelry</MenuItem>
+          <MenuItem value={mediumTypes.sculpture}>Sculpture</MenuItem>
+          <MenuItem value={mediumTypes.furniture}>Furniture</MenuItem>
+          <MenuItem value={mediumTypes.ceramics}>Ceramics</MenuItem>
+          <MenuItem value={mediumTypes.other}>Other</MenuItem>
+          <MenuItem value={mediumTypes.worksOnPaper}>Works on paper</MenuItem>
         </Select>
       </Grid>
       {isLoading || !options || !lineData.length ? (

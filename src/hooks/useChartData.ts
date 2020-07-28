@@ -16,7 +16,9 @@ import ArtworkIndexChartDatum from '@models/ArtworkIndexChartDatum'
 import CompoundAnnualReturnsChartDatum from '@models/CompoundAnnualReturnsChartDatum'
 import ReturnsVsPeriodChartDatum from '@models/ReturnsVsPeriodChartDatum'
 
-import mediumList from './mediumList'
+import mediumTypes from './mediumTypes'
+
+const mediumList = (Object.values(mediumTypes) as unknown) as Array<keyof typeof mediumTypes>
 
 export type ChartData<T> = {
   data: T[]
@@ -26,11 +28,15 @@ export type ChartData<T> = {
 
 export type PriceMomentumAndVolumeChartData = ChartData<IPriceMomentumChartDatum>
 export type ArtworkIndexChartData = ChartData<IArtworkIndexChartDatum>
+export type ArtworkIndexChartAllData = ChartData<{
+  data: IArtworkIndexChartDatum[]
+  name: keyof typeof mediumTypes
+}>
 export type CompoundAnnualReturnsChartData = ChartData<ICompoundAnnualReturnsChartDatum>
 export type ReturnsVsPeriodChartData = ChartData<IReturnsVsPeriodChartDatum>
 
-const getMedium = (medium: keyof typeof mediumList): string => {
-  if (medium === mediumList.all) return ''
+const getMedium = (medium: keyof typeof mediumTypes): string => {
+  if (medium === mediumTypes.all) return ''
 
   return `?medium[eq]=${medium}`
 }
@@ -51,7 +57,7 @@ export const usePriceMomentumAndVolumeChartData: (
 
 export const useArtworkIndexChartData: (
   artistId: number,
-  medium: keyof typeof mediumList
+  medium: keyof typeof mediumTypes
 ) => ArtworkIndexChartData = (artistId, medium) => {
   const { data, error } = useSWR(
     `/api/charts/artwork-index/${artistId}${getMedium(medium)}`,
@@ -64,6 +70,26 @@ export const useArtworkIndexChartData: (
     ),
     isLoading: !error && !data,
     isError: error,
+  }
+}
+
+export const useArtworkIndexChartAllData: (artistId: number) => ArtworkIndexChartAllData = (
+  artistId
+) => {
+  const allData = mediumList.map((item) => ({
+    ...useSWR(`/api/charts/artwork-index/${artistId}${getMedium(item)}`, fetcher),
+    name: item,
+  }))
+
+  return {
+    data: allData.map(({ name, data }) => ({
+      name,
+      data: (data || []).map((d: ArtworkIndexChartDatumEntity) =>
+        ArtworkIndexChartDatum.fromEntity(d)
+      ),
+    })),
+    isLoading: allData.some((item) => item.isValidating),
+    isError: allData.some((item) => item.error),
   }
 }
 
