@@ -8,11 +8,14 @@ import { useArtworkSearchListData } from '@hooks/useArtworkData'
 const SearchResultsComponent: React.FC<unknown> = () => {
   // const classes = useStyles({})
   const query = useContext<string>(SearchContext)
-  console.log('[INFO] SearchResultsComponent', query)
 
   console.log('[INFO] SearchResultsComponent:query', query)
 
-  const { data, /*isError, */isLoading } = useArtworkSearchListData({ query, offset: 0, limit: 5 })
+  const { data, /* isError, */ isLoading } = useArtworkSearchListData({
+    query,
+    offset: 0,
+    limit: 10,
+  })
 
   if (isLoading) {
     return <p>Loading...</p>

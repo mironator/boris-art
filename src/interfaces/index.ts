@@ -61,6 +61,46 @@ export type ReturnsVsPeriodChartDatum = {
   artworkId: number
 }
 
+export type ComparablesChartDatum = {
+  description: string
+  exhibited: unknown
+  lotImagePresignedUrl: string
+  lotImageSize: number
+  editionSize: number
+  literature: string
+  lotImageLoadError: unknown
+  mediumFinal: string
+  conditionIn: unknown
+  measurementsDepth: unknown
+  lotImageHeight: number
+  creationYear: number
+  markings: string
+  artistId: number
+  id: number
+  provenance: unknown
+  editionCurrent: number
+  imageLoadingStatus: string
+  materials: string
+  lotImageWidth: number
+  measurementsUnit: string
+  measurementsWidth: number
+  measurementsHeight: number
+  sizeNotes: string
+  name: string
+  lotImageS3Key: string
+  similarity: number
+  yearLastSold: number
+  lastPrice: number
+}
+
+export type ArtworkValueChartDatum = {
+  value: number
+  valueLow: number
+  soldFor: number
+  valueHigh: number
+  date: Date
+}
+
 export type PriceMomentumChartDatumEntity = {
   volume: number
   price_momentum: number
@@ -84,6 +124,44 @@ export type ReturnsVsPeriodChartDatumEntity = {
   artwork_id: number
 }
 
+export type ComparablesChartDatumEntity = {
+  description: string
+  exhibited: unknown
+  lot_image_presigned_url: string
+  lot_image_size: number
+  edition_size: number
+  literature: string
+  lot_image_load_error: unknown
+  medium_final: string
+  condition_in: unknown
+  measurements_depth: unknown
+  lot_image_height: number
+  creation_year: number
+  markings: string
+  artist_id: number
+  id: number
+  provenance: unknown
+  edition_current: number
+  image_loading_status: string
+  materials: string
+  lot_image_width: number
+  measurements_unit: string
+  measurements_width: number
+  measurements_height: number
+  size_notes: string
+  name: string
+  lot_image_s3_key: string
+  similarity: number
+}
+
+export type ArtworkValueChartDatumEntity = {
+  value: number
+  value_low: number
+  sold_for: number
+  value_high: number
+  date: string
+}
+
 export type Artwork = {
   creationYear: number
   sizeNotes: string
@@ -92,9 +170,9 @@ export type Artwork = {
   measurementsHeight: number
   lotImageHeight: number
   markings: string
-  literature: null
+  literature: string
   imageLoadingStatus: string
-  lotImageWidth: 624
+  lotImageWidth: number
   lotImagePresignedUrl: string
   measurementsUnit: string
   mediumFinal: string
@@ -123,7 +201,7 @@ export type ArtworkEntity = {
   measurements_height: number
   lot_image_height: number
   markings: string
-  literature: null
+  literature: string
   image_loading_status: string
   lot_image_width: 624
   lot_image_presigned_url: string

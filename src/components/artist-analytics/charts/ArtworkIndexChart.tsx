@@ -25,8 +25,8 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
     lineData.push([data[i].date.getTime(), data[i].index])
     volume.push([
       data[i].date.getTime(), // the date
-      data[i].volume // the volume
-    ]);
+      data[i].volume, // the volume
+    ])
   }
 
   let options: Highcharts.Options | null = null
@@ -42,22 +42,25 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
         text: '',
       },
 
-      yAxis: [{
-        labels: {
-          align: 'left'
+      yAxis: [
+        {
+          labels: {
+            align: 'left',
+          },
+          height: '80%',
+          resize: {
+            enabled: true,
+          },
         },
-        height: '80%',
-        resize: {
-          enabled: true
-        }
-      }, {
-        labels: {
-          align: 'left'
+        {
+          labels: {
+            align: 'left',
+          },
+          top: '80%',
+          height: '20%',
+          offset: 0,
         },
-        top: '80%',
-        height: '20%',
-        offset: 0
-      }],
+      ],
 
       series: [
         {
@@ -72,8 +75,8 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
           type: 'column',
           name: 'Artwork Volume',
           data: volume,
-          yAxis: 1
-        }
+          yAxis: 1,
+        },
       ],
     }
   }

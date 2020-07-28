@@ -19,11 +19,11 @@ export default class Artwork implements IArtwork {
 
   markings: string
 
-  literature: null
+  literature: string
 
   imageLoadingStatus: string
 
-  lotImageWidth: 624
+  lotImageWidth: number
 
   lotImagePresignedUrl: string
 
@@ -67,7 +67,7 @@ export default class Artwork implements IArtwork {
     measurementsHeight: number,
     lotImageHeight: number,
     markings: string,
-    literature: null,
+    literature: string,
     imageLoadingStatus: string,
     lotImageWidth: 624,
     lotImagePresignedUrl: string,

@@ -1,8 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
+import Router from 'next/router'
 import FsLightbox from 'fslightbox-react'
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
+import Button from '@material-ui/core/Button'
+import CardActions from '@material-ui/core/CardActions'
 import CardActionArea from '@material-ui/core/CardActionArea'
 import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
@@ -56,10 +59,22 @@ const LotCard: React.FC<Props> = ({
   const classes = useStyles()
   const [toggler, setToggler] = useState(false)
 
+  const goToDetails = useCallback(
+    (artworkId: number) => () => {
+      Router.push(`/artworks/${artworkId}`)
+    },
+    [id]
+  )
+
   return (
-    <Card className={classes.root} variant="outlined" onClick={() => setToggler(!toggler)}>
-      <CardActionArea>
-        <CardMedia className={classes.media} image={lotImagePresignedUrl} title={name} />
+    <Card className={classes.root} variant="outlined">
+      <CardActionArea onClick={() => setToggler(!toggler)}>
+        <CardMedia
+          className={classes.media}
+          image={lotImagePresignedUrl}
+          title={name}
+          component="img"
+        />
         <CardContent>
           <Typography gutterBottom variant="body1" component="h4">
             {name}
@@ -75,6 +90,14 @@ const LotCard: React.FC<Props> = ({
           </Typography>
         </CardContent>
       </CardActionArea>
+      <CardActions>
+        {/* <Button size="small" color="primary">
+          Share
+        </Button> */}
+        <Button size="small" color="primary" onClick={goToDetails(id)}>
+          Learn More
+        </Button>
+      </CardActions>
       <FsLightbox
         toggler={toggler}
         customSources={[

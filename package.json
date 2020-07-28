@@ -15,6 +15,7 @@
     "@types/fslightbox-react": "^1.4.0",
     "clsx": "latest",
     "cross-fetch": "^3.0.5",
+    "fslightbox-react": "^1.4.9",
     "highcharts": "8.1.2",
     "highcharts-react-official": "3.0.0",
     "lodash": "4.17.19",
@@ -45,7 +46,6 @@
     "eslint-plugin-prettier": "3.1.4",
     "eslint-plugin-react": "7.20.0",
     "eslint-plugin-react-hooks": "4.0.4",
-    "fslightbox-react": "^1.4.9",
     "prettier": "2.0.5",
     "typescript": "3.7.3"
   },
