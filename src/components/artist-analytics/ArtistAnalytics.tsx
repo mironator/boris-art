@@ -2,7 +2,7 @@ import React from 'react'
 import { Grid, Typography } from '@material-ui/core'
 
 import { Artist } from '@interfaces/index'
-import ArtworkIndexChart from './charts/ArtworkIndexChart'
+// import ArtworkIndexChart from './charts/ArtworkIndexChart'
 import ArtworkIndexAllCharts from './charts/ArtworkIndexAllCharts'
 import ReturnsVSHoldingPeriodChart from './charts/ReturnsVSHoldingPeriodChart'
 import CompoundAnnualReturns from './charts/CompoundAnnualReturns'
