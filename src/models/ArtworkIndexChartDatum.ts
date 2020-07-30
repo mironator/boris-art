@@ -5,7 +5,9 @@ import {
 
 export default class ArtworkIndexChartDatum implements IArtworkIndexChartDatum {
   index: number
+
   volume: number
+
   date: Date
 
   constructor(index: number, volume: number, date: Date) {

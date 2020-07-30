@@ -58,9 +58,11 @@ export default class ComparablesChartDatum implements IComparablesChartDatum {
 
   similarity: number
 
-  yearLastSold: number
-
   lastPrice: number
+
+  dateLastSold: Date
+
+  placeLastSold: string
 
   constructor(
     description: string,
@@ -90,8 +92,9 @@ export default class ComparablesChartDatum implements IComparablesChartDatum {
     name: string,
     lotImageS3Key: string,
     similarity: number,
-    yearLastSold: number,
-    lastPrice: number
+    lastPrice: number,
+    dateLastSold: Date,
+    placeLastSold: string
   ) {
     this.description = description
     this.exhibited = exhibited
@@ -120,8 +123,9 @@ export default class ComparablesChartDatum implements IComparablesChartDatum {
     this.name = name
     this.lotImageS3Key = lotImageS3Key
     this.similarity = similarity
-    this.yearLastSold = yearLastSold
     this.lastPrice = lastPrice
+    this.dateLastSold = dateLastSold
+    this.placeLastSold = placeLastSold
   }
 
   static fromEntity(entity: ComparablesChartDatumEntity): ComparablesChartDatum {
@@ -153,8 +157,9 @@ export default class ComparablesChartDatum implements IComparablesChartDatum {
       entity.name,
       entity.lot_image_s3_key,
       entity.similarity,
-      Math.round(Math.random() * 50) + 1970,
-      Math.round(Math.random() * 1e6)
+      entity.last_price,
+      entity.date_last_sold,
+      entity.place_last_sold
     )
   }
 }

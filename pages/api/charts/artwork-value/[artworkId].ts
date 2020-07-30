@@ -10,23 +10,29 @@ const handler: (_req: NextApiRequest, res: NextApiResponse) => Promise<void> = a
     const data = await apiRes.json()
 
     // {
-    //   "payload": {
-    //     "artwork_value_chart": [
-    //       {
-    //         "value": 15108,
-    //         "value_low": 14853,
-    //         "sold_for": 31826.5,
-    //         "value_high": 15393,
-    //         "date": "2006-10-01"
-    //       },
+    //   "artwork_value_chart": {
+    //     "values": [
+    //       [
+    //         66835,
+    //         62811,
+    //         71534,
+    //         "1993-04-01"
+    //       ],
+    //       ...
+    //     ],
+    //     "sales": [
+    //       [
+    //         81239,
+    //         68000,
+    //         true,
+    //         "1993-05-04",
+    //         "MP",
+    //         "Christie's",
+    //         null
+    //       ],
+    //       ...
 
-    const {
-      payload: { artwork_value_chart: chartData },
-    } = data
-
-    if (!Array.isArray(chartData)) {
-      throw new Error(`Cannot find chart data`)
-    }
+    const { artwork_value_chart: chartData } = data
 
     res.status(200).json(chartData)
   } catch (err) {

@@ -1,34 +1,31 @@
 import {
   ArtworkValueChartDatum as IArtworkValueChartDatum,
   ArtworkValueChartDatumEntity,
+  ArtworkValueChartSalesDatumEntity,
+  ArtworkValueChartValuesDatumEntity,
 } from '@interfaces/index'
 
+import ArtworkValueChartSalesDatum from '@models/ArtworkValueChartSalesDatum'
+import ArtworkValueChartValuesDatum from '@models/ArtworkValueChartValuesDatum'
+
 export default class ArtworkValueChartDatum implements IArtworkValueChartDatum {
-  value: number
+  sales: ArtworkValueChartSalesDatum[]
 
-  valueLow: number
+  values: ArtworkValueChartValuesDatum[]
 
-  soldFor: number
-
-  valueHigh: number
-
-  date: Date
-
-  constructor(value: number, valueLow: number, soldFor: number, valueHigh: number, date: string) {
-    this.value = value
-    this.valueLow = valueLow
-    this.soldFor = soldFor
-    this.valueHigh = valueHigh
-    this.date = new Date(date)
+  constructor(sales: ArtworkValueChartSalesDatum[], values: ArtworkValueChartValuesDatum[]) {
+    this.sales = sales
+    this.values = values
   }
 
   static fromEntity(entity: ArtworkValueChartDatumEntity): ArtworkValueChartDatum {
     return new ArtworkValueChartDatum(
-      entity.value,
-      entity.value_low,
-      entity.sold_for,
-      entity.value_high,
-      entity.date
+      entity.sales.map((sale: ArtworkValueChartSalesDatumEntity) =>
+        ArtworkValueChartSalesDatum.fromEntity(sale)
+      ),
+      entity.values.map((value: ArtworkValueChartValuesDatumEntity) =>
+        ArtworkValueChartValuesDatum.fromEntity(value)
+      )
     )
   }
 }

@@ -89,16 +89,14 @@ export type ComparablesChartDatum = {
   name: string
   lotImageS3Key: string
   similarity: number
-  yearLastSold: number
   lastPrice: number
+  dateLastSold: Date
+  placeLastSold: string
 }
 
 export type ArtworkValueChartDatum = {
-  value: number
-  valueLow: number
-  soldFor: number
-  valueHigh: number
-  date: Date
+  sales: ArtworkValueChartSalesDatum[]
+  values: ArtworkValueChartValuesDatum[]
 }
 
 export type PriceMomentumChartDatumEntity = {
@@ -125,6 +123,8 @@ export type ReturnsVsPeriodChartDatumEntity = {
 }
 
 export type ComparablesChartDatumEntity = {
+  date_last_sold: Date
+  place_last_sold: string
   description: string
   exhibited: unknown
   lot_image_presigned_url: string
@@ -150,20 +150,49 @@ export type ComparablesChartDatumEntity = {
   measurements_height: number
   size_notes: string
   name: string
+  last_price: number
   lot_image_s3_key: string
   similarity: number
 }
 
 export type ArtworkValueChartDatumEntity = {
+  sales: ArtworkValueChartSalesDatumEntity[]
+  values: ArtworkValueChartValuesDatumEntity[]
+}
+
+export type ArtworkValueChartSalesDatumEntity = [
+  number,
+  number,
+  boolean,
+  string,
+  string,
+  string,
+  string
+]
+
+export type ArtworkValueChartSalesDatum = {
+  artworkId: number
+  price: number
+  isRepeatSale: boolean
+  date: Date
+  artworkName: string
+  auctionHouseName: string
+  url: string
+}
+
+export type ArtworkValueChartValuesDatumEntity = [number, number, number, string]
+
+export type ArtworkValueChartValuesDatum = {
   value: number
-  value_low: number
-  sold_for: number
-  value_high: number
-  date: string
+  valueLow: number
+  valueHigh: number
+  date: Date
 }
 
 export type Artwork = {
   creationYear: number
+  dateLastSold: Date
+  placeLastSold: string
   sizeNotes: string
   lotImageS3Key: string
   exhibited: unknown | null
@@ -189,12 +218,13 @@ export type Artwork = {
   measurementsWidth: number
   lotImageSize: number
   description: string
-  yearLastSold: number
   lastPrice: number
 }
 
 export type ArtworkEntity = {
   creation_year: number
+  date_last_sold: string
+  place_last_sold: string
   size_notes: string
   lot_image_s3_key: string
   exhibited: unknown | null
@@ -220,6 +250,5 @@ export type ArtworkEntity = {
   measurements_width: number
   lot_image_size: number
   description: string
-  year_last_sold: number
   last_price: number
 }

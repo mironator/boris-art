@@ -53,9 +53,11 @@ export default class Artwork implements IArtwork {
 
   description: string
 
-  yearLastSold: number
-
   lastPrice: number
+
+  dateLastSold: Date
+
+  placeLastSold: string
 
   constructor(
     id: number,
@@ -84,8 +86,9 @@ export default class Artwork implements IArtwork {
     measurementsWidth: number,
     lotImageSize: number,
     description: string,
-    yearLastSold: number,
-    lastPrice: number
+    lastPrice: number,
+    dateLastSold: Date,
+    placeLastSold: string
   ) {
     this.id = id
     this.name = name
@@ -113,8 +116,9 @@ export default class Artwork implements IArtwork {
     this.measurementsWidth = measurementsWidth
     this.lotImageSize = lotImageSize
     this.description = description
-    this.yearLastSold = yearLastSold
     this.lastPrice = lastPrice
+    this.dateLastSold = dateLastSold
+    this.placeLastSold = placeLastSold
   }
 
   static fromEntity(entity: ArtworkEntity): Artwork {
@@ -145,8 +149,9 @@ export default class Artwork implements IArtwork {
       entity.measurements_width,
       entity.lot_image_size,
       entity.description,
-      entity.year_last_sold,
-      entity.last_price
+      entity.last_price,
+      new Date(entity.date_last_sold),
+      entity.place_last_sold
     )
   }
 }

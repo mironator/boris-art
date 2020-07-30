@@ -2,7 +2,7 @@ import React from 'react'
 import { Grid } from '@material-ui/core'
 import Highcharts from 'highcharts/highstock'
 import HighchartsExporting from 'highcharts/modules/exporting'
-import HighchartsReact from 'highcharts-react-official'
+// import HighchartsReact from 'highcharts-react-official'
 
 import { useComparablesChartData } from '@hooks/useChartData'
 import Artwork from '@models/Artwork'
@@ -20,7 +20,7 @@ type Props = {
 const ArtworkComparables: React.FC<Props> = ({ artwork }) => {
   const { id } = artwork
 
-  const { data, isLoading, isError } = useComparablesChartData(id)
+  const { data, isLoading /* , isError */ } = useComparablesChartData(id)
 
   const chartData = []
 
@@ -33,46 +33,46 @@ const ArtworkComparables: React.FC<Props> = ({ artwork }) => {
     })
   }
 
-  let options: Highcharts.Options | null = null
+  //  let options: Highcharts.Options | null = null
 
-  if (data && !isLoading && !isError) {
-    // @ts-ignore
-    options = {
-      tooltip: {
-        useHTML: true,
-        pointFormat: `
-          <div style="display: table">
-            <img 
-              src = "{point.lotImagePresignedUrl}"
-              width="55"
-              height="45"
-              style="float:left;margin: 0 10px 10px 0"/>
-            <div style="white-space: normal;width: 200px">{point.name}</div>
-          </div>
-          <span>Auction house</span> <span>Sotheby's</span>
-          <br/>
-          <span>Sale date</span> <span>Apr 2, 2005</span>
-          <br/>
-          <span>Sold for</span> <span>\${point.lotImageSize}</span>
-          <br/>
-          `,
-      },
-      series: [
-        {
-          type: 'line',
-          name: 'Artwork Index',
-          // @ts-ignore
-          data: chartData,
-        },
-      ],
-    }
-  }
-  if (!options || isLoading || !chartData.length) {
+  // if (data && !isLoading && !isError) {
+  //   // @ts-ignore
+  //   options = {
+  //     tooltip: {
+  //       useHTML: true,
+  //       pointFormat: `
+  //         <div style="display: table">
+  //           <img
+  //             src = "{point.lotImagePresignedUrl}"
+  //             width="55"
+  //             height="45"
+  //             style="float:left;margin: 0 10px 10px 0"/>
+  //           <div style="white-space: normal;width: 200px">{point.name}</div>
+  //         </div>
+  //         <span>Auction house</span> <span>Sotheby's</span>
+  //         <br/>
+  //         <span>Sale date</span> <span>Apr 2, 2005</span>
+  //         <br/>
+  //         <span>Sold for</span> <span>\${point.lotImageSize}</span>
+  //         <br/>
+  //         `,
+  //     },
+  //     series: [
+  //       {
+  //         type: 'line',
+  //         name: 'Artwork Index',
+  //         // @ts-ignore
+  //         data: chartData,
+  //       },
+  //     ],
+  //   }
+  // }
+  if (isLoading) {
     return <div>Loading...</div>
   }
   return (
     <>
-      <HighchartsReact highcharts={Highcharts} options={options} constructorType="stockChart" />
+      {/* <HighchartsReact highcharts={Highcharts} options={options} constructorType="stockChart" /> */}
       <Grid container item spacing={5}>
         {data.map((item) => (
           <Grid key={item.id} item container justify="center" xs={12} sm={6} md={4}>
