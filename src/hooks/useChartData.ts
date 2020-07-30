@@ -77,7 +77,9 @@ export const useArtworkIndexChartAllData: (artistId: number) => ArtworkIndexChar
   artistId
 ) => {
   const allData = mediumList.map((item) => ({
-    ...useSWR(`/api/charts/artwork-index/${artistId}${getMedium(item)}`, fetcher),
+    ...useSWR(`/api/charts/artwork-index/${artistId}${getMedium(item)}`, fetcher, {
+      revalidateOnFocus: false,
+    }),
     name: item,
   }))
 
