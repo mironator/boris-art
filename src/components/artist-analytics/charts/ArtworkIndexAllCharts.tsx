@@ -53,7 +53,7 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
 
   const seriesLine = filteredData.map(({ name, data: items }) => ({
     type: 'line',
-    name: `Artwork ${name} index`,
+    name: `${name}`,
     id: `${name}index`,
     data: items.map((item) => [item.date.getTime(), item.index]),
     tooltip: {
@@ -65,7 +65,7 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
     .filter(({ name }) => name === mediumTypes.all)
     .map(({ name, data: items }) => ({
       type: 'column',
-      name: `Artwork ${name} volume`,
+      name: `${name} volume`,
       id: `${name}volume`,
       data: items.map((item) => [item.date.getTime(), item.volume]),
       yAxis: 1,
@@ -103,6 +103,14 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
           offset: 0,
         },
       ],
+
+      legend: {
+        enabled: true,
+        align: 'left',
+        verticalAlign: 'top',
+        layout: 'vertical',
+        x: 200,
+      },
 
       series: [...seriesLine, ...columnLine] as Highcharts.SeriesOptionsType[],
     }
