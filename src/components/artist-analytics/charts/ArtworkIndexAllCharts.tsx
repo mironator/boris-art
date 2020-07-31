@@ -106,10 +106,9 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
 
       legend: {
         enabled: true,
-        align: 'left',
-        verticalAlign: 'top',
-        layout: 'vertical',
-        x: 200,
+        align: 'center',
+        verticalAlign: 'bottom',
+        layout: 'horizontal',
       },
 
       series: [...seriesLine, ...columnLine] as Highcharts.SeriesOptionsType[],
