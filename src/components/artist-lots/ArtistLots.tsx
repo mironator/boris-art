@@ -127,11 +127,11 @@ const ArtistLots: React.FC<Props> = ({ artist: { id } }) => {
               <MenuItem value={sortTypes.lastPriceHighToLow}>
                 Last price realized - High to Low
               </MenuItem>
-              <MenuItem value={sortTypes.yearLastSoldLowToHigh}>
-                Year last sold - Low to High
+              <MenuItem value={sortTypes.dateLastSoldLowToHigh}>
+                Date last sold - Low to High
               </MenuItem>
-              <MenuItem value={sortTypes.yearLastSoldHighToLow}>
-                Year last sold - High to Low
+              <MenuItem value={sortTypes.dateLastSoldHighToLow}>
+                Date last sold - High to Low
               </MenuItem>
               <MenuItem value={sortTypes.nameLowToHigh}>Title - A to Z</MenuItem>
               <MenuItem value={sortTypes.nameHighToLow}>Title - Z to A</MenuItem>

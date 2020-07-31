@@ -77,7 +77,7 @@ export const useArtworkSearchListData: (params: SearchListInputType) => ChartDat
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: artworkData, error, isValidating } = useSWR<ArtworkListEntity>(
-    `/api/artworks?${queryString.stringify({
+    `/api/artworks/search?${queryString.stringify({
       'query[eq]': query,
       'artist_id[eq]': artistId,
       offset,

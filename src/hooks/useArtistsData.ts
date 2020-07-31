@@ -33,7 +33,7 @@ export const useArtistsListData: (inputText: string) => ArtistsData = (inputText
 
   useEffect(() => {
     if (isValidating) {
-      controllers.forEach((controller) => controller.abort())
+      controllers.forEach((c) => c.abort())
       setControllers([controller])
     } else {
       setControllers([...controllers, controller])
