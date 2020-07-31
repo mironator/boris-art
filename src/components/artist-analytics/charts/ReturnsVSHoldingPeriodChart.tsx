@@ -28,15 +28,15 @@ const ReturnsVSHoldingPeriodChart: React.FC<Props> = ({ artistId }) => {
 
   let options: Highcharts.Options | null = null
 
-  if (true /*data && !isLoading && !isError*/) {
+  if (true /* data && !isLoading && !isError */) {
     // @ts-ignore
     options = {
       chart: {
         type: 'scatter',
-        zoomType: 'xy'
+        zoomType: 'xy',
       },
       navigator: {
-        enabled: false
+        enabled: false,
       },
       scrollbar: {
         enabled: false,
@@ -45,25 +45,25 @@ const ReturnsVSHoldingPeriodChart: React.FC<Props> = ({ artistId }) => {
         enabled: false,
       },
       rangeSelector: {
-        enabled: false
+        enabled: false,
       },
       title: {
-        text: 'Realized Compound Annual Returns (%) against Holding Period'
+        text: 'Realized Compound Annual Returns (%) against Holding Period',
       },
       xAxis: {
         type: 'linear',
         title: {
           // enabled: true,
-          text: 'Holding Period (Years)'
+          text: 'Holding Period (Years)',
         },
         labels: {
-          formatter: (x: any) => `${Math.round(x['value'] / 12)}`
-        }
+          formatter: (x: any) => `${Math.round(x.value / 12)}`,
+        },
       },
       yAxis: {
         title: {
           // enabled: true,
-          text: 'Realized CAR (%)'
+          text: 'Realized CAR (%)',
         },
       },
       plotOptions: {
@@ -73,23 +73,26 @@ const ReturnsVSHoldingPeriodChart: React.FC<Props> = ({ artistId }) => {
             states: {
               hover: {
                 enabled: true,
-                lineColor: 'rgb(100,100,100)'
-              }
-            }
+                lineColor: 'rgb(100,100,100)',
+              },
+            },
           },
           tooltip: {
             // headerFormat: '<b>{series.name}</b><br>',
-            pointFormat: 'Holding Period (Months): <b>{point.x}</b><br/>Realized CAR (%): <b>{point.y}</b><br/>Index: <b>{point.label}</b>'
+            pointFormat:
+              'Holding Period (Months): <b>{point.x}</b><br/>Realized CAR (%): <b>{point.y}</b><br/>Index: <b>{point.label}</b>',
           },
         },
       },
-      series: [{
-        name: 'Index',
-        type: 'scatter',
-        color: 'rgba(223, 83, 83, .5)',
-        // @ts-ignore
-        data: _.take(chartData, 1e3) /* TODO: fix performance issue & remove this limit */
-      },]
+      series: [
+        {
+          name: 'Index',
+          type: 'scatter',
+          color: 'rgba(223, 83, 83, .5)',
+          // @ts-ignore
+          data: _.take(chartData, 1e3) /* TODO: fix performance issue & remove this limit */,
+        },
+      ],
     }
   }
 
