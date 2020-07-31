@@ -84,12 +84,12 @@ export const useArtworkIndexChartAllData: (artistId: number) => ArtworkIndexChar
   }))
 
   return {
-    data: allData.map(({ name, data }) => ({
-      name,
-      data: (data || []).map((d: ArtworkIndexChartDatumEntity) =>
-        ArtworkIndexChartDatum.fromEntity(d)
-      ),
-    })),
+    data: allData
+      .filter(({ data }) => data && data.length)
+      .map(({ name, data }) => ({
+        name,
+        data: data.map((d: ArtworkIndexChartDatumEntity) => ArtworkIndexChartDatum.fromEntity(d)),
+      })),
     isLoading: allData.some((item) => item.isValidating),
     isError: allData.some((item) => item.error),
   }

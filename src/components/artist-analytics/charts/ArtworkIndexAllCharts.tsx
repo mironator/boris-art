@@ -8,15 +8,13 @@ import { CircularProgress, Grid, MenuItem, Select } from '@material-ui/core'
 import { useArtworkIndexChartAllData } from '@hooks/useChartData'
 import mediumTypes from '@hooks/mediumTypes'
 
-const mediumKeys = (Object.values(mediumTypes) as unknown) as Array<keyof typeof mediumTypes>
-
 const useStyles = makeStyles(() =>
   createStyles({
     loading: {
       height: '400px',
     },
-    sortLabel: {
-      marginRight: '7px',
+    menuItem: {
+      textTransform: 'capitalize',
     },
   })
 )
@@ -31,7 +29,7 @@ type Props = {
 
 const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
   const classes = useStyles()
-  const [medium, setMedium] = useState<Array<keyof typeof mediumTypes>>(mediumKeys)
+  const [medium, setMedium] = useState<Array<keyof typeof mediumTypes>>([])
   const { data, isLoading, isError } = useArtworkIndexChartAllData(artistId)
   const [filteredData, setFilteredData] = useState(data)
 
@@ -44,6 +42,12 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
       setFilteredData(newData)
     }
   }, [isLoading, medium])
+
+  useEffect(() => {
+    if (data && !isLoading && !isError) {
+      setMedium(data.map((item) => item.name))
+    }
+  }, [isLoading])
 
   const updateMedium = useCallback((event: any) => {
     setMedium(event.target.value)
@@ -116,17 +120,11 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
           renderValue={() => 'Medium'}
           onChange={updateMedium}
         >
-          <MenuItem value={mediumTypes.all}>All</MenuItem>
-          <MenuItem value={mediumTypes.paintings}>Paintings</MenuItem>
-          <MenuItem value={mediumTypes.prints}>Prints</MenuItem>
-          <MenuItem value={mediumTypes.undetermined}>Undetermined</MenuItem>
-          <MenuItem value={mediumTypes.photographs}>Photographs</MenuItem>
-          <MenuItem value={mediumTypes.jewelry}>Jewelry</MenuItem>
-          <MenuItem value={mediumTypes.sculpture}>Sculpture</MenuItem>
-          <MenuItem value={mediumTypes.furniture}>Furniture</MenuItem>
-          <MenuItem value={mediumTypes.ceramics}>Ceramics</MenuItem>
-          <MenuItem value={mediumTypes.other}>Other</MenuItem>
-          <MenuItem value={mediumTypes.worksOnPaper}>Works on paper</MenuItem>
+          {data.map((item) => (
+            <MenuItem key={item.name} className={classes.menuItem} value={item.name}>
+              {item.name}
+            </MenuItem>
+          ))}
         </Select>
       </Grid>
       {isLoading ? (
