@@ -59,6 +59,12 @@ export type ReturnsVsPeriodChartDatum = {
   period: number
   car: number
   artworkId: number
+  price: number
+  date: Date
+  artworkName: string
+  auctionHouseName: string
+  url: string
+  medium: string
 }
 
 export type ComparablesChartDatum = {
@@ -116,11 +122,17 @@ export type CompoundAnnualReturnsChartDatumEntity = {
   date: string
 }
 
-export type ReturnsVsPeriodChartDatumEntity = {
-  period: number
-  car: number
-  artwork_id: number
-}
+export type ReturnsVsPeriodChartDatumEntity = [
+  number,
+  number,
+  number,
+  number,
+  string,
+  string,
+  string,
+  string,
+  string
+]
 
 export type ComparablesChartDatumEntity = {
   date_last_sold: Date

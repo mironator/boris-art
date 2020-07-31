@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import _ from 'lodash'
 import Highcharts from 'highcharts/highstock'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
 
 import { useReturnVsPeriodData } from '@hooks/useChartData'
+import mediumTypes from '@hooks/mediumTypes'
+import { ReturnsVsPeriodChartDatum } from '@interfaces/index'
 
 if (typeof Highcharts === 'object') {
   HighchartsExporting(Highcharts)
@@ -14,21 +16,37 @@ type Props = {
   artistId: number
 }
 
+type PartialRecord<K extends string | number | symbol, T> = {
+  [P in K]?: T
+}
+
+type GroupedByMeduim = PartialRecord<keyof typeof mediumTypes, ReturnsVsPeriodChartDatum[]>
+
 const ReturnsVSHoldingPeriodChart: React.FC<Props> = ({ artistId }) => {
-  const { data, isLoading, isError } = useReturnVsPeriodData(artistId)
+  const { data, isLoading /* , isError */ } = useReturnVsPeriodData(artistId)
+  const [dataByMedium, setDataByMeduim] = useState<GroupedByMeduim>({
+    ceramics: [],
+  })
 
-  const chartData = []
-  const dataLength = data.length
-  let i = 0
-
-  for (i; i < dataLength; i += 1) {
-    // @ts-ignore
-    chartData.push({ x: data[i].period, y: data[i].car, label: data[i].artworkId })
-  }
+  useEffect(() => {
+    const foo = _.take(data, 100).map((d) => ({
+      x: d.period,
+      y: d.car,
+      ...d,
+    }))
+    setDataByMeduim(_.groupBy(foo, 'medium'))
+  }, [data.length])
 
   let options: Highcharts.Options | null = null
 
-  if (true /* data && !isLoading && !isError */) {
+  if (data && !isLoading) {
+    const series = Object.keys(dataByMedium).map((key) => ({
+      name: key,
+      type: 'scatter',
+      // @ts-ignore
+      data: dataByMedium[key] /* TODO: fix performance issue & remove this limit */,
+    }))
+
     // @ts-ignore
     options = {
       chart: {
@@ -40,6 +58,9 @@ const ReturnsVSHoldingPeriodChart: React.FC<Props> = ({ artistId }) => {
       },
       scrollbar: {
         enabled: false,
+      },
+      tooltip: {
+        useHTML: true,
       },
       exporting: {
         enabled: false,
@@ -66,6 +87,12 @@ const ReturnsVSHoldingPeriodChart: React.FC<Props> = ({ artistId }) => {
           text: 'Realized CAR (%)',
         },
       },
+      legend: {
+        enabled: true,
+        align: 'center',
+        verticalAlign: 'bottom',
+        layout: 'horizontal',
+      },
       plotOptions: {
         scatter: {
           marker: {
@@ -79,24 +106,36 @@ const ReturnsVSHoldingPeriodChart: React.FC<Props> = ({ artistId }) => {
           },
           tooltip: {
             // headerFormat: '<b>{series.name}</b><br>',
-            pointFormat:
-              'Holding Period (Months): <b>{point.x}</b><br/>Realized CAR (%): <b>{point.y}</b><br/>Index: <b>{point.label}</b>',
+            pointFormat: `
+              <div style="display: table">
+                <img
+                  src = "{point.url}"
+                  width="55"
+                  height="45"
+                  style="float:left;margin: 0 10px 10px 0"/>
+                <div style="white-space: normal;width: 200px">{point.artworkName}</div>
+              </div>
+              <span>Auction house</span> <span>{point.auctionHouseName}</span>
+              <br/>
+              <span>Sale date</span> <span>{point.date}</span>
+              <br/>
+              <span>Sold for: </span> <span>\${point.price}</span>
+              <br/>
+              <span>Holding Period (Months):</span>{point.x}<span></span>
+              <br/>
+              <span>Realized CAR (%): </span> <span>{point.y}</span>
+              <br/>
+              <span>Index: </span> <span>{point.artworkId}</span>
+              <br/>
+              `,
           },
         },
       },
-      series: [
-        {
-          name: 'Index',
-          type: 'scatter',
-          color: 'rgba(223, 83, 83, .5)',
-          // @ts-ignore
-          data: _.take(chartData, 1e3) /* TODO: fix performance issue & remove this limit */,
-        },
-      ],
+      series,
     }
   }
 
-  if (!options || isLoading || !chartData.length || isError) {
+  if (!options || isLoading) {
     return <div>Loading...</div>
   }
 
