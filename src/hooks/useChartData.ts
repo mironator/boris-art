@@ -113,7 +113,7 @@ export const useReturnVsPeriodData: (artistId: number) => ReturnsVsPeriodChartDa
   const { data, error } = useSWR(`/api/charts/returns-vs-period/${artistId}`, fetcher)
 
   return {
-    data: (data || []).map((d: ReturnsVsPeriodChartDatumEntity) =>
+    data: (Array.isArray(data) ? data : []).map((d: ReturnsVsPeriodChartDatumEntity) =>
       ReturnsVsPeriodChartDatum.fromEntity(d)
     ),
     isLoading: !error && !data,

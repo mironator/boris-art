@@ -35,9 +35,7 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
 
   useEffect(() => {
     if (data && !isLoading && !isError) {
-      const newData = data.filter((item) =>
-        medium.some((mediumItem) => mediumItem === mediumTypes[item.name])
-      )
+      const newData = data.filter((item) => medium.some((mediumItem) => mediumItem === item.name))
 
       setFilteredData(newData)
     }
