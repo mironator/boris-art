@@ -26,7 +26,7 @@ const handler: (_req: NextApiRequest, res: NextApiResponse) => Promise<void> = a
     //       },
 
     const {
-      payload: { returns_vs_period_chart: chartData },
+      returns_vs_period_chart: { points: chartData },
     } = data
 
     if (!Array.isArray(chartData)) {
