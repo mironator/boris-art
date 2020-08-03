@@ -29,20 +29,25 @@ const ArtworkValue: React.FC<Props> = ({ artwork }) => {
 
   const chartData = []
   const valueData = []
-  const soldForSeriesData = []
+  let soldForSeriesData = []
+  let similarSalesSeriesData = []
 
   for (let i = 0; i < values.length; i += 1) {
     chartData.push([new Date(values[i].date).getTime(), values[i].valueLow, values[i].valueHigh])
     valueData.push([new Date(values[i].date).getTime(), values[i].value])
   }
 
-  for (let i = 0; i < sales.length; i += 1) {
-    soldForSeriesData.push({ x: new Date(sales[i].date).getTime(), y: sales[i].price, ...sales[i] })
-  }
+  similarSalesSeriesData = sales
+    .filter((s) => s.isRepeatSale)
+    .map((s) => ({ x: new Date(s.date).getTime(), y: s.price, ...s }))
+  soldForSeriesData = sales
+    .filter((s) => !s.isRepeatSale)
+    .map((s) => ({ x: new Date(s.date).getTime(), y: s.price, ...s }))
 
   let options: Highcharts.Options | null = null
 
   if (values && !isLoading && !isError) {
+    // @ts-ignore
     options = {
       chart: {
         zoomType: 'xy',
@@ -68,6 +73,19 @@ const ArtworkValue: React.FC<Props> = ({ artwork }) => {
           name: '',
           type: 'arearange',
           data: chartData,
+          tooltip: {
+            // @ts-ignore
+            pointFormatter() {
+              return false
+            },
+          },
+          lineWidth: 0,
+          color: '#e0860433',
+          states: {
+            hover: {
+              lineWidthPlus: 0,
+            },
+          },
         },
         {
           name: 'Value',
@@ -76,16 +94,68 @@ const ArtworkValue: React.FC<Props> = ({ artwork }) => {
           tooltip: {
             valueDecimals: 2,
           },
+          color: '#e08604ae',
         },
         {
-          name: 'Sold for',
+          name: 'Similar Sales',
           color: '#e08604',
           data: soldForSeriesData,
           type: 'line',
           lineWidth: 0,
           marker: {
             enabled: true,
-            radius: 7,
+            radius: 5,
+            symbol: 'circle',
+          },
+          tooltip: {
+            pointFormatter() {
+              // @ts-ignore
+              const {
+                url,
+                artworkName,
+                auctionHouseName,
+                date,
+                price,
+              }: {
+                url: string
+                artworkName: string
+                auctionHouseName: string
+                date: Date
+                price: number
+              } = this
+              return `
+                <div style="display: table">
+                  <img
+                    src = "${url}"
+                    width="55"
+                    height="45"
+                    style="float:left;margin: 0 10px 10px 0"/>
+                  <div style="white-space: normal;width: 200px"><strong>${artworkName}</strong></div>
+                </div>
+                <strong>Auction house:</strong> <span>${auctionHouseName}</span>
+                <br/>
+                <strong>Sale date:</strong> <span>${moment(date).format('LL')}</span>
+                <br/>
+                <strong>Sold for:</strong> <span>${priceFormatter(price)}</span>
+                <br/>
+              `
+            },
+          },
+          states: {
+            hover: {
+              lineWidthPlus: 0,
+            },
+          },
+        },
+        {
+          name: 'Repeat Sales',
+          color: '#2d04e0',
+          data: similarSalesSeriesData,
+          type: 'line',
+          lineWidth: 0,
+          marker: {
+            enabled: true,
+            radius: 5,
             symbol: 'circle',
           },
           tooltip: {
