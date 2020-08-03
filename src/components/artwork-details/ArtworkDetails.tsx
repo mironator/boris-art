@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Box, Card, CardActionArea, CardMedia, Grid, Typography } from '@material-ui/core'
 import FsLightbox from 'fslightbox-react'
+import moment from 'moment'
 
 import { Artwork } from '@interfaces/index'
 import { priceFormatter } from '@utils/formatters'
@@ -39,18 +40,41 @@ const ArtworkDetails: React.FC<Props> = ({ artwork }) => {
           justify="flex-start"
           className={classes.imageDescription}
           xs={12}
+          spacing={2}
         >
-          <Typography gutterBottom variant="body1" component="h4" className={classes.artworkName}>
-            {artwork.name} ({artwork.creationYear})
-          </Typography>
-          <Typography variant="body2" component="p" className={classes.artistName}>
-            Artist ID: {artwork.artistId}
-          </Typography>
-          <Grid container direction="row" className={classes.briefInfo}>
-            <Grid item container direction="column">
-              <Grid item>{artwork.lastPrice && `Price: ${priceFormatter(artwork.lastPrice)}`}</Grid>
+          <Grid item>
+            <Typography gutterBottom variant="body1" component="h4" className={classes.artworkName}>
+              {artwork.name} ({artwork.creationYear})
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="body2" component="p">
+              <strong>Artist ID:</strong> {artwork.artistId}
+            </Typography>
+          </Grid>
+          <Grid item container direction="row" className={classes.briefInfo}>
+            <Grid item container direction="column" sm={6}>
+              <Grid item>
+                <strong>Price:</strong>
+                {artwork.lastPrice && ` ${priceFormatter(artwork.lastPrice)}`}
+              </Grid>
             </Grid>
-            <Grid item container direction="column" />
+            <Grid item container direction="column" sm={6}>
+              <Grid item>
+                <strong>Date Last sold:</strong>
+                {artwork.dateLastSold && ` ${moment(artwork.dateLastSold).format('LL')}`}
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item>
+            <Typography variant="body2" component="div">
+              <strong>Description:</strong> {artwork.description}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="body2" component="p">
+              <strong>Materials:</strong> {artwork.materials}
+            </Typography>
           </Grid>
         </Grid>
       </Box>
