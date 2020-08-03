@@ -73,6 +73,7 @@ const ArtworkComparables: React.FC<Props> = ({ artwork }) => {
   return (
     <>
       {/* <HighchartsReact highcharts={Highcharts} options={options} constructorType="stockChart" /> */}
+      {!data.length && !isLoading && <p>No similar sales available for this artwork.</p>}
       <Grid container item spacing={5}>
         {data.map((item) => (
           <Grid key={item.id} item container justify="center" xs={12} sm={6} md={4}>

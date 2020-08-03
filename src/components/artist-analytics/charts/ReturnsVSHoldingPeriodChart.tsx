@@ -3,6 +3,8 @@ import _ from 'lodash'
 import Highcharts from 'highcharts/highstock'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
+import { priceFormatter } from '@utils/formatters'
+import moment from 'moment'
 
 import { useReturnVsPeriodData } from '@hooks/useChartData'
 import mediumTypes from '@hooks/mediumTypes'
@@ -106,28 +108,72 @@ const ReturnsVSHoldingPeriodChart: React.FC<Props> = ({ artistId }) => {
           },
           tooltip: {
             // headerFormat: '<b>{series.name}</b><br>',
-            pointFormat: `
-              <div style="display: table">
-                <img
-                  src = "{point.url}"
-                  width="55"
-                  height="45"
-                  style="float:left;margin: 0 10px 10px 0"/>
-                <div style="white-space: normal;width: 200px">{point.artworkName}</div>
-              </div>
-              <span>Auction house</span> <span>{point.auctionHouseName}</span>
-              <br/>
-              <span>Sale date</span> <span>{point.date}</span>
-              <br/>
-              <span>Sold for: </span> <span>\${point.price}</span>
-              <br/>
-              <span>Holding Period (Months):</span>{point.x}<span></span>
-              <br/>
-              <span>Realized CAR (%): </span> <span>{point.y}</span>
-              <br/>
-              <span>Index: </span> <span>{point.artworkId}</span>
-              <br/>
-              `,
+            // pointFormat: `
+            //   <div style="display: table">
+            //     <img
+            //       src = "{point.url}"
+            //       width="55"
+            //       height="45"
+            //       style="float:left;margin: 0 10px 10px 0"/>
+            //     <div style="white-space: normal;width: 200px">{point.artworkName}</div>
+            //   </div>
+            //   <span>Auction house</span> <span>{point.auctionHouseName}</span>
+            //   <br/>
+            //   <span>Sale date</span> <span>{point.date}</span>
+            //   <br/>
+            //   <span>Sold for: </span> <span>\${point.price}</span>
+            //   <br/>
+            //   <span>Holding Period (Months):</span>{point.x}<span></span>
+            //   <br/>
+            //   <span>Realized CAR (%): </span> <span>{point.y}</span>
+            //   <br/>
+            //   <span>Index: </span> <span>{point.artworkId}</span>
+            //   <br/>
+            //   `,
+            pointFormatter() {
+              // @ts-ignore
+              const {
+                url,
+                artworkId,
+                artworkName,
+                auctionHouseName,
+                date,
+                price,
+                x,
+                y,
+              }: {
+                url: string
+                artworkId: number
+                artworkName: string
+                auctionHouseName: string
+                date: Date
+                price: number
+                x: number
+                y: number
+              } = this
+              return `
+                <div style="display: table">
+                  <img
+                    src = "${url}"
+                    width="55"
+                    height="45"
+                    style="float:left;margin: 0 10px 10px 0"/>
+                  <div style="white-space: normal;width: 200px"><strong>${artworkName}</strong></div>
+                </div>
+                <strong>Auction house:</strong> <span>${auctionHouseName}</span>
+                <br/>
+                <strong>Sale date:</strong> <span>${moment(date).format('LL')}</span>
+                <br/>
+                <strong>Sold for:</strong> <span>${priceFormatter(price)}</span>
+                <br/>
+                <strong>Holding Period (Months):</strong> ${x}<span></span>
+                <br/>
+                <strong>Realized CAR (%):</strong> <span>${y}</span>
+                <br/>
+                <strong>Index:</strong> <span>${artworkId}</span>
+                <br/>
+              `
+            },
           },
         },
       },
