@@ -21,7 +21,7 @@ const ArtistAnalytics: React.FC<Props> = ({ artistInfo }) => {
     <Grid container direction="column" spacing={5}>
       <Grid item>
         <Typography variant="h5" component="h2">
-          Artwork All Index
+          Artwork Index
         </Typography>
       </Grid>
       <Grid item>
