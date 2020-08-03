@@ -1,4 +1,4 @@
-enum mediumList {
+enum mediumTypes {
   all = 'all',
   paintings = 'paintings',
   prints = 'prints',
@@ -12,4 +12,4 @@ enum mediumList {
   worksOnPaper = 'works on paper',
 }
 
-export default mediumList
+export default mediumTypes

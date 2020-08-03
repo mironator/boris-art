@@ -21,7 +21,9 @@ import ReturnsVsPeriodChartDatum from '@models/ReturnsVsPeriodChartDatum'
 import ComparablesChartDatum from '@models/ComparablesChartDatum'
 import ArtworkValueChartDatum from '@models/ArtworkValueChartDatum'
 
-import mediumList from './mediumList'
+import mediumTypes from './mediumTypes'
+
+const mediumList = (Object.values(mediumTypes) as unknown) as Array<keyof typeof mediumTypes>
 
 export type ChartData<T> = {
   data: T
@@ -31,13 +33,19 @@ export type ChartData<T> = {
 
 export type PriceMomentumAndVolumeChartData = ChartData<IPriceMomentumChartDatum[]>
 export type ArtworkIndexChartData = ChartData<IArtworkIndexChartDatum[]>
+export type ArtworkIndexChartAllData = ChartData<
+  Array<{
+    data: IArtworkIndexChartDatum[]
+    name: keyof typeof mediumTypes
+  }>
+>
 export type CompoundAnnualReturnsChartData = ChartData<ICompoundAnnualReturnsChartDatum[]>
 export type ReturnsVsPeriodChartData = ChartData<IReturnsVsPeriodChartDatum[]>
 export type ComparablesChartData = ChartData<IComparablesChartDatum[]>
 export type ArtworkValueChartData = ChartData<IArtworkValueChartDatum>
 
-const getMedium = (medium: keyof typeof mediumList): string => {
-  if (medium === mediumList.all) return ''
+const getMedium = (medium: keyof typeof mediumTypes): string => {
+  if (medium === mediumTypes.all) return ''
 
   return `?medium[eq]=${medium}`
 }
@@ -60,7 +68,7 @@ export const usePriceMomentumAndVolumeChartData: (
 
 export const useArtworkIndexChartData: (
   artistId: number,
-  medium: keyof typeof mediumList
+  medium: keyof typeof mediumTypes
 ) => ArtworkIndexChartData = (artistId, medium) => {
   const { data, error } = useSWR(
     `/api/charts/artwork-index/${artistId}${getMedium(medium)}`,
@@ -76,6 +84,28 @@ export const useArtworkIndexChartData: (
     ),
     isLoading: !error && !data,
     isError: error,
+  }
+}
+
+export const useArtworkIndexChartAllData: (artistId: number) => ArtworkIndexChartAllData = (
+  artistId
+) => {
+  const allData = mediumList.map((item) => ({
+    ...useSWR(`/api/charts/artwork-index/${artistId}${getMedium(item)}`, fetcher, {
+      revalidateOnFocus: false,
+    }),
+    name: item,
+  }))
+
+  return {
+    data: allData
+      .filter(({ data }) => data && data.length)
+      .map(({ name, data }) => ({
+        name,
+        data: data.map((d: ArtworkIndexChartDatumEntity) => ArtworkIndexChartDatum.fromEntity(d)),
+      })),
+    isLoading: allData.some((item) => item.isValidating),
+    isError: allData.some((item) => item.error),
   }
 }
 
@@ -101,7 +131,7 @@ export const useReturnVsPeriodData: (artistId: number) => ReturnsVsPeriodChartDa
   })
 
   return {
-    data: (data || []).map((d: ReturnsVsPeriodChartDatumEntity) =>
+    data: (Array.isArray(data) ? data : []).map((d: ReturnsVsPeriodChartDatumEntity) =>
       ReturnsVsPeriodChartDatum.fromEntity(d)
     ),
     isLoading: !error && !data,

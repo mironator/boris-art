@@ -12,6 +12,12 @@ export type ArtistsData = {
   isError: boolean
 }
 
+export type ArtistsMediumList = {
+  data: string[]
+  isLoading: boolean
+  isError: boolean
+}
+
 export const useArtistsListData: (inputText: string) => ArtistsData = (inputText) => {
   const [controllers, setControllers] = useState<AbortController[]>([])
   const controller = new AbortController()
@@ -39,5 +45,21 @@ export const useArtistsListData: (inputText: string) => ArtistsData = (inputText
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     isLoading: isValidating,
     isError: !!error,
+  }
+}
+
+export const useArtistsMediumList: (artistId: number) => ArtistsMediumList = (artistId) => {
+  const { data, error, isValidating } = useSWR<string[]>(
+    `/api/artists/medium-list/${artistId}`,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    }
+  )
+
+  return {
+    data: data || [],
+    isLoading: isValidating,
+    isError: error,
   }
 }

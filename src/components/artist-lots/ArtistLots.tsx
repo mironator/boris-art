@@ -6,7 +6,7 @@ import InfiniteScroll from 'react-infinite-scroller'
 
 import { useArtworkListData } from '@hooks/useArtworkData'
 import sortTypes from '@hooks/sortTypes'
-import mediumList from '@hooks/mediumList'
+import mediumTypes from '@hooks/mediumTypes'
 import { Artist, Artwork } from '@interfaces/index'
 import Lot from '@components/artist-lot'
 
@@ -47,7 +47,7 @@ const ArtistLots: React.FC<Props> = ({ artist: { id } }) => {
   const [page, setPage] = useState<number>(0)
   const [artworks, setArtworks] = useState<Artwork[]>([])
   const [sort, setSort] = useState<keyof typeof sortTypes>(sortTypes.featured)
-  const [medium, setMedium] = useState<keyof typeof mediumList>(mediumList.all)
+  const [medium, setMedium] = useState<keyof typeof mediumTypes>(mediumTypes.all)
   const { data, isLoading } = useArtworkListData({
     artistId: Number(id),
     offset: page * limit,
@@ -99,17 +99,17 @@ const ArtistLots: React.FC<Props> = ({ artist: { id } }) => {
           <Grid className={classes.filtersContainer} container direction="row" alignItems="center">
             <Typography className={classes.sortLabel}>Medium:</Typography>
             <Select value={medium} onChange={updateMedium}>
-              <MenuItem value={mediumList.all}>All</MenuItem>
-              <MenuItem value={mediumList.paintings}>Paintings</MenuItem>
-              <MenuItem value={mediumList.prints}>Prints</MenuItem>
-              <MenuItem value={mediumList.undetermined}>Undetermined</MenuItem>
-              <MenuItem value={mediumList.photographs}>Photographs</MenuItem>
-              <MenuItem value={mediumList.jewelry}>Jewelry</MenuItem>
-              <MenuItem value={mediumList.sculpture}>Sculpture</MenuItem>
-              <MenuItem value={mediumList.furniture}>Furniture</MenuItem>
-              <MenuItem value={mediumList.ceramics}>Ceramics</MenuItem>
-              <MenuItem value={mediumList.other}>Other</MenuItem>
-              <MenuItem value={mediumList.worksOnPaper}>Works on paper</MenuItem>
+              <MenuItem value={mediumTypes.all}>All</MenuItem>
+              <MenuItem value={mediumTypes.paintings}>Paintings</MenuItem>
+              <MenuItem value={mediumTypes.prints}>Prints</MenuItem>
+              <MenuItem value={mediumTypes.undetermined}>Undetermined</MenuItem>
+              <MenuItem value={mediumTypes.photographs}>Photographs</MenuItem>
+              <MenuItem value={mediumTypes.jewelry}>Jewelry</MenuItem>
+              <MenuItem value={mediumTypes.sculpture}>Sculpture</MenuItem>
+              <MenuItem value={mediumTypes.furniture}>Furniture</MenuItem>
+              <MenuItem value={mediumTypes.ceramics}>Ceramics</MenuItem>
+              <MenuItem value={mediumTypes.other}>Other</MenuItem>
+              <MenuItem value={mediumTypes.worksOnPaper}>Works on paper</MenuItem>
             </Select>
 
             <Typography className={classes.sortLabel}>Sort by:</Typography>

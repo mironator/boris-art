@@ -3,6 +3,8 @@ import Highcharts from 'highcharts/highstock'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
 import HighchartsMore from 'highcharts/highcharts-more'
+import { priceFormatter } from '@utils/formatters'
+import moment from 'moment'
 
 import { useArtworkValueChartData } from '@hooks/useChartData'
 import Artwork from '@models/Artwork'
@@ -54,6 +56,13 @@ const ArtworkValue: React.FC<Props> = ({ artwork }) => {
         useHTML: true,
       },
 
+      legend: {
+        enabled: true,
+        align: 'center',
+        verticalAlign: 'bottom',
+        layout: 'horizontal',
+      },
+
       series: [
         {
           name: '',
@@ -76,27 +85,42 @@ const ArtworkValue: React.FC<Props> = ({ artwork }) => {
           lineWidth: 0,
           marker: {
             enabled: true,
-            radius: 5,
+            radius: 7,
             symbol: 'circle',
           },
           tooltip: {
-            valueDecimals: 2,
-            pointFormat: `
-              <div style="display: table">
-                <img
-                  src = "{point.url}"
-                  width="55"
-                  height="45"
-                  style="float:left;margin: 0 10px 10px 0"/>
-                <div style="white-space: normal;width: 200px">{point.artworkName}</div>
-              </div>
-              <span>Auction house</span> <span>{point.auctionHouseName}</span>
-              <br/>
-              <span>Sale date</span> <span>{point.date}</span>
-              <br/>
-              <span>Sold for</span> <span>\${point.price}</span>
-              <br/>
-              `,
+            pointFormatter() {
+              // @ts-ignore
+              const {
+                url,
+                artworkName,
+                auctionHouseName,
+                date,
+                price,
+              }: {
+                url: string
+                artworkName: string
+                auctionHouseName: string
+                date: Date
+                price: number
+              } = this
+              return `
+                <div style="display: table">
+                  <img
+                    src = "${url}"
+                    width="55"
+                    height="45"
+                    style="float:left;margin: 0 10px 10px 0"/>
+                  <div style="white-space: normal;width: 200px"><strong>${artworkName}</strong></div>
+                </div>
+                <strong>Auction house:</strong> <span>${auctionHouseName}</span>
+                <br/>
+                <strong>Sale date:</strong> <span>${moment(date).format('LL')}</span>
+                <br/>
+                <strong>Sold for:</strong> <span>${priceFormatter(price)}</span>
+                <br/>
+              `
+            },
           },
           states: {
             hover: {
