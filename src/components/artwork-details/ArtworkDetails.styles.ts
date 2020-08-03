@@ -4,7 +4,7 @@ import { makeStyles, createStyles } from '@material-ui/core/styles'
 const styles = () =>
   createStyles({
     cardRoot: {
-      maxWidth: 600,
+      maxWidth: 350,
       width: '100%',
     },
     media: {

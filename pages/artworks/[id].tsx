@@ -42,6 +42,9 @@ const ArtworkPage: NextPage<Props> = ({ entity }) => {
         Artwork Value
       </Typography>
       <ArtworkValue artwork={artwork as Artwork} />
+      <Typography variant="h4" component="h4" style={{ marginTop: 24, marginBottom: 24 }}>
+        Similar Sales
+      </Typography>
       <ArtworkComparables artwork={artwork as Artwork} />
       {/* <pre>{JSON.stringify(props, undefined, 2)}</pre> */}
     </Layout>
