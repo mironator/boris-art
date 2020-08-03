@@ -61,15 +61,13 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
     },
   }))
 
-  const columnLine = filteredData
-    .filter(({ name }) => name === mediumTypes.all)
-    .map(({ name, data: items }) => ({
-      type: 'column',
-      name: `${name} volume`,
-      id: `${name}volume`,
-      data: items.map((item) => [item.date.getTime(), item.volume]),
-      yAxis: 1,
-    }))
+  const columnLine = filteredData.map(({ name, data: items }) => ({
+    type: 'column',
+    name: `${name} volume`,
+    id: `${name}volume`,
+    data: items.map((item) => [item.date.getTime(), item.volume]),
+    yAxis: 1,
+  }))
 
   let options: Highcharts.Options | null = null
 
@@ -101,8 +99,21 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
           top: '80%',
           height: '20%',
           offset: 0,
+          min: 0,
+          stackLabels: {
+            enabled: false,
+          },
         },
       ],
+
+      plotOptions: {
+        column: {
+          stacking: 'normal',
+          dataLabels: {
+            enabled: false,
+          },
+        },
+      },
 
       legend: {
         enabled: true,
