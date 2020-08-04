@@ -201,8 +201,12 @@ const ArtworkValue: React.FC<Props> = ({ artwork }) => {
       ],
     }
   }
-  if (!options || isLoading || !chartData.length) {
+  if (!options || isLoading) {
     return <div>Loading...</div>
+  }
+
+  if (!isLoading && !values.length) {
+    return <span>No chart data for this artwork.</span>
   }
   return (
     <>
