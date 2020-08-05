@@ -9,6 +9,7 @@ import ArtistAnalytics from '../artist-analytics'
 
 interface OwnProps {
   artist: Artist
+  mediumList: string[]
 }
 
 interface TabPanelProps {
@@ -50,7 +51,7 @@ const ArtistDetails: React.FC<Props> = (props) => {
     setValue(newValue)
   }
 
-  const { artist } = props
+  const { artist, mediumList } = props
 
   return (
     <>
@@ -64,7 +65,7 @@ const ArtistDetails: React.FC<Props> = (props) => {
       </TabPanel>
       <TabPanel value={value} index={1}>
         <ArtistInfo artist={artist} />
-        <ArtistAnalytics artistInfo={artist} />
+        <ArtistAnalytics artistInfo={artist} mediumList={mediumList} />
       </TabPanel>
     </>
   )

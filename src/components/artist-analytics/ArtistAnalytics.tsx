@@ -2,6 +2,7 @@ import React from 'react'
 import { Grid, Typography } from '@material-ui/core'
 
 import { Artist } from '@interfaces/index'
+
 // import ArtworkIndexChart from './charts/ArtworkIndexChart'
 import ArtworkIndexAllCharts from './charts/ArtworkIndexAllCharts'
 import ReturnsVSHoldingPeriodChart from './charts/ReturnsVSHoldingPeriodChart'
@@ -9,14 +10,16 @@ import CompoundAnnualReturns from './charts/CompoundAnnualReturns'
 
 interface OwnProps {
   artistInfo: Artist
+  mediumList: string[]
 }
 
 type Props = OwnProps
 
-const ArtistAnalytics: React.FC<Props> = ({ artistInfo }) => {
+const ArtistAnalytics: React.FC<Props> = ({ artistInfo, mediumList }) => {
   if (!artistInfo.id) {
     return null
   }
+
   return (
     <Grid container direction="column" spacing={5}>
       <Grid item>
@@ -25,7 +28,7 @@ const ArtistAnalytics: React.FC<Props> = ({ artistInfo }) => {
         </Typography>
       </Grid>
       <Grid item>
-        <ArtworkIndexAllCharts artistId={artistInfo.id} />
+        <ArtworkIndexAllCharts artistId={artistInfo.id} mediumList={mediumList} />
       </Grid>
       {/* <Grid item>
         <Typography variant="h5" component="h2">
