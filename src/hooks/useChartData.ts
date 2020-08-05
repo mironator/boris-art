@@ -153,13 +153,13 @@ export const useComparablesChartData: (artworkId: number) => ComparablesChartDat
 export const useArtworkValueChartData: (artworkId: number) => ArtworkValueChartData = (
   artworkId
 ) => {
-  const { data, error } = useSWR(`/api/charts/artwork-value/${artworkId}`, fetcher, {
+  const { data, error, isValidating } = useSWR(`/api/charts/artwork-value/${artworkId}`, fetcher, {
     revalidateOnFocus: false,
   })
 
   return {
     data: ArtworkValueChartDatum.fromEntity(data || { sales: [], values: [] }),
-    isLoading: !error && !data,
+    isLoading: isValidating,
     isError: error,
   }
 }

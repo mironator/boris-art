@@ -30,15 +30,8 @@ type Props = {
 const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
   const classes = useStyles()
   const { data, isLoading, isError } = useArtworkIndexChartAllData(artistId, mediumList)
-  const [filteredData, setFilteredData] = useState(data)
 
-  useEffect(() => {
-    if (data && !isLoading && !isError) {
-      setFilteredData(data)
-    }
-  }, [isLoading])
-
-  const seriesLine = filteredData.map(({ name, data: items }, index) => ({
+  const seriesLine = data.map(({ name, data: items }, index) => ({
     type: 'line',
     name: `${name}`,
     id: `${name}index`,
@@ -49,7 +42,7 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
     color: colors[index],
   }))
 
-  const columnLine = filteredData.map(({ name, data: items }, index) => ({
+  const columnLine = data.map(({ name, data: items }, index) => ({
     type: 'column',
     name: `${name} volume`,
     id: `${name}volume`,
