@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import {
   ArtworkValueChartDatum as IArtworkValueChartDatum,
   ArtworkValueChartDatumEntity,
@@ -20,10 +22,13 @@ export default class ArtworkValueChartDatum implements IArtworkValueChartDatum {
 
   static fromEntity(entity: ArtworkValueChartDatumEntity): ArtworkValueChartDatum {
     return new ArtworkValueChartDatum(
-      entity.sales.map((sale: ArtworkValueChartSalesDatumEntity) =>
+      (_.isArray(entity.sales) ? entity.sales : []).map((sale: ArtworkValueChartSalesDatumEntity) =>
         ArtworkValueChartSalesDatum.fromEntity(sale)
       ),
-      entity.values.map((value: ArtworkValueChartValuesDatumEntity) =>
+      (_.isArray(entity.values)
+        ? entity.values
+        : []
+      ).map((value: ArtworkValueChartValuesDatumEntity) =>
         ArtworkValueChartValuesDatum.fromEntity(value)
       )
     )

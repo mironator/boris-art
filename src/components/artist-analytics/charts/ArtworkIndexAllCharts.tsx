@@ -15,17 +15,21 @@ const useStyles = makeStyles(() =>
   })
 )
 
+let colors: string[] = []
+
 if (typeof Highcharts === 'object') {
   HighchartsExporting(Highcharts)
+  colors = Highcharts.getOptions().colors || []
 }
 
 type Props = {
   artistId: number
+  mediumList: string[]
 }
 
-const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
+const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
   const classes = useStyles()
-  const { data, isLoading, isError } = useArtworkIndexChartAllData(artistId)
+  const { data, isLoading, isError } = useArtworkIndexChartAllData(artistId, mediumList)
   const [filteredData, setFilteredData] = useState(data)
 
   useEffect(() => {
@@ -34,7 +38,7 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
     }
   }, [isLoading])
 
-  const seriesLine = filteredData.map(({ name, data: items }) => ({
+  const seriesLine = filteredData.map(({ name, data: items }, index) => ({
     type: 'line',
     name: `${name}`,
     id: `${name}index`,
@@ -42,22 +46,25 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
     tooltip: {
       valueDecimals: 2,
     },
+    color: colors[index],
   }))
 
-  const columnLine = filteredData
-    .filter(({ name }) => name === mediumTypes.all)
-    .map(({ name, data: items }) => ({
-      type: 'column',
-      name: `${name} volume`,
-      id: `${name}volume`,
-      data: items.map((item) => [item.date.getTime(), item.volume]),
-      yAxis: 1,
-    }))
+  const columnLine = filteredData.map(({ name, data: items }, index) => ({
+    type: 'column',
+    name: `${name} volume`,
+    id: `${name}volume`,
+    data: items.map((item) => [item.date.getTime(), item.volume]),
+    yAxis: 1,
+    color: colors[index],
+  }))
 
   let options: Highcharts.Options | null = null
 
   if (data && !isLoading && !isError) {
     options = {
+      chart: {
+        zoomType: 'xy',
+      },
       rangeSelector: {
         allButtonsEnabled: true,
         selected: 6,
@@ -84,8 +91,21 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId }) => {
           top: '80%',
           height: '20%',
           offset: 0,
+          min: 0,
+          stackLabels: {
+            enabled: false,
+          },
         },
       ],
+
+      plotOptions: {
+        column: {
+          stacking: 'normal',
+          dataLabels: {
+            enabled: false,
+          },
+        },
+      },
 
       legend: {
         enabled: true,
