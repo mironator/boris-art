@@ -18,7 +18,7 @@ const handler: (_req: NextApiRequest, res: NextApiResponse) => Promise<void> = a
       (item: any) => item.medium
     ) as Array<keyof typeof mediumTypes>
 
-    res.status(200).json(['all', ...mediumList])
+    res.status(200).json(mediumList || [])
   } catch (err) {
     res.status(500).json({ statusCode: 500, message: err.message })
   }
