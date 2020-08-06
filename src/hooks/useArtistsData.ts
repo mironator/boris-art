@@ -59,7 +59,7 @@ export const useArtistsMediumList: (artistId: number) => ArtistsMediumList = (ar
   )
 
   return {
-    data: data ? ['all', ...data] : [],
+    data: data || [],
     isLoading: isValidating,
     isError: error,
   }
