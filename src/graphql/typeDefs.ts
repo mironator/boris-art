@@ -6,8 +6,8 @@ const typeDefs = gql`
   type Query {
     users: [User!]!
     artists(query: String, limit: Int, offset: Int): [Artist!]!
-    artist(id: ID): Artist
-    events(artistId: ID, limit: Int, offset: Int): [Event]
+    artist(id: Int): Artist
+    events(artistId: Int, limit: Int, offset: Int): [Event]
   }
 
   "Test type with mocked data"
@@ -31,7 +31,7 @@ const typeDefs = gql`
   "Events either Artist Life or Artwork"
   type Event {
     id: Int!
-    imgUrl: String
+    imageUrl: String
     date: Date
     type: String!
     description: String

@@ -1,36 +1,45 @@
+/* eslint-disable camelcase */
 export type EventEntity = {
-  id: Number
+  id: number
   date: Date
-  description: String
-  year: Number
-  artist_id: Number
-  artwork_id: Number
-  image_url: String
-  params: String
-  type: String
+  description: string
+  year: number
+  artist_id: number
+  artwork_id: number
+  image_url: string
+  params: string
+  type: string
 }
 
 export default class Event {
-  id: Number
+  id: number
+
   date: Date
-  description: String
-  year: Number
-  artistId: Number
-  artworkId: Number
-  imageUrl: String
-  params: String
-  type: String
+
+  description: string
+
+  year: number
+
+  artistId: number
+
+  artworkId: number
+
+  imageUrl: string
+
+  params: string
+
+  type: string
 
   constructor(
-    id: Number,
+    id: number,
     date: Date,
-    description: String,
-    year: Number,
-    artistId: Number,
-    artworkId: Number,
-    imageUrl: String,
-    params: String,
-    type: String
+    description: string,
+    year: number,
+    artistId: number,
+    artworkId: number,
+    imageUrl: string,
+    params: string,
+    type: string
   ) {
     this.id = id
     this.date = date

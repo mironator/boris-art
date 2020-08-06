@@ -40,14 +40,14 @@ const resolvers = {
     },
   },
   Event: {
-    artist: async (_root: unknown, { artistId }: Event): Promise<Artist | null> => {
+    artist: async ({ artistId }: Event): Promise<Artist | null> => {
       const apiRes = await fetch(`http://54.156.225.113:8000/v1/artist/${artistId}`)
       const data = await apiRes.json()
       const entity = _.get(data, 'artist[0]') as ArtistEntity
 
-      return entity ? Artist.fromEntity(artistEntity) : null
+      return entity ? Artist.fromEntity(entity) : null
     },
-    artwork: async (_root: unknown, { artworkId }: Event): Promise<Artwork | null> => {
+    artwork: async ({ artworkId }: Event): Promise<Artwork | null> => {
       const apiRes = await fetch(`http://54.156.225.113:8000/v1/artwork/${artworkId}`)
       const data = await apiRes.json()
       const entity = _.get(data, 'artwork[0]') as ArtworkEntity
