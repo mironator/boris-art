@@ -40,12 +40,12 @@ const resolvers = {
     },
   },
   Event: {
-    artist: async (_root: unknown, { artistId }: Event): Promise<Artist> => {
+    artist: async (_root: unknown, { artistId }: Event): Promise<Artist | null> => {
       const apiRes = await fetch(`http://54.156.225.113:8000/v1/artist/${artistId}`)
       const data = await apiRes.json()
-      const artistEntity = _.get(data, 'artist[0]') as ArtistEntity
+      const entity = _.get(data, 'artist[0]') as ArtistEntity
 
-      return Artist.fromEntity(artistEntity)
+      return entity ? Artist.fromEntity(artistEntity) : null
     },
     artwork: async (_root: unknown, { artworkId }: Event): Promise<Artwork | null> => {
       const apiRes = await fetch(`http://54.156.225.113:8000/v1/artwork/${artworkId}`)
