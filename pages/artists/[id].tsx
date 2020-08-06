@@ -9,12 +9,13 @@ import ArtistDetails from '@components/artist-details'
 import { PriceMomentumChartDatum, ArtistEntity } from '@interfaces/index'
 import { server } from '@config/index'
 import Artist from '@models/Artist'
+import mediumTypes from '@hooks/mediumTypes'
 
 interface Props {
   id: string
   artistEntity: ArtistEntity
   priceMomentumData: PriceMomentumChartDatum[]
-  mediumList: string[]
+  mediumList: Array<keyof typeof mediumTypes>
 }
 
 const ArtistPage: NextPage<Props> = ({ artistEntity, mediumList }) => {

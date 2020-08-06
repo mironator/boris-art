@@ -6,6 +6,7 @@ import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { CircularProgress, Grid } from '@material-ui/core'
 
 import { useArtworkIndexChartAllData } from '@hooks/useChartData'
+import mediumTypes from '@hooks/mediumTypes'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -24,7 +25,7 @@ if (typeof Highcharts === 'object') {
 
 type Props = {
   artistId: number
-  mediumList: string[]
+  mediumList: Array<keyof typeof mediumTypes>
 }
 
 const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {

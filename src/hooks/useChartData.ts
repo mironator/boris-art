@@ -87,7 +87,7 @@ export const useArtworkIndexChartData: (
 
 export const useArtworkIndexChartAllData: (
   artistId: number,
-  mediumList: string[]
+  mediumList: Array<keyof typeof mediumTypes>
 ) => ArtworkIndexChartAllData = (artistId, mediumList) => {
   const allData = mediumList.map((item) => ({
     ...useSWR(`/api/charts/artwork-index/${artistId}${getMedium(item)}`, fetcher, {

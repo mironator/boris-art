@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box, Tab, Tabs, Typography } from '@material-ui/core'
 
+import mediumTypes from '@hooks/mediumTypes'
 import { Artist } from '@interfaces/index'
 // import useStyles, { StyleProps } from './ArtistDetails.styles'
 import ArtistInfo from '../artist-info'
@@ -9,7 +10,7 @@ import ArtistAnalytics from '../artist-analytics'
 
 interface OwnProps {
   artist: Artist
-  mediumList: string[]
+  mediumList: Array<keyof typeof mediumTypes>
 }
 
 interface TabPanelProps {
