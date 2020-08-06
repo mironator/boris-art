@@ -23,8 +23,6 @@ import ArtworkValueChartDatum from '@models/ArtworkValueChartDatum'
 
 import mediumTypes from './mediumTypes'
 
-const mediumList = (Object.values(mediumTypes) as unknown) as Array<keyof typeof mediumTypes>
-
 export type ChartData<T> = {
   data: T
   isLoading: boolean
@@ -36,7 +34,7 @@ export type ArtworkIndexChartData = ChartData<IArtworkIndexChartDatum[]>
 export type ArtworkIndexChartAllData = ChartData<
   Array<{
     data: IArtworkIndexChartDatum[]
-    name: keyof typeof mediumTypes
+    name: string
   }>
 >
 export type CompoundAnnualReturnsChartData = ChartData<ICompoundAnnualReturnsChartDatum[]>
@@ -44,7 +42,7 @@ export type ReturnsVsPeriodChartData = ChartData<IReturnsVsPeriodChartDatum[]>
 export type ComparablesChartData = ChartData<IComparablesChartDatum[]>
 export type ArtworkValueChartData = ChartData<IArtworkValueChartDatum>
 
-const getMedium = (medium: keyof typeof mediumTypes): string => {
+const getMedium = (medium: string): string => {
   if (medium === mediumTypes.all) return ''
 
   return `?medium[eq]=${medium}`
@@ -87,9 +85,10 @@ export const useArtworkIndexChartData: (
   }
 }
 
-export const useArtworkIndexChartAllData: (artistId: number) => ArtworkIndexChartAllData = (
-  artistId
-) => {
+export const useArtworkIndexChartAllData: (
+  artistId: number,
+  mediumList: Array<keyof typeof mediumTypes>
+) => ArtworkIndexChartAllData = (artistId, mediumList) => {
   const allData = mediumList.map((item) => ({
     ...useSWR(`/api/charts/artwork-index/${artistId}${getMedium(item)}`, fetcher, {
       revalidateOnFocus: false,

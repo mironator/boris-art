@@ -9,14 +9,16 @@ import ArtistDetails from '@components/artist-details'
 import { PriceMomentumChartDatum, ArtistEntity } from '@interfaces/index'
 import { HTTP_SERVER } from '@config/index'
 import Artist from '@models/Artist'
+import mediumTypes from '@hooks/mediumTypes'
 
 interface Props {
   id: string
   artistEntity: ArtistEntity
   priceMomentumData: PriceMomentumChartDatum[]
+  mediumList: Array<keyof typeof mediumTypes>
 }
 
-const ArtistPage: NextPage<Props> = ({ artistEntity }) => {
+const ArtistPage: NextPage<Props> = ({ artistEntity, mediumList }) => {
   const artist = Artist.fromEntity(artistEntity)
 
   if (!artist) {
@@ -33,7 +35,7 @@ const ArtistPage: NextPage<Props> = ({ artistEntity }) => {
   return (
     <Layout>
       <Link href="/">&lt; Back to Search</Link>
-      <ArtistDetails artist={artist as Artist} />
+      <ArtistDetails artist={artist as Artist} mediumList={mediumList} />
       {/* <pre>{JSON.stringify(props, undefined, 2)}</pre> */}
     </Layout>
   )
@@ -46,7 +48,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   // Fetch data from external API
 
   const res = await fetch(`${HTTP_SERVER}/api/artists/${id}`)
+  const mediumRes = await fetch(`${HTTP_SERVER}/api/artists/medium-list/${id}`)
   const artistEntity: ArtistEntity = (await res.json()) as ArtistEntity
+  const mediumList = await mediumRes.json()
   // const artist = Artist.fromEntity(artistEntity)
 
   if (!artistEntity && context.res) {
@@ -55,7 +59,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   // Pass data to the page via props
-  return { props: { artistEntity } }
+  return { props: { artistEntity, mediumList } }
 }
 
 export default ArtistPage

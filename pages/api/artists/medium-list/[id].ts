@@ -1,6 +1,8 @@
 import _ from 'lodash'
 import { NextApiRequest, NextApiResponse } from 'next'
 
+import mediumTypes from '@hooks/mediumTypes'
+
 const handler: (_req: NextApiRequest, res: NextApiResponse) => Promise<void> = async (
   _req,
   res
@@ -14,9 +16,9 @@ const handler: (_req: NextApiRequest, res: NextApiResponse) => Promise<void> = a
     const data = await apiRes.json()
     const mediumList = _.get(data, 'payload.artist_medium_list')?.map(
       (item: any) => item.medium
-    ) as string[]
+    ) as Array<keyof typeof mediumTypes>
 
-    res.status(200).json(mediumList || [])
+    res.status(200).json(['all', ...mediumList])
   } catch (err) {
     res.status(500).json({ statusCode: 500, message: err.message })
   }

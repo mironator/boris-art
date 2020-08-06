@@ -5,6 +5,7 @@ import AbortController from 'abort-controller'
 import fetcher from '@utils/fetcher'
 import { Artist as IArtist, ArtistEntity } from '@interfaces/index'
 import Artist from '@models/Artist'
+import mediumTypes from '@hooks/mediumTypes'
 
 export type ArtistsData = {
   data: IArtist[]
@@ -13,7 +14,7 @@ export type ArtistsData = {
 }
 
 export type ArtistsMediumList = {
-  data: string[]
+  data: Array<keyof typeof mediumTypes>
   isLoading: boolean
   isError: boolean
 }
@@ -49,7 +50,7 @@ export const useArtistsListData: (inputText: string) => ArtistsData = (inputText
 }
 
 export const useArtistsMediumList: (artistId: number) => ArtistsMediumList = (artistId) => {
-  const { data, error, isValidating } = useSWR<string[]>(
+  const { data, error, isValidating } = useSWR<Array<keyof typeof mediumTypes>>(
     `/api/artists/medium-list/${artistId}`,
     fetcher,
     {
