@@ -7,7 +7,7 @@ import Link from '@components/Link'
 import Layout from '@components/layout/Layout'
 import ArtworkDetails from '@components/artwork-details'
 import { ArtworkEntity } from '@interfaces/index'
-import { server } from '@config/index'
+import { HTTP_SERVER } from '@config/index'
 import Artwork from '@models/Artwork'
 import ArtworkComparables from '@components/artwork-analytics/charts/artwork-comparables'
 import ArtworkValue from '@components/artwork-analytics/charts/artwork-value'
@@ -57,7 +57,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.params || {}
   // Fetch data from external API
 
-  const res = await fetch(`${server}/api/artworks/${id}`)
+  const res = await fetch(`${HTTP_SERVER}/api/artworks/${id}`)
   const entity: ArtworkEntity = (await res.json()) as ArtworkEntity
   // const artist = Artist.fromEntity(artistEntity)
 

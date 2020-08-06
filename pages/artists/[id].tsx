@@ -7,7 +7,7 @@ import Link from '@components/Link'
 import Layout from '@components/layout/Layout'
 import ArtistDetails from '@components/artist-details'
 import { PriceMomentumChartDatum, ArtistEntity } from '@interfaces/index'
-import { server } from '@config/index'
+import { HTTP_SERVER } from '@config/index'
 import Artist from '@models/Artist'
 import mediumTypes from '@hooks/mediumTypes'
 
@@ -47,8 +47,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.params || {}
   // Fetch data from external API
 
-  const res = await fetch(`${server}/api/artists/${id}`)
-  const mediumRes = await fetch(`${server}/api/artists/medium-list/${id}`)
+  const res = await fetch(`${HTTP_SERVER}/api/artists/${id}`)
+  const mediumRes = await fetch(`${HTTP_SERVER}/api/artists/medium-list/${id}`)
   const artistEntity: ArtistEntity = (await res.json()) as ArtistEntity
   const mediumList = await mediumRes.json()
   // const artist = Artist.fromEntity(artistEntity)
