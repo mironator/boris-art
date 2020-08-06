@@ -1,5 +1,6 @@
 import { ApolloServer, gql } from 'apollo-server-micro'
 import { DateResolver } from 'graphql-scalars'
+import fetch from 'cross-fetch'
 
 import Artist from '@models/Artist'
 import { ArtistEntity } from '@interfaces/index'
