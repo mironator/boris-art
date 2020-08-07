@@ -8,7 +8,7 @@ import { ApolloProvider } from '@apollo/react-hooks'
 import ApolloClient, { InMemoryCache } from 'apollo-boost'
 
 import theme from '@theme/theme'
-import { SERVER } from 'src/config/index'
+import { SERVER } from '@config/index'
 
 type Props = AppProps & { apollo: ApolloClient<InMemoryCache> }
 
