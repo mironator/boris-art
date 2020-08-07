@@ -1,5 +1,4 @@
 /* eslint-disable react/no-this-in-sfc */
-/* eslint-disable no-unused-expressions */
 import React, { useState, useEffect } from 'react'
 import _ from 'lodash'
 import Highcharts from 'highcharts/highstock'
@@ -20,15 +19,6 @@ const useStyles = makeStyles(() =>
     },
   })
 )
-
-const getVolumeChartByEvent = ({ target }: any) => {
-  const {
-    name,
-    chart: { series },
-  } = target
-
-  return series.find((item: any) => item.name === `${name} volume`)
-}
 
 let colors: string[] = []
 
@@ -106,8 +96,8 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
 
   const columnLine = data.map(({ name, data: items }, index) => ({
     type: 'column',
+    linkedTo: `${name}index`,
     name: `${name} volume`,
-    id: `${name}volume`,
     data: items.map((item) => [item.date.getTime(), item.volume]),
     yAxis: 1,
     color: colors[index],
@@ -127,7 +117,7 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
         events: {
           load() {
             this.legend.allItems
-              .filter((item) => item.name.includes('volume'))
+              .filter((item) => item.name.includes('Series'))
               .forEach((item: any) => {
                 item.legendGroup.hide()
               })
@@ -168,19 +158,6 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
       ],
 
       plotOptions: {
-        series: {
-          events: {
-            hide: (event) => {
-              const volumeChart = getVolumeChartByEvent(event)
-
-              volumeChart?.hide()
-            },
-            show: (event) => {
-              const volumeChart = getVolumeChartByEvent(event)
-              volumeChart?.show()
-            },
-          },
-        },
         column: {
           stacking: 'normal',
           dataLabels: {
