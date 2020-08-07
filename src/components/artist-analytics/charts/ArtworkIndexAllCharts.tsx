@@ -1,3 +1,5 @@
+/* eslint-disable react/no-this-in-sfc */
+/* eslint-disable no-unused-expressions */
 import React, { useState, useEffect } from 'react'
 import _ from 'lodash'
 import Highcharts from 'highcharts/highstock'
@@ -18,6 +20,15 @@ const useStyles = makeStyles(() =>
     },
   })
 )
+
+const getVolumeChartByEvent = ({ target }: any) => {
+  const {
+    name,
+    chart: { series },
+  } = target
+
+  return series.find((item: any) => item.name === `${name} volume`)
+}
 
 let colors: string[] = []
 
@@ -113,6 +124,15 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
     options = {
       chart: {
         zoomType: 'xy',
+        events: {
+          load() {
+            this.legend.allItems
+              .filter((item) => item.name.includes('volume'))
+              .forEach((item: any) => {
+                item.legendGroup.hide()
+              })
+          },
+        },
       },
       rangeSelector: {
         allButtonsEnabled: true,
@@ -148,6 +168,19 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
       ],
 
       plotOptions: {
+        series: {
+          events: {
+            hide: (event) => {
+              const volumeChart = getVolumeChartByEvent(event)
+
+              volumeChart?.hide()
+            },
+            show: (event) => {
+              const volumeChart = getVolumeChartByEvent(event)
+              volumeChart?.show()
+            },
+          },
+        },
         column: {
           stacking: 'normal',
           dataLabels: {
@@ -179,8 +212,8 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
           </Grid>
         </Grid>
       ) : (
-          <HighchartsReact highcharts={Highcharts} options={options} constructorType="stockChart" />
-        )}
+        <HighchartsReact highcharts={Highcharts} options={options} constructorType="stockChart" />
+      )}
     </>
   )
 }
