@@ -7,7 +7,7 @@ import Link from '@components/Link'
 import Layout from '@components/layout/Layout'
 import ArtistDetails from '@components/artist-details'
 import { PriceMomentumChartDatum, ArtistEntity } from '@interfaces/index'
-import { HTTP_SERVER } from '@config/index'
+import { HTTP_SERVER } from 'src/config/index'
 import Artist from '@models/Artist'
 import mediumTypes from '@hooks/mediumTypes'
 

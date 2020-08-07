@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import _ from 'lodash'
 import Highcharts from 'highcharts/highstock'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { CircularProgress, Grid } from '@material-ui/core'
+import { gql, useQuery } from '@apollo/client'
 
+import Event from '@models/Event'
 import { useArtworkIndexChartAllData } from '@hooks/useChartData'
 import mediumTypes from '@hooks/mediumTypes'
 
@@ -23,14 +26,61 @@ if (typeof Highcharts === 'object') {
   colors = Highcharts.getOptions().colors || []
 }
 
+const GET_EVENTS = gql`
+  query GetEvents($artistId: Int!) {
+    events(artistId: $artistId) {
+      id
+      date
+      type
+      description
+      year
+      params
+      imageUrl
+    }
+  }
+`
+
+interface EventsData {
+  events: Event[]
+}
+
 type Props = {
   artistId: number
   mediumList: Array<keyof typeof mediumTypes>
 }
 
+type FlagSerie = {
+  x: number
+  title: string
+  text: string
+}
+
+const pretifyFlagText = (obj: Record<string, unknown>): string =>
+  _.toPairs(obj)
+    .map((pair) => `<strong>${pair[0]}: </strong>${pair[1]}<br/>`)
+    .join('')
+
 const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
   const classes = useStyles()
   const { data, isLoading, isError } = useArtworkIndexChartAllData(artistId, mediumList)
+  const [flagData, setFlagData] = useState<FlagSerie[]>([])
+  const { data: eventsData } = useQuery<EventsData, { artistId: number }>(GET_EVENTS, {
+    variables: { artistId },
+  })
+
+  useEffect(() => {
+    const foo =
+      eventsData?.events.map((event: Event) => ({
+        x: (event.date ? new Date(event.date) : new Date(event.year, 0)).getTime(),
+        title: event.type,
+        text:
+          event.type === 'Life Events'
+            ? `<strong>${event.description}`
+            : `<pre>${pretifyFlagText(JSON.parse(event.params))}</pre>`,
+      })) || []
+
+    setFlagData(foo)
+  }, [eventsData])
 
   const seriesLine = data.map(({ name, data: items }, index) => ({
     type: 'line',
@@ -51,6 +101,11 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
     yAxis: 1,
     color: colors[index],
   }))
+
+  const flagSeries = {
+    type: 'flags',
+    data: flagData,
+  }
 
   let options: Highcharts.Options | null = null
 
@@ -99,6 +154,9 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
             enabled: false,
           },
         },
+        flags: {
+          useHTML: true,
+        },
       },
 
       legend: {
@@ -108,7 +166,7 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
         layout: 'horizontal',
       },
 
-      series: [...seriesLine, ...columnLine] as Highcharts.SeriesOptionsType[],
+      series: [...seriesLine, ...columnLine, flagSeries] as Highcharts.SeriesOptionsType[],
     }
   }
 
@@ -121,8 +179,8 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
           </Grid>
         </Grid>
       ) : (
-        <HighchartsReact highcharts={Highcharts} options={options} constructorType="stockChart" />
-      )}
+          <HighchartsReact highcharts={Highcharts} options={options} constructorType="stockChart" />
+        )}
     </>
   )
 }
