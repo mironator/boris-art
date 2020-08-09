@@ -10,6 +10,7 @@ import { gql, useQuery } from '@apollo/client'
 import Event from '@models/Event'
 import { useArtworkIndexChartAllData } from '@hooks/useChartData'
 import mediumTypes from '@hooks/mediumTypes'
+import { formatFlagEventBubble } from '@utils/formatters'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -55,11 +56,6 @@ type FlagSerie = {
   text: string
 }
 
-const pretifyFlagText = (obj: Record<string, unknown>): string =>
-  _.toPairs(obj)
-    .map((pair) => `<strong>${pair[0]}: </strong>${pair[1]}<br/>`)
-    .join('')
-
 const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
   const classes = useStyles()
   const { data, isLoading, isError } = useArtworkIndexChartAllData(artistId, mediumList)
@@ -73,10 +69,8 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
       eventsData?.events.map((event: Event) => ({
         x: (event.date ? new Date(event.date) : new Date(event.year, 0)).getTime(),
         title: event.type,
-        text:
-          event.type === 'Life Events'
-            ? `<strong>${event.description}`
-            : `<pre>${pretifyFlagText(JSON.parse(event.params))}</pre>`,
+        text: '',
+        ...event,
       })) || []
 
     setFlagData(foo)
@@ -105,6 +99,14 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
   const flagSeries = {
     type: 'flags',
     data: flagData,
+    tooltip: {
+      pointFormatter(): string {
+        const { type, description } = this as Event & { pointFormatter(): string }
+        return type === 'Life Events'
+          ? `<strong>${description}</strong>`
+          : formatFlagEventBubble(this as Event & { pointFormatter(): string })
+      },
+    },
   }
 
   let options: Highcharts.Options | null = null
@@ -114,6 +116,11 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
       chart: {
         zoomType: 'xy',
       },
+
+      tooltip: {
+        useHTML: true,
+      },
+
       rangeSelector: {
         allButtonsEnabled: true,
         selected: 6,
