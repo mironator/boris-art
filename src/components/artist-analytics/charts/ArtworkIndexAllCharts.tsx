@@ -1,3 +1,4 @@
+/* eslint-disable react/no-this-in-sfc */
 import React, { useState, useEffect } from 'react'
 import _ from 'lodash'
 import Highcharts from 'highcharts/highstock'
@@ -89,8 +90,8 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
 
   const columnLine = data.map(({ name, data: items }, index) => ({
     type: 'column',
+    linkedTo: `${name}index`,
     name: `${name} volume`,
-    id: `${name}volume`,
     data: items.map((item) => [item.date.getTime(), item.volume]),
     yAxis: 1,
     color: colors[index],
@@ -115,6 +116,15 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
     options = {
       chart: {
         zoomType: 'xy',
+        events: {
+          load() {
+            this.legend.allItems
+              .filter((item) => item.name.includes('Series'))
+              .forEach((item: any) => {
+                item.legendGroup.hide()
+              })
+          },
+        },
       },
 
       tooltip: {
@@ -186,8 +196,8 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
           </Grid>
         </Grid>
       ) : (
-          <HighchartsReact highcharts={Highcharts} options={options} constructorType="stockChart" />
-        )}
+        <HighchartsReact highcharts={Highcharts} options={options} constructorType="stockChart" />
+      )}
     </>
   )
 }
