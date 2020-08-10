@@ -71,7 +71,7 @@ export default class Artwork implements IArtwork {
     markings: string,
     literature: string,
     imageLoadingStatus: string,
-    lotImageWidth: 624,
+    lotImageWidth: number,
     lotImagePresignedUrl: string,
     measurementsUnit: string,
     mediumFinal: string,

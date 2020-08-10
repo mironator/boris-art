@@ -32,6 +32,9 @@
       "@config/*": [
         "src/config/*"
       ],
+      "@graphql/*": [
+        "src/graphql/*"
+      ],
       "@models/*": [
         "src/models/*"
       ],

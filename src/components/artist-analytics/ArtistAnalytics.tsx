@@ -2,6 +2,7 @@ import React from 'react'
 import { Grid, Typography } from '@material-ui/core'
 
 import { Artist } from '@interfaces/index'
+import mediumTypes from '@hooks/mediumTypes'
 
 // import ArtworkIndexChart from './charts/ArtworkIndexChart'
 import ArtworkIndexAllCharts from './charts/ArtworkIndexAllCharts'
@@ -10,7 +11,7 @@ import CompoundAnnualReturns from './charts/CompoundAnnualReturns'
 
 interface OwnProps {
   artistInfo: Artist
-  mediumList: string[]
+  mediumList: Array<keyof typeof mediumTypes>
 }
 
 type Props = OwnProps

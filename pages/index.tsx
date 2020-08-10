@@ -1,4 +1,6 @@
+import _ from 'lodash'
 import React, { useCallback, useState } from 'react'
+import { gql, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Grid, TextField } from '@material-ui/core'
@@ -7,7 +9,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import { useDebounce } from 'use-debounce'
 
 import Layout from '@components/layout/Layout'
-import { useArtistsListData } from '@hooks/useArtistsData'
+import { Artist } from '@interfaces/index'
 
 const useStyles = makeStyles({
   root: {
@@ -34,12 +36,38 @@ const useStyles = makeStyles({
   },
 })
 
+const GET_ARTISTS = gql`
+  query GetArtists($query: String!) {
+    artists(query: $query) {
+      id
+      name
+      birth
+      death
+      artworksCount
+      qualifier
+      lotsCost
+    }
+  }
+`
+
+interface ArtistData {
+  artists: Artist[]
+}
+
+type VariablesType = {
+  query: string
+}
+
 const Search: React.FC<unknown> = () => {
   const classes = useStyles()
   const router = useRouter()
   const [inputText, setInputText] = useState<string>('')
   const [debouncedInputText] = useDebounce(inputText, 300)
-  const { data, isLoading } = useArtistsListData(debouncedInputText)
+  const { loading, data } = useQuery<ArtistData, VariablesType>(GET_ARTISTS, {
+    variables: { query: debouncedInputText },
+  })
+
+  const artists = _.get(data, 'artists', [])
 
   const onArtistSelected = useCallback(
     (_, value, reason) => {
@@ -75,8 +103,8 @@ const Search: React.FC<unknown> = () => {
           }}
           getOptionSelected={(option, value) => option.name === value.name}
           getOptionLabel={(option) => option.name}
-          options={data}
-          loading={isLoading}
+          options={artists}
+          loading={loading}
           onChange={onArtistSelected}
           onInputChange={onInputChange}
           renderInput={(params) => (
@@ -89,7 +117,7 @@ const Search: React.FC<unknown> = () => {
                 ...params.inputProps,
                 endadornment: (
                   <>
-                    {isLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                    {loading ? <CircularProgress color="inherit" size={20} /> : null}
                     {params.InputProps.endAdornment}
                   </>
                 ),
