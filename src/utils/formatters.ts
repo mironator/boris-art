@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import moment from 'moment'
 import Event from '@models/Event'
 import EventParams from '@models/EventParams'
