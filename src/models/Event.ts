@@ -1,4 +1,12 @@
 /* eslint-disable camelcase */
+
+export enum EventType {
+  MajorSales = 'Major Sales',
+  LifeEvents = 'Life Events',
+  MajorPublications = 'Major Publications',
+  MajorExhibitions = 'Major Exhibitions',
+}
+
 export type EventEntity = {
   id: number
   date: Date
@@ -8,7 +16,7 @@ export type EventEntity = {
   artwork_id: number
   image_url: string
   params: string
-  type: string
+  type: EventType
 }
 
 export default class Event {
