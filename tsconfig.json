@@ -8,10 +8,7 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "lib": [
-      "dom",
-      "es2017"
-    ],
+    "lib": ["dom", "es2017"],
     "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
@@ -23,76 +20,29 @@
     "strict": true,
     "target": "esnext",
     "paths": {
-      "@components/*": [
-        "src/components/*"
-      ],
-      "@api/*": [
-        "src/api/*"
-      ],
-      "@config/*": [
-        "src/config/*"
-      ],
-      "@graphql/*": [
-        "src/graphql/*"
-      ],
-      "@models/*": [
-        "src/models/*"
-      ],
-      "@entities/*": [
-        "src/entities/*"
-      ],
-      "@screens/*": [
-        "src/screens/*"
-      ],
-      "@hooks/*": [
-        "src/hooks/*"
-      ],
-      "@interfaces/*": [
-        "src/interfaces/*"
-      ],
-      "@mocks/*": [
-        "src/mocks/*"
-      ],
-      "@services/*": [
-        "src/services/*"
-      ],
-      "@constants/*": [
-        "src/constants/*"
-      ],
-      "@context/*": [
-        "src/context/*"
-      ],
-      "@queries/*": [
-        "src/queries/*"
-      ],
-      "@data/*": [
-        "src/data/*"
-      ],
-      "@typeDefs/*": [
-        "src/types/*"
-      ],
-      "@generated/*": [
-        "src/generated/*"
-      ],
-      "@public/*": [
-        "./public/*"
-      ],
-      "@theme/*": [
-        "src/theme/*"
-      ],
-      "@utils/*": [
-        "src/utils/*"
-      ]
-    },
+      "@components/*": ["src/components/*"],
+      "@api/*": ["src/api/*"],
+      "@config/*": ["src/config/*"],
+      "@graphql/*": ["src/graphql/*"],
+      "@models/*": ["src/models/*"],
+      "@entities/*": ["src/entities/*"],
+      "@screens/*": ["src/screens/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@interfaces/*": ["src/interfaces/*"],
+      "@mocks/*": ["src/mocks/*"],
+      "@services/*": ["src/services/*"],
+      "@constants/*": ["src/constants/*"],
+      "@context/*": ["src/context/*"],
+      "@queries/*": ["src/queries/*"],
+      "@data/*": ["src/data/*"],
+      "@typeDefs/*": ["src/types/*"],
+      "@generated/*": ["src/generated/*"],
+      "@public/*": ["./public/*"],
+      "@theme/*": ["src/theme/*"],
+      "@utils/*": ["src/utils/*"],
+      "@icons/*": ["src/icons/*"]
+    }
   },
-  "exclude": [
-    "interfaces/node_modules"
-  ],
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "next-env.d.ts",
-    "next.config.js",
-    "src/components/Link.tsx"
-  ]
+  "exclude": ["interfaces/node_modules", "next.config.js"],
+  "include": ["**/*.ts", "**/*.tsx", "next-env.d.ts", "src/components/Link.tsx"]
 }
