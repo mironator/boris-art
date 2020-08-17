@@ -12,6 +12,7 @@ import Event, { EventType } from '@models/Event'
 import { useArtworkIndexChartAllData } from '@hooks/useChartData'
 import mediumTypes from '@hooks/mediumTypes'
 import { formatFlagEventBubble } from '@utils/formatters'
+import { rangeSelector } from '@utils/charts-config'
 
 enum Shape {
   Flag = 'flag',
@@ -172,7 +173,10 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
   let options: Highcharts.Options | null = null
 
   if (data && !isLoading && !isError) {
+    // @ts-ignore
     options = {
+      rangeSelector,
+
       chart: {
         zoomType: 'xy',
         events: {
@@ -195,11 +199,6 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
 
       tooltip: {
         useHTML: true,
-      },
-
-      rangeSelector: {
-        allButtonsEnabled: true,
-        selected: 6,
       },
 
       title: {

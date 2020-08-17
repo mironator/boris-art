@@ -4,6 +4,7 @@ import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
 
 import { useCompoundAnnualReturnsChartData } from '@hooks/useChartData'
+import { rangeSelector } from '@utils/charts-config'
 
 if (typeof Highcharts === 'object') {
   HighchartsExporting(Highcharts)
@@ -27,18 +28,21 @@ const CompoundAnnualReturns: React.FC<Props> = ({ artistId }) => {
   let options: Highcharts.Options | null = null
 
   if (data && !isLoading && !isError) {
+    // @ts-ignore
     options = {
+      rangeSelector,
+
       chart: {
         type: 'column',
       },
       navigator: {
-        enabled: false
+        enabled: false,
       },
       scrollbar: {
         enabled: false,
       },
       title: {
-        text: 'Median Realized Compound Annual Returns (CAR)'
+        text: 'Median Realized Compound Annual Returns (CAR)',
       },
       xAxis: {
         type: 'datetime',
@@ -48,19 +52,22 @@ const CompoundAnnualReturns: React.FC<Props> = ({ artistId }) => {
           borderWidth: 0,
           dataLabels: {
             enabled: true,
-            format: '{point.y:.1f}%'
-          }
-        }
+            format: '{point.y:.1f}%',
+          },
+        },
       },
       tooltip: {
-        pointFormat: '<b>{point.name}</b><br/>Median CAR (%): <span style="color:{point.color}">{point.y:.2f}%</span>'
+        pointFormat:
+          '<b>{point.name}</b><br/>Median CAR (%): <span style="color:{point.color}">{point.y:.2f}%</span>',
       },
-      series: [{
-        type: 'column',
-        name: 'Median CAR (%)',
-        // eslint-disable-next-line
-        data: chartData
-      }]
+      series: [
+        {
+          type: 'column',
+          name: 'Median CAR (%)',
+          // eslint-disable-next-line
+          data: chartData,
+        },
+      ],
     }
   }
 

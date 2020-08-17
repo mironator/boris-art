@@ -11,6 +11,7 @@ import { gql, useQuery } from '@apollo/client'
 import Event from '@models/Event'
 import { useArtworkValueChartData } from '@hooks/useChartData'
 import Artwork from '@models/Artwork'
+import { rangeSelector } from '@utils/charts-config'
 
 if (typeof Highcharts === 'object') {
   HighchartsExporting(Highcharts)
@@ -105,11 +106,10 @@ const ArtworkValue: React.FC<Props> = ({ artwork }) => {
   if (values && !isLoading && !isError) {
     // @ts-ignore
     options = {
+      rangeSelector,
+
       chart: {
         zoomType: 'xy',
-      },
-      rangeSelector: {
-        selected: 6,
       },
 
       tooltip: {
