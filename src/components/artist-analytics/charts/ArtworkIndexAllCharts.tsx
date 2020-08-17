@@ -12,6 +12,7 @@ import Event from '@models/Event'
 import { useArtworkIndexChartAllData } from '@hooks/useChartData'
 import mediumTypes from '@hooks/mediumTypes'
 import { formatFlagEventBubble } from '@utils/formatters'
+import { rangeSelector } from '@utils/charts-config'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -114,6 +115,8 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
 
   if (data && !isLoading && !isError) {
     options = {
+      rangeSelector,
+
       chart: {
         zoomType: 'xy',
         events: {
@@ -129,11 +132,6 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
 
       tooltip: {
         useHTML: true,
-      },
-
-      rangeSelector: {
-        allButtonsEnabled: true,
-        selected: 6,
       },
 
       title: {
