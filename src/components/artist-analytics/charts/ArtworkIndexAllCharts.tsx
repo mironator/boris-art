@@ -116,6 +116,8 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
   if (data && !isLoading && !isError) {
     // @ts-ignore
     options = {
+      rangeSelector,
+
       chart: {
         zoomType: 'xy',
         events: {
@@ -131,11 +133,6 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
 
       tooltip: {
         useHTML: true,
-      },
-
-      rangeSelector: {
-        ...rangeSelector,
-        allButtonsEnabled: true,
       },
 
       title: {

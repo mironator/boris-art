@@ -1,25 +1,7 @@
 export const rangeSelector = {
-  selected: 7,
+  selected: 2,
+  allButtonsEnabled: true,
   buttons: [
-    {
-      type: 'month',
-      count: 1,
-      text: '1m',
-    },
-    {
-      type: 'month',
-      count: 3,
-      text: '3m',
-    },
-    {
-      type: 'month',
-      count: 6,
-      text: '6m',
-    },
-    {
-      type: 'ytd',
-      text: 'YTD',
-    },
     {
       type: 'year',
       count: 1,
