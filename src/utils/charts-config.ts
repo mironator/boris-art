@@ -1,5 +1,4 @@
 export const rangeSelector = {
-  allButtonsEnabled: false,
   selected: 7,
   buttons: [
     {

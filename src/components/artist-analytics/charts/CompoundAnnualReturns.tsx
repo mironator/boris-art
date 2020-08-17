@@ -28,6 +28,7 @@ const CompoundAnnualReturns: React.FC<Props> = ({ artistId }) => {
   let options: Highcharts.Options | null = null
 
   if (data && !isLoading && !isError) {
+    // @ts-ignore
     options = {
       rangeSelector,
 
