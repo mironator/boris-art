@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import _ from 'lodash'
 import Highcharts from 'highcharts/highstock'
 import HighchartsExporting from 'highcharts/modules/exporting'
@@ -6,9 +6,9 @@ import HighchartsReact from 'highcharts-react-official'
 import HighchartsMore from 'highcharts/highcharts-more'
 import { priceFormatter } from '@utils/formatters'
 import moment from 'moment'
-import { gql, useQuery } from '@apollo/client'
+// import { gql, useQuery } from '@apollo/client'
 
-import Event from '@models/Event'
+// import Event from '@models/Event'
 import { useArtworkValueChartData } from '@hooks/useChartData'
 import Artwork from '@models/Artwork'
 import { rangeSelector } from '@utils/charts-config'
@@ -18,65 +18,65 @@ if (typeof Highcharts === 'object') {
   HighchartsMore(Highcharts)
 }
 
-const GET_EVENTS = gql`
-  query GetEvents($artistId: Int!) {
-    events(artistId: $artistId) {
-      id
-      date
-      type
-      description
-      year
-      params
-      imageUrl
-    }
-  }
-`
+// const GET_EVENTS = gql`
+//   query GetEvents($artistId: Int!) {
+//     events(artistId: $artistId) {
+//       id
+//       date
+//       type
+//       description
+//       year
+//       params
+//       imageUrl
+//     }
+//   }
+// `
 
-interface EventsData {
-  events: Event[]
-}
+// interface EventsData {
+//   events: Event[]
+// }
 
-type FlagSerie = {
-  x: number
-  title: string
-  text: string
-}
+// type FlagSerie = {
+//   x: number
+//   title: string
+//   text: string
+// }
 
-const pretifyFlagText = (obj: Record<string, unknown>): string =>
-  _.toPairs(obj)
-    .map((pair) => `<strong>${pair[0]}: </strong>${pair[1]}<br/>`)
-    .join('')
+// const pretifyFlagText = (obj: Record<string, unknown>): string =>
+//   _.toPairs(obj)
+//     .map((pair) => `<strong>${pair[0]}: </strong>${pair[1]}<br/>`)
+//     .join('')
 
 type Props = {
   artwork: Artwork
 }
 
 const ArtworkValue: React.FC<Props> = ({ artwork }) => {
-  const { id, artistId } = artwork
+  const { id } = artwork
 
-  const [flagData, setFlagData] = useState<FlagSerie[]>([])
-  const { data: eventsData } = useQuery<EventsData, { artistId: number }>(GET_EVENTS, {
-    variables: { artistId },
-  })
+  // const [flagData, setFlagData] = useState<FlagSerie[]>([])
+  // const { data: eventsData } = useQuery<EventsData, { artistId: number }>(GET_EVENTS, {
+  //   variables: { artistId },
+  // })
 
-  useEffect(() => {
-    const foo =
-      eventsData?.events.map((event: Event) => ({
-        x: (event.date ? new Date(event.date) : new Date(event.year, 0)).getTime(),
-        title: event.type,
-        text:
-          event.type === 'Life Events'
-            ? `<strong>${event.description}`
-            : `<pre>${pretifyFlagText(JSON.parse(event.params))}</pre>`,
-      })) || []
+  // useEffect(() => {
+  //   const foo =
+  //     eventsData?.events.map((event: Event) => ({
+  //       x: (event.date ? new Date(event.date) : new Date(event.year, 0)).getTime(),
+  //       title: event.type,
+  //       text:
+  //         event.type === 'Life Events'
+  //           ? `<strong>${event.description}`
+  //           : `<pre>${pretifyFlagText(JSON.parse(event.params))}</pre>`,
+  //     })) || []
 
-    setFlagData(foo)
-  }, [eventsData])
+  //   setFlagData(foo)
+  // }, [eventsData])
 
-  const flagSeries = {
-    type: 'flags',
-    data: flagData,
-  }
+  // const flagSeries = {
+  //   type: 'flags',
+  //   data: flagData,
+  // }
 
   const {
     data: { sales = [], values = [] },
@@ -260,7 +260,7 @@ const ArtworkValue: React.FC<Props> = ({ artwork }) => {
             },
           },
         },
-        flagSeries,
+        // flagSeries,
       ] as Highcharts.SeriesOptionsType[],
     }
   }
