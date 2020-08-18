@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
@@ -7,7 +7,7 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
 
-// import UploadCloud from '@icons/UploadCloud'
+import DropZone from './DropZone'
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -17,12 +17,6 @@ const useStyles = makeStyles((theme) => ({
 
   dropZone: {
     height: 250,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'column',
-    border: '2px dashed',
-    borderColor: 'rgb(184, 184, 184)',
   },
 
   singleSpacing: {
@@ -36,8 +30,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Search: React.FC<unknown> = () => {
+export type SearchProps = {
+  image: string
+}
+
+export type SearchComponentProps = {
+  onReset: () => void
+  onSearch: (_: SearchProps) => void
+}
+
+const Search: React.FC<SearchComponentProps> = (props) => {
+  const { onSearch, onReset } = props
+
   const classes = useStyles()
+
+  const [image, setImage] = useState<string | undefined>()
+
+  const resetAll = () => {
+    setImage(undefined)
+    onReset()
+  }
+
+  const handleSearch = () => onSearch({ image: image as string })
 
   return (
     <Container>
@@ -45,10 +59,7 @@ const Search: React.FC<unknown> = () => {
         Search Similar Artworks
       </Typography>
 
-      <div className={classes.dropZone}>
-        <Typography variant="subtitle1">Drag and drop an image</Typography>
-        <Typography variant="subtitle2">or browse to choose a file</Typography>
-      </div>
+      <DropZone className={classes.dropZone} image={image} onImageChanged={setImage} />
 
       <Grid container spacing={2}>
         <Grid container item>
@@ -105,12 +116,25 @@ const Search: React.FC<unknown> = () => {
       </Grid>
 
       <div>
-        <Button variant="contained" color="primary" className={classes.button}>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          disabled={!image}
+          onClick={handleSearch}
+        >
           Search
         </Button>
-        <Button variant="contained" color="secondary" className={classes.button}>
-          Reset Search
-        </Button>
+        {image && (
+          <Button
+            variant="contained"
+            color="secondary"
+            className={classes.button}
+            onClick={resetAll}
+          >
+            Reset Search
+          </Button>
+        )}
       </div>
     </Container>
   )
