@@ -18,7 +18,7 @@ export const formatFlagEventBubble = (event: Event): string => {
         height="45"
         style="float:left;margin: 0 10px 10px 0"/>
       <div style="white-space: normal;width: 300px">
-        <strong>BAR ${event.type}</strong>
+        <strong>${event.type}</strong>
         <br/>
         <strong>Name: </strong> <span>${params.name}</span>
         <br/>
