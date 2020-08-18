@@ -101,7 +101,6 @@ type FlagSerie = {
 
 const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
   const classes = useStyles()
-  const [isAllSeriesOn /* , setIsOnSeriesOn */] = useState<boolean>(true)
   const { data, isLoading, isError } = useArtworkIndexChartAllData(artistId, mediumList)
   const [flagData, setFlagData] = useState<Dictionary<FlagSerie[]>>()
   const { data: eventsData } = useQuery<EventsData, { artistId: number }>(GET_EVENTS, {
@@ -137,22 +136,26 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
       tooltip: {
         valueDecimals: 2,
       },
-      color: colors[index],
+      color: colors[index], // getColorByName(name),
+      showInNavigator: true,
     }
   })
 
-  const columnLine = data.map(({ name, data: items }, index) => {
-    // console.log(`[INFO] column serie: line-${index}`)
-    return {
-      type: 'column',
-      linkedTo: `line-${name}`,
-      enableMouseTracking: false,
-      name: `${name} volume`,
-      data: items.map((item) => [item.date.getTime(), item.volume]),
-      yAxis: 1,
-      color: colors[index],
-    }
-  })
+  const columnLine = data
+    .filter((i) => !i.name.includes('all'))
+    .map(({ name, data: items }, index) => {
+      // console.log(`[INFO] column serie: line-${index}`)
+      return {
+        type: 'column',
+        // linkedTo: `line-${name}`,
+        enableMouseTracking: false,
+        showInLegend: false,
+        name: `${name} volume`,
+        data: items.map((item) => [item.date.getTime(), item.volume]),
+        yAxis: 1,
+        color: colors[index + 1], // getColorByName(name),
+      }
+    })
 
   const flagSeries = _.keys(flagData).map((flagType: string) => {
     const flagSeriesData: FlagSerie[] = _.get(flagData, flagType, [])
@@ -162,7 +165,7 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
       type: 'flags',
       name: `${shapeData.code}: ${flagType}`,
       data: flagSeriesData,
-      onSeries: isAllSeriesOn ? 'line-all' : null,
+      onSeries: 'line-all',
       tooltip: {
         pointFormatter(): string {
           const { type, description } = this as Event & { pointFormatter(): string }
@@ -186,14 +189,26 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
         events: {
           load() {
             this.legend.allItems
-              .filter((item) => item.name.includes('Series') /* || item.name.includes('flags') */)
+              .filter((item) => item.name.includes('Series') /* || item.name.includes('volume') */)
               .forEach((item: any) => {
                 item.legendGroup.hide()
+              })
+
+            // console.log('[FOO]', this.legend.allItems)
+            this.legend.allItems
+              .filter(
+                (item) =>
+                  !item.name.includes('all') &&
+                  !item.name.includes(':') &&
+                  !item.name.includes('volume')
+              )
+              .forEach((item: any) => {
+                item.setVisible(false)
               })
           },
           redraw() {
             this.legend.allItems
-              .filter((item) => item.name.includes('Series') /* || item.name.includes('flags') */)
+              .filter((item) => item.name.includes('Series') /* || item.name.includes('volume') */)
               .forEach((item: any) => {
                 item.legendGroup.hide()
               })
@@ -253,11 +268,20 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
         },
         series: {
           events: {
-            // legendItemClick: function() {
-            //   console.log('[INFO] hide', this)
-            //   if (this.name.includes('all')) {
-            //     setIsOnSeriesOn(!isAllSeriesOn)
-            //   }
+            // legendItemClick() {
+            //   setTimeout(() => {
+            //     const series = this.chart.legend.allItems.filter(
+            //       (i) => !(i.name.includes('all') || i.name.includes(':')) && i.visible
+            //     )
+            //     console.log('[INFO] legendItemClick series.length', series.length, series)
+            //     if (series.length === 0) {
+            //       console.log('[INFO] setIsOnlyAllSeriesDisplayed', true)
+            //       setIsOnlyAllSeriesDisplayed(true)
+            //     } else {
+            //       console.log('[INFO] setIsOnlyAllSeriesDisplayed', false)
+            //       setIsOnlyAllSeriesDisplayed(false)
+            //     }
+            //   }, 300)
             // },
           },
           states: {
