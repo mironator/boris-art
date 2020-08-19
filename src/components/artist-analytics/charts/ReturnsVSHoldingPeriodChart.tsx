@@ -10,6 +10,8 @@ import { useReturnVsPeriodData } from '@hooks/useChartData'
 import mediumTypes from '@hooks/mediumTypes'
 import { ReturnsVsPeriodChartDatum } from '@interfaces/index'
 
+const NO_IMAGE_URL = '/images/no-image-available.png'
+
 if (typeof Highcharts === 'object') {
   HighchartsExporting(Highcharts)
 }
@@ -151,13 +153,16 @@ const ReturnsVSHoldingPeriodChart: React.FC<Props> = ({ artistId }) => {
                 x: number
                 y: number
               } = this
+
               return `
-                <div style="display: table">
+                <div style="display: flex;">
                   <img
-                    src = "${url}"
+                    src = "${url || NO_IMAGE_URL}"
                     width="55"
                     height="45"
-                    style="float:left;margin: 0 10px 10px 0"/>
+                    style="margin: 0 10px 10px 0;
+                      object-fit: scale-down;"
+                  />
                   <div style="white-space: normal;width: 200px"><strong>${artworkName}</strong></div>
                 </div>
                 <strong>Auction house:</strong> <span>${auctionHouseName}</span>
