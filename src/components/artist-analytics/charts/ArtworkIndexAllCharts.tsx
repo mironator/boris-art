@@ -158,7 +158,7 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
       }
     })
 
-  const flagSeries = _.keys(flagData).map((flagType: string, index) => {
+  const flagSeries = _.keys(flagData).map((flagType: string) => {
     const flagSeriesData: FlagSerie[] = _.get(flagData, flagType, [])
     const shapeData = getShapeByEventType(flagType as EventType)
 
