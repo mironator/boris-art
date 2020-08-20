@@ -41,6 +41,9 @@ const GET_VALUATION = gql`
         sizeNotes
         lotImagePresignedUrl
         exhibited
+        lastPrice
+        placeLastSold
+        dateLastSold
       }
       sales
       values
