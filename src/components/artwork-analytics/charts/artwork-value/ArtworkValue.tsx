@@ -1,51 +1,25 @@
 import React from 'react'
-import _ from 'lodash'
 import Highcharts from 'highcharts/highstock'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
 import HighchartsMore from 'highcharts/highcharts-more'
-import { priceFormatter } from '@utils/formatters'
-import moment from 'moment'
 // import { gql, useQuery } from '@apollo/client'
 
 // import Event from '@models/Event'
 import { useArtworkValueChartData } from '@hooks/useChartData'
 import Artwork from '@models/Artwork'
-import { rangeSelector } from '@utils/charts-config'
+import {
+  rangeSelector,
+  getTooltipArtworkValue,
+  tooltipTypes,
+  toggleTooltipFreze,
+  freezeWorkaround,
+} from '@utils/charts-config'
 
 if (typeof Highcharts === 'object') {
   HighchartsExporting(Highcharts)
   HighchartsMore(Highcharts)
 }
-
-// const GET_EVENTS = gql`
-//   query GetEvents($artistId: Int!) {
-//     events(artistId: $artistId) {
-//       id
-//       date
-//       type
-//       description
-//       year
-//       params
-//       imageUrl
-//     }
-//   }
-// `
-
-// interface EventsData {
-//   events: Event[]
-// }
-
-// type FlagSerie = {
-//   x: number
-//   title: string
-//   text: string
-// }
-
-// const pretifyFlagText = (obj: Record<string, unknown>): string =>
-//   _.toPairs(obj)
-//     .map((pair) => `<strong>${pair[0]}: </strong>${pair[1]}<br/>`)
-//     .join('')
 
 type Props = {
   artwork: Artwork
@@ -53,30 +27,6 @@ type Props = {
 
 const ArtworkValue: React.FC<Props> = ({ artwork }) => {
   const { id } = artwork
-
-  // const [flagData, setFlagData] = useState<FlagSerie[]>([])
-  // const { data: eventsData } = useQuery<EventsData, { artistId: number }>(GET_EVENTS, {
-  //   variables: { artistId },
-  // })
-
-  // useEffect(() => {
-  //   const foo =
-  //     eventsData?.events.map((event: Event) => ({
-  //       x: (event.date ? new Date(event.date) : new Date(event.year, 0)).getTime(),
-  //       title: event.type,
-  //       text:
-  //         event.type === 'Life Events'
-  //           ? `<strong>${event.description}`
-  //           : `<pre>${pretifyFlagText(JSON.parse(event.params))}</pre>`,
-  //     })) || []
-
-  //   setFlagData(foo)
-  // }, [eventsData])
-
-  // const flagSeries = {
-  //   type: 'flags',
-  //   data: flagData,
-  // }
 
   const {
     data: { sales = [], values = [] },
@@ -113,6 +63,7 @@ const ArtworkValue: React.FC<Props> = ({ artwork }) => {
       },
 
       tooltip: {
+        ...freezeWorkaround(),
         valuePrefix: '$',
         useHTML: true,
       },
@@ -127,6 +78,18 @@ const ArtworkValue: React.FC<Props> = ({ artwork }) => {
       plotOptions: {
         flags: {
           useHTML: true,
+        },
+        series: {
+          cursor: 'pointer',
+          point: {
+            events: {
+              click() {
+                // @ts-ignore
+                const { chart } = this.series
+                toggleTooltipFreze(chart)
+              },
+            },
+          },
         },
       },
 
@@ -171,36 +134,17 @@ const ArtworkValue: React.FC<Props> = ({ artwork }) => {
           },
           tooltip: {
             pointFormatter() {
-              // @ts-ignore
-              const {
+              const props = (this as unknown) as tooltipTypes
+              const { url, artworkId, artworkName, auctionHouseName, date, price } = props
+
+              return getTooltipArtworkValue({
                 url,
+                artworkId,
                 artworkName,
                 auctionHouseName,
                 date,
                 price,
-              }: {
-                url: string
-                artworkName: string
-                auctionHouseName: string
-                date: Date
-                price: number
-              } = this
-              return `
-                <div style="display: table">
-                  <img
-                    src = "${url}"
-                    width="55"
-                    height="45"
-                    style="float:left;margin: 0 10px 10px 0"/>
-                  <div style="white-space: normal;width: 200px"><strong>${artworkName}</strong></div>
-                </div>
-                <strong>Auction house:</strong> <span>${auctionHouseName}</span>
-                <br/>
-                <strong>Sale date:</strong> <span>${moment(date).format('LL')}</span>
-                <br/>
-                <strong>Sold for:</strong> <span>${priceFormatter(price)}</span>
-                <br/>
-              `
+              })
             },
           },
           states: {
@@ -222,36 +166,17 @@ const ArtworkValue: React.FC<Props> = ({ artwork }) => {
           },
           tooltip: {
             pointFormatter() {
-              // @ts-ignore
-              const {
+              const props = (this as unknown) as tooltipTypes
+              const { url, artworkId, artworkName, auctionHouseName, date, price } = props
+
+              return getTooltipArtworkValue({
                 url,
+                artworkId,
                 artworkName,
                 auctionHouseName,
                 date,
                 price,
-              }: {
-                url: string
-                artworkName: string
-                auctionHouseName: string
-                date: Date
-                price: number
-              } = this
-              return `
-                <div style="display: table">
-                  <img
-                    src = "${url}"
-                    width="55"
-                    height="45"
-                    style="float:left;margin: 0 10px 10px 0"/>
-                  <div style="white-space: normal;width: 200px"><strong>${artworkName}</strong></div>
-                </div>
-                <strong>Auction house:</strong> <span>${auctionHouseName}</span>
-                <br/>
-                <strong>Sale date:</strong> <span>${moment(date).format('LL')}</span>
-                <br/>
-                <strong>Sold for:</strong> <span>${priceFormatter(price)}</span>
-                <br/>
-              `
+              })
             },
           },
           states: {
