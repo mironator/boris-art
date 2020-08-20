@@ -48,7 +48,7 @@ const resolvers = {
       const params = {
         'artist[eq]': artist,
         'image[eq]': image,
-        'medium[eq]': medium,
+        'medium[eq]': medium !== 'all' ? medium : null,
         'year[eq]': year,
         'height[eq]': height,
         'width[eq]': width,
