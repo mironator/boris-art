@@ -2,18 +2,40 @@ import { gql } from 'apollo-server-micro'
 
 const typeDefs = gql`
   scalar Date
+  scalar JSON
 
   type Query {
     users: [User!]!
     artists(query: String, limit: Int, offset: Int): [Artist!]!
     artist(id: Int): Artist
     events(artistId: Int, limit: Int, offset: Int): [Event]
+    valuation(
+      artist: Int
+      image: String
+      medium: String
+      year: Int
+      height: Int
+      width: Int
+      depth: Int
+      unit: String
+    ): Valuation
+  }
+
+  type File {
+    uri: String!
+    filename: String!
+    mimetype: String!
+    encoding: String!
   }
 
   "Test type with mocked data"
   type User {
     id: Int!
     firstName: String
+  }
+
+  type Mutation {
+    uploadFile(file: Upload!): File
   }
 
   "Artist object containing basis scalar fields"
@@ -71,6 +93,12 @@ const typeDefs = gql`
     lastPrice: Int
     dateLastSold: Date
     placeLastSold: String
+  }
+
+  type Valuation {
+    artworks: [Artwork]
+    sales: JSON
+    values: JSON
   }
 `
 

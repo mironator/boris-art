@@ -1,6 +1,7 @@
 /* eslint-disable react/no-this-in-sfc */
 import React, { useState, useEffect } from 'react'
 import _ from 'lodash'
+import moment from 'moment'
 import Highcharts, { Dictionary } from 'highcharts/highstock'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
@@ -30,6 +31,9 @@ enum Code {
   C = 'C',
   D = 'D',
   E = 'E',
+  L = 'L',
+  S = 'S',
+  P = 'P',
 }
 
 const EventToShapeMapper = {
@@ -40,10 +44,10 @@ const EventToShapeMapper = {
 }
 
 const EventToCodeMapper = {
-  [EventType.MajorSales]: Code.A,
-  [EventType.LifeEvents]: Code.B,
-  [EventType.MajorExhibitions]: Code.C,
-  [EventType.MajorPublications]: Code.D,
+  [EventType.MajorSales]: Code.S,
+  [EventType.LifeEvents]: Code.L,
+  [EventType.MajorExhibitions]: Code.E,
+  [EventType.MajorPublications]: Code.P,
 }
 
 const getShapeByEventType: (
@@ -105,7 +109,6 @@ type FlagSerie = {
 
 const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
   const classes = useStyles()
-  const [isAllSeriesOn /* , setIsOnSeriesOn */] = useState<boolean>(true)
   const { data, isLoading, isError } = useArtworkIndexChartAllData(artistId, mediumList)
   const [flagData, setFlagData] = useState<Dictionary<FlagSerie[]>>()
   const { data: eventsData } = useQuery<EventsData, { artistId: number }>(GET_EVENTS, {
@@ -117,7 +120,9 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
       eventsData?.events.map((event: Event) => {
         const shapeData = getShapeByEventType(event.type as EventType)
         return {
-          x: (event.date ? new Date(event.date) : new Date(event.year, 6, 15)).getTime(),
+          x: event.date
+            ? moment.utc(event.date)
+            : moment.utc(`${event.year}-07-01 12:00:00`).valueOf(),
           title: shapeData.code,
           ...event,
         }
@@ -139,30 +144,41 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
       tooltip: {
         valueDecimals: 2,
       },
-      color: colors[index],
+      color: colors[index], // getColorByName(name),
+      showInNavigator: true,
     }
   })
 
-  const columnLine = data.map(({ name, data: items }, index) => {
-    // console.log(`[INFO] column serie: line-${index}`)
-    return {
-      type: 'column',
-      linkedTo: `line-${name}`,
-      name: `${name} volume`,
-      data: items.map((item) => [item.date.getTime(), item.volume]),
-      yAxis: 1,
-      color: colors[index],
-    }
-  })
+  const columnLine = data
+    .filter((i) => !i.name.includes('all'))
+    .map(({ name, data: items }, index) => {
+      // console.log(`[INFO] column serie: line-${index}`)
+      return {
+        type: 'column',
+        // linkedTo: `line-${name}`,
+        enableMouseTracking: false,
+        showInLegend: false,
+        name: `${name} volume`,
+        data: items.map((item) => [item.date.getTime(), item.volume]),
+        yAxis: 1,
+        color: colors[index + 1], // getColorByName(name),
+      }
+    })
 
   const flagSeries = _.keys(flagData).map((flagType: string) => {
     const flagSeriesData: FlagSerie[] = _.get(flagData, flagType, [])
     const shapeData = getShapeByEventType(flagType as EventType)
+
     return {
       type: 'flags',
-      name: 'flags',
+      name: `${shapeData.code}: ${flagType}`,
       data: flagSeriesData,
-      onSeries: isAllSeriesOn ? 'line-all' : null,
+      color: '#3d3d3d',
+      style: {
+        color: '#3d3d3d',
+      },
+      onSeries: 'line-all',
+
       tooltip: {
         pointFormatter(): string {
           const { type, description } = this as Event & { pointFormatter(): string }
@@ -170,7 +186,7 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
           return type === 'Life Events' ||
             type === 'Major Exhibitions' ||
             type === 'Major Publications'
-            ? `<strong>${description}</strong>`
+            ? `<strong>${type}</strong><br/><div style="width: 200px;word-wrap: break-word; word-break: break-word; white-space: normal;">${description}</div>`
             : getTooltipArtworkIndexAll(this as Event & { pointFormatter(): string })
         },
       },
@@ -190,21 +206,35 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
         events: {
           load() {
             this.legend.allItems
-              .filter((item) => item.name.includes('Series') || item.name.includes('flags'))
+              .filter((item) => item.name.includes('Series') /* || item.name.includes('volume') */)
               .forEach((item: any) => {
                 item.legendGroup.hide()
+              })
+
+            // console.log('[FOO]', this.legend.allItems)
+            this.legend.allItems
+              .filter(
+                (item) =>
+                  !item.name.includes('all') &&
+                  !item.name.includes(':') &&
+                  !item.name.includes('volume')
+              )
+              .forEach((item: any) => {
+                item.setVisible(false)
               })
           },
           redraw() {
             this.legend.allItems
-              .filter((item) => item.name.includes('Series') || item.name.includes('flags'))
+              .filter((item) => item.name.includes('Series') /* || item.name.includes('volume') */)
               .forEach((item: any) => {
                 item.legendGroup.hide()
               })
           },
         },
       },
-
+      time: {
+        timezone: 'Europe/London',
+      },
       tooltip: {
         useHTML: true,
         // @ts-ignore
@@ -261,11 +291,20 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
             },
           },
           events: {
-            // legendItemClick: function() {
-            //   console.log('[INFO] hide', this)
-            //   if (this.name.includes('all')) {
-            //     setIsOnSeriesOn(!isAllSeriesOn)
-            //   }
+            // legendItemClick() {
+            //   setTimeout(() => {
+            //     const series = this.chart.legend.allItems.filter(
+            //       (i) => !(i.name.includes('all') || i.name.includes(':')) && i.visible
+            //     )
+            //     console.log('[INFO] legendItemClick series.length', series.length, series)
+            //     if (series.length === 0) {
+            //       console.log('[INFO] setIsOnlyAllSeriesDisplayed', true)
+            //       setIsOnlyAllSeriesDisplayed(true)
+            //     } else {
+            //       console.log('[INFO] setIsOnlyAllSeriesDisplayed', false)
+            //       setIsOnlyAllSeriesDisplayed(false)
+            //     }
+            //   }, 300)
             // },
           },
           states: {
@@ -299,13 +338,13 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
           </Grid>
         </Grid>
       ) : (
-        <HighchartsReact
-          containerProps={{ style: { height: 600 } }}
-          highcharts={Highcharts}
-          options={options}
-          constructorType="stockChart"
-        />
-      )}
+          <HighchartsReact
+            containerProps={{ style: { height: 600 } }}
+            highcharts={Highcharts}
+            options={options}
+            constructorType="stockChart"
+          />
+        )}
     </>
   )
 }
