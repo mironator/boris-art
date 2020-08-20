@@ -1,4 +1,4 @@
-import _, { isEmpty } from 'lodash'
+import _ from 'lodash'
 import { DateResolver } from 'graphql-scalars'
 // import { GraphQLUpload } from 'graphql-upload'
 import Artist from '@models/Artist'
@@ -55,9 +55,17 @@ const resolvers = {
         'depth[eq]': depth,
         'unit[eq]': unit,
       }
+
+      // console.log(
+      //   '[INFO] looking for similarities',
+      //   params,
+      //   `http://54.156.225.113:8000/v1/valuation/?${queryString.stringify(
+      //     _.omitBy(params, (i) => !i)
+      //   )}`
+      // )
       const apiRes = await fetch(
         `http://54.156.225.113:8000/v1/valuation/?${queryString.stringify(
-          _.omitBy(params, isEmpty)
+          _.omitBy(params, (i) => !i)
         )}`
       )
 

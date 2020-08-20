@@ -71,7 +71,7 @@ const DropZone: React.FC<DropZoneProps> = (props) => {
       const data = new FormData()
       data.append('file', file)
 
-      const response = await fetch('http://54.156.225.113:8000/v1/image-upload/', {
+      const response = await fetch('/api/artworks/upload', {
         method: 'POST',
         body: data,
       })
