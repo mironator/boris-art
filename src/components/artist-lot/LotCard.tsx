@@ -54,7 +54,7 @@ interface OwnProps {
 type Props = OwnProps
 
 const LotCard: React.FC<Props> = ({
-  artwork: { id, name, lotImagePresignedUrl, markings, creationYear, lastPrice },
+  artwork: { id, name, lotImagePresignedUrl, markings, creationYear, lastPrice, placeLastSold },
 }) => {
   const classes = useStyles()
   const [toggler, setToggler] = useState(false)
@@ -85,9 +85,16 @@ const LotCard: React.FC<Props> = ({
           <Typography variant="body2" color="textSecondary" component="p">
             {creationYear}
           </Typography>
-          <Typography variant="body1" component="h4" style={{ bottom: 0 }}>
-            {lastPrice && `Price: ${priceFormatter(lastPrice)}`}
-          </Typography>
+          {lastPrice && (
+            <Typography variant="body1" component="p">
+              {`Price: ${priceFormatter(lastPrice)}`}
+            </Typography>
+          )}
+          {placeLastSold && (
+            <Typography variant="body1" component="p" style={{ bottom: 0 }}>
+              {`Auction: ${placeLastSold}`}
+            </Typography>
+          )}
         </CardContent>
       </CardActionArea>
       <CardActions>
@@ -119,9 +126,16 @@ const LotCard: React.FC<Props> = ({
               <Typography variant="body2" component="p">
                 {creationYear}
               </Typography>
-              <Typography variant="body1" component="h4">
-                {lastPrice && `Price: ${priceFormatter(lastPrice)}`}
-              </Typography>
+              {lastPrice && (
+                <Typography variant="body1" component="h4">
+                  {`Price: ${priceFormatter(lastPrice)}`}
+                </Typography>
+              )}
+              {placeLastSold && (
+                <Typography variant="body1" component="h4">
+                  {`Auction: ${placeLastSold}`}
+                </Typography>
+              )}
             </Grid>
           </div>,
         ]}
