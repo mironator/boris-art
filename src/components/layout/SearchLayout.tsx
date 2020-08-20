@@ -47,13 +47,15 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-export const SearchContext = React.createContext<string>('');
+export const SearchContext = React.createContext<string>('')
 
 const MainLayout: React.FC<unknown> = ({ children }) => {
   const [query, setQuery] = useState<string>('')
   const [debouncedQuery] = useDebounce(query, 1e3)
 
-  const onInputChange = useCallback((query) => { setQuery(query) }, [])
+  const onInputChange = useCallback((q: string) => {
+    setQuery(q)
+  }, [])
 
   const classes = useStyles({})
   return (
