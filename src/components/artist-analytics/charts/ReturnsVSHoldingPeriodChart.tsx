@@ -7,12 +7,7 @@ import HighchartsReact from 'highcharts-react-official'
 import { useReturnVsPeriodData } from '@hooks/useChartData'
 import mediumTypes from '@hooks/mediumTypes'
 import { ReturnsVsPeriodChartDatum } from '@interfaces/index'
-import {
-  getTooltipRvsHP,
-  tooltipTypes,
-  toggleTooltipFreze,
-  freezeWorkaround,
-} from '@utils/charts-config'
+import { getTooltipRvsHP, tooltipTypes, frezeTooltip } from '@utils/charts-config'
 
 if (typeof Highcharts === 'object') {
   HighchartsExporting(Highcharts)
@@ -66,7 +61,6 @@ const ReturnsVSHoldingPeriodChart: React.FC<Props> = ({ artistId }) => {
         enabled: false,
       },
       tooltip: {
-        ...freezeWorkaround(),
         useHTML: true,
       },
       exporting: {
@@ -108,7 +102,7 @@ const ReturnsVSHoldingPeriodChart: React.FC<Props> = ({ artistId }) => {
               click() {
                 // @ts-ignore
                 const { chart } = this.series
-                toggleTooltipFreze(chart)
+                frezeTooltip(chart)
               },
             },
           },

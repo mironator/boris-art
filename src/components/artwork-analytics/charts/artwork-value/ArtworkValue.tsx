@@ -12,8 +12,7 @@ import {
   rangeSelector,
   getTooltipArtworkValue,
   tooltipTypes,
-  toggleTooltipFreze,
-  freezeWorkaround,
+  frezeTooltip,
 } from '@utils/charts-config'
 
 if (typeof Highcharts === 'object') {
@@ -63,7 +62,6 @@ const ArtworkValue: React.FC<Props> = ({ artwork }) => {
       },
 
       tooltip: {
-        ...freezeWorkaround(),
         valuePrefix: '$',
         useHTML: true,
       },
@@ -86,7 +84,7 @@ const ArtworkValue: React.FC<Props> = ({ artwork }) => {
               click() {
                 // @ts-ignore
                 const { chart } = this.series
-                toggleTooltipFreze(chart)
+                frezeTooltip(chart)
               },
             },
           },
