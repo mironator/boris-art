@@ -11,8 +11,12 @@ import { gql, useQuery } from '@apollo/client'
 import Event, { EventType } from '@models/Event'
 import { useArtworkIndexChartAllData } from '@hooks/useChartData'
 import mediumTypes from '@hooks/mediumTypes'
-import { formatFlagEventBubble } from '@utils/formatters'
-import { rangeSelector } from '@utils/charts-config'
+import {
+  rangeSelector,
+  getTooltipArtworkIndexAll,
+  toggleTooltipFreze,
+  freezeWorkaround,
+} from '@utils/charts-config'
 
 enum Shape {
   Flag = 'flag',
@@ -77,6 +81,9 @@ const GET_EVENTS = gql`
       year
       params
       imageUrl
+      artwork {
+        id
+      }
     }
   }
 `
@@ -159,11 +166,12 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
       tooltip: {
         pointFormatter(): string {
           const { type, description } = this as Event & { pointFormatter(): string }
+
           return type === 'Life Events' ||
             type === 'Major Exhibitions' ||
             type === 'Major Publications'
             ? `<strong>${description}</strong>`
-            : formatFlagEventBubble(this as Event & { pointFormatter(): string })
+            : getTooltipArtworkIndexAll(this as Event & { pointFormatter(): string })
         },
       },
       shape: shapeData.shape,
@@ -199,6 +207,8 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
 
       tooltip: {
         useHTML: true,
+        // @ts-ignore
+        ...freezeWorkaround(),
       },
 
       title: {
@@ -241,6 +251,15 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
           useHTML: true,
         },
         series: {
+          cursor: 'pointer',
+          point: {
+            events: {
+              click() {
+                const { chart } = this.series
+                toggleTooltipFreze(chart)
+              },
+            },
+          },
           events: {
             // legendItemClick: function() {
             //   console.log('[INFO] hide', this)
@@ -280,13 +299,13 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
           </Grid>
         </Grid>
       ) : (
-          <HighchartsReact
-            containerProps={{ style: { height: 600 } }}
-            highcharts={Highcharts}
-            options={options}
-            constructorType="stockChart"
-          />
-        )}
+        <HighchartsReact
+          containerProps={{ style: { height: 600 } }}
+          highcharts={Highcharts}
+          options={options}
+          constructorType="stockChart"
+        />
+      )}
     </>
   )
 }
