@@ -1,62 +1,72 @@
 /* eslint-disable react/no-this-in-sfc */
-import React, { useState, useEffect } from 'react'
+import React, {
+  // useState,
+  // useEffect,
+} from 'react'
 import _ from 'lodash'
-import moment from 'moment'
-import Highcharts, { Dictionary } from 'highcharts/highstock'
+// import moment from 'moment'
+import Highcharts, {
+  // Dictionary,
+} from 'highcharts/highstock'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { CircularProgress, Grid } from '@material-ui/core'
 import { gql, useQuery } from '@apollo/client'
 
-import Event, { EventType } from '@models/Event';
+// import Event, {
+//   EventType,
+// } from '@models/Event';
 import Artist from '@models/Artist';
 
-import { useArtworkIndexChartAllData, useArtworkIndexComparisonChartData } from '@hooks/useChartData'
+import {
+  // useArtworkIndexChartAllData,
+  useArtworkIndexComparisonChartData,
+} from '@hooks/useChartData'
 import mediumTypes from '@hooks/mediumTypes'
-import { formatFlagEventBubble } from '@utils/formatters'
+// import { formatFlagEventBubble } from '@utils/formatters'
 import { rangeSelector } from '@utils/charts-config'
 
-enum Shape {
-  Flag = 'flag',
-  Circle = 'circlepin',
-  Square = 'squarepin',
-}
+// enum Shape {
+//   Flag = 'flag',
+//   Circle = 'circlepin',
+//   Square = 'squarepin',
+// }
 
-enum Code {
-  A = 'A',
-  B = 'B',
-  C = 'C',
-  D = 'D',
-  E = 'E',
-  L = 'L',
-  S = 'S',
-  P = 'P',
-}
+// enum Code {
+//   A = 'A',
+//   B = 'B',
+//   C = 'C',
+//   D = 'D',
+//   E = 'E',
+//   L = 'L',
+//   S = 'S',
+//   P = 'P',
+// }
 
-const EventToShapeMapper = {
-  [EventType.MajorSales]: Shape.Circle,
-  [EventType.LifeEvents]: Shape.Flag,
-  [EventType.MajorExhibitions]: Shape.Square,
-  [EventType.MajorPublications]: Shape.Square,
-}
+// const EventToShapeMapper = {
+//   [EventType.MajorSales]: Shape.Circle,
+//   [EventType.LifeEvents]: Shape.Flag,
+//   [EventType.MajorExhibitions]: Shape.Square,
+//   [EventType.MajorPublications]: Shape.Square,
+// }
 
-const EventToCodeMapper = {
-  [EventType.MajorSales]: Code.S,
-  [EventType.LifeEvents]: Code.L,
-  [EventType.MajorExhibitions]: Code.E,
-  [EventType.MajorPublications]: Code.P,
-}
+// const EventToCodeMapper = {
+//   [EventType.MajorSales]: Code.S,
+//   [EventType.LifeEvents]: Code.L,
+//   [EventType.MajorExhibitions]: Code.E,
+//   [EventType.MajorPublications]: Code.P,
+// }
 
-const getShapeByEventType: (
-  eType: EventType
-) => {
-  shape: Shape
-  code: Code
-} = (eType) => ({
-  shape: EventToShapeMapper[eType],
-  code: EventToCodeMapper[eType],
-})
+// const getShapeByEventType: (
+//   eType: EventType
+// ) => {
+//   shape: Shape
+//   code: Code
+// } = (eType) => ({
+//   shape: EventToShapeMapper[eType],
+//   code: EventToCodeMapper[eType],
+// })
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -73,19 +83,19 @@ if (typeof Highcharts === 'object') {
   colors = Highcharts.getOptions().colors || []
 }
 
-const GET_EVENTS = gql`
-  query GetEvents($artistId: Int!) {
-    events(artistId: $artistId) {
-      id
-      date
-      type
-      description
-      year
-      params
-      imageUrl
-    }
-  }
-`
+// const GET_EVENTS = gql`
+//   query GetEvents($artistId: Int!) {
+//     events(artistId: $artistId) {
+//       id
+//       date
+//       type
+//       description
+//       year
+//       params
+//       imageUrl
+//     }
+//   }
+// `
 interface ArtistsData {
   artists: Artist[];
 };
@@ -105,22 +115,22 @@ const GET_ARTISTS = gql`
   }
 `;
 
-interface EventsData {
-  events: Event[]
-}
+// interface EventsData {
+//   events: Event[]
+// }
 
 type Props = {
   artistId: number
   mediumList: Array<keyof typeof mediumTypes>
 }
 
-type FlagSerie = {
-  x: number
-  title: string
-  text: string
-}
+// type FlagSerie = {
+//   x: number
+//   title: string
+//   text: string
+// }
 
-const ArtworkIndexCompareChart: React.FC<Props> = props => {
+const ArtworkIndexCompareChart: React.FC<Props> = () => {
   const { data } = useQuery<ArtistsData, { query: string }>(GET_ARTISTS, {
     variables: {
       query: 'basq',
@@ -128,16 +138,12 @@ const ArtworkIndexCompareChart: React.FC<Props> = props => {
   });
 
   return data ? (
-    <ComparisonChart
-      artists={data.artists}
-      artistId={props.artistId}
-      mediumList={props.mediumList}
-    />
+    <ComparisonChart artists={data.artists} />
   ): null;
 };
 
 
-const ComparisonChart: React.FC<{ artists: Artist[] } & Props> = ({ artists, artistId, mediumList }) => {
+const ComparisonChart: React.FC<{ artists: Artist[] }> = ({ artists }) => {
   const classes = useStyles()
   // const { data, isLoading, isError } = useArtworkIndexChartAllData(artistId, mediumList)
   
@@ -243,34 +249,6 @@ const ComparisonChart: React.FC<{ artists: Artist[] } & Props> = ({ artists, art
 
       chart: {
         zoomType: 'xy',
-        events: {
-          load() {
-            this.legend.allItems
-              .filter((item) => item.name.includes('Series') /* || item.name.includes('volume') */)
-              .forEach((item: any) => {
-                item.legendGroup.hide()
-              })
-
-            // console.log('[FOO]', this.legend.allItems)
-            this.legend.allItems
-              .filter(
-                (item) =>
-                  !item.name.includes('all') &&
-                  !item.name.includes(':') &&
-                  !item.name.includes('volume')
-              )
-              .forEach((item: any) => {
-                item.setVisible(false)
-              })
-          },
-          redraw() {
-            this.legend.allItems
-              .filter((item) => item.name.includes('Series') /* || item.name.includes('volume') */)
-              .forEach((item: any) => {
-                item.legendGroup.hide()
-              })
-          },
-        },
       },
       time: {
         timezone: 'Europe/London',
@@ -289,23 +267,23 @@ const ComparisonChart: React.FC<{ artists: Artist[] } & Props> = ({ artists, art
           labels: {
             align: 'left',
           },
-          height: '70%',
+          // height: '70%',
           resize: {
             enabled: true,
           },
         },
-        {
-          labels: {
-            align: 'left',
-          },
-          top: '70%',
-          height: '30%',
-          offset: 0,
-          min: 0,
-          stackLabels: {
-            enabled: false,
-          },
-        },
+        // {
+        //   labels: {
+        //     align: 'left',
+        //   },
+        //   top: '70%',
+        //   height: '30%',
+        //   offset: 0,
+        //   min: 0,
+        //   stackLabels: {
+        //     enabled: false,
+        //   },
+        // },
       ],
 
       plotOptions: {
@@ -319,6 +297,8 @@ const ComparisonChart: React.FC<{ artists: Artist[] } & Props> = ({ artists, art
           useHTML: true,
         },
         series: {
+          compare: 'percent',
+          showInNavigator: true,
           events: {
             // legendItemClick() {
             //   setTimeout(() => {
@@ -364,7 +344,6 @@ const ComparisonChart: React.FC<{ artists: Artist[] } & Props> = ({ artists, art
 
   return (
     <>
-      Писюн-висюн
       {isLoading ? (
         <Grid container justify="center" alignItems="center" className={classes.loading}>
           <Grid item>

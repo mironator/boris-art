@@ -1,6 +1,5 @@
 import useSWR from 'swr';
-import _, { groupBy } from 'lodash';
-import { gql, useQuery } from '@apollo/client';
+import _  from 'lodash';
 
 import fetcher from '@utils/fetcher'
 import {
@@ -173,25 +172,6 @@ export const useArtworkValueChartData: (artworkId: number) => ArtworkValueChartD
     isError: error,
   }
 }
-
-interface ArtistsData {
-  artists: Artist[];
-};
-
-const GET_ARTISTS = gql`
-  query GetArtists($query: String){
-    artists(query: $query) {
-      id
-      name
-      birth
-      death
-      qualifier
-      lotsCost
-      artworksCount
-      lotsCount
-    }
-  }
-`;
 
 export const useArtworkIndexComparisonChartData: (artists: Artist[]) => ArtworkIndexComparisonChartData = artists => {
   const params = {
