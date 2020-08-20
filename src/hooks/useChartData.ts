@@ -1,4 +1,6 @@
-import useSWR from 'swr'
+import useSWR from 'swr';
+import _, { groupBy } from 'lodash';
+import { gql, useQuery } from '@apollo/client';
 
 import fetcher from '@utils/fetcher'
 import {
@@ -13,6 +15,7 @@ import {
   CompoundAnnualReturnsChartDatumEntity,
   ReturnsVsPeriodChartDatumEntity,
   ComparablesChartDatumEntity,
+  ArtworkIndexComparisonChartDatum as IArtworkIndexComparisonChartDatum,
 } from '@interfaces/index'
 import PriceMomentumChartDatum from '@models/PriceMomentumChartDatum'
 import ArtworkIndexChartDatum from '@models/ArtworkIndexChartDatum'
@@ -20,6 +23,7 @@ import CompoundAnnualReturnsChartDatum from '@models/CompoundAnnualReturnsChartD
 import ReturnsVsPeriodChartDatum from '@models/ReturnsVsPeriodChartDatum'
 import ComparablesChartDatum from '@models/ComparablesChartDatum'
 import ArtworkValueChartDatum from '@models/ArtworkValueChartDatum'
+import Artist from '@models/Artist';
 
 import mediumTypes from './mediumTypes'
 
@@ -31,6 +35,12 @@ export type ChartData<T> = {
 
 export type PriceMomentumAndVolumeChartData = ChartData<IPriceMomentumChartDatum[]>
 export type ArtworkIndexChartData = ChartData<IArtworkIndexChartDatum[]>
+export type ArtworkIndexComparisonChartData = ChartData<
+  Array<{
+    data: IArtworkIndexComparisonChartDatum[]
+    name: string
+  }>
+>
 export type ArtworkIndexChartAllData = ChartData<
   Array<{
     data: IArtworkIndexChartDatum[]
@@ -164,10 +174,71 @@ export const useArtworkValueChartData: (artworkId: number) => ArtworkValueChartD
   }
 }
 
+interface ArtistsData {
+  artists: Artist[];
+};
+
+const GET_ARTISTS = gql`
+  query GetArtists($query: String){
+    artists(query: $query) {
+      id
+      name
+      birth
+      death
+      qualifier
+      lotsCost
+      artworksCount
+      lotsCount
+    }
+  }
+`;
+
+export const useArtworkIndexComparisonChartData: (artists: Artist[]) => ArtworkIndexComparisonChartData = artists => {
+  const params = {
+    artwork_index_comparison_chart: artists.map(item => ({
+      artist_id: item.id,
+      medium: null,
+    })),
+  }
+
+  const { data, error } = useSWR(
+    'http://54.156.225.113:8000/v1/artwork-index-comparison-chart/',
+    (url, options) => params && fetcher(url, {
+      ...options,
+      method: 'post',
+      body: JSON.stringify(params),
+    }),
+    {
+      revalidateOnFocus: false,
+    },
+  );
+
+  if (data) {
+    const chartData = data.payload.artwork_index_comparison_chart as IArtworkIndexComparisonChartDatum[];
+    const groupedByName = _.groupBy(
+      chartData,
+      item => artists.find(artist => artist.id === item.artist_id)?.name,
+    );
+
+    return {
+      data: _.map(groupedByName, (data, name) => ({ name, data })),
+      isLoading: false,
+      isError: error,
+    };
+  }
+
+  return {
+    data: [],
+    isLoading: !error && !data,
+    isError: error,
+  };
+};
+
 export default {
   usePriceMomentumAndVolumeChartData,
   useArtworkIndexChartData,
   useCompoundAnnualReturnsChartData,
   useReturnVsPeriodData,
   useComparablesChartData,
+  useArtworkIndexComparisonChartData,
 }
