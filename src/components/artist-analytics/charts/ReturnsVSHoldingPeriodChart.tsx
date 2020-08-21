@@ -3,12 +3,16 @@ import _ from 'lodash'
 import Highcharts from 'highcharts/highstock'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
-import { priceFormatter } from '@utils/formatters'
-import moment from 'moment'
 
 import { useReturnVsPeriodData } from '@hooks/useChartData'
 import mediumTypes from '@hooks/mediumTypes'
 import { ReturnsVsPeriodChartDatum } from '@interfaces/index'
+import {
+  getTooltipRvsHP,
+  tooltipTypes,
+  toggleTooltipFreze,
+  freezeWorkaround,
+} from '@utils/charts-config'
 
 if (typeof Highcharts === 'object') {
   HighchartsExporting(Highcharts)
@@ -62,6 +66,7 @@ const ReturnsVSHoldingPeriodChart: React.FC<Props> = ({ artistId }) => {
         enabled: false,
       },
       tooltip: {
+        ...freezeWorkaround(),
         useHTML: true,
       },
       exporting: {
@@ -96,6 +101,19 @@ const ReturnsVSHoldingPeriodChart: React.FC<Props> = ({ artistId }) => {
         layout: 'horizontal',
       },
       plotOptions: {
+        series: {
+          cursor: 'pointer',
+          point: {
+            events: {
+              click() {
+                // @ts-ignore
+                const { chart } = this.series
+                toggleTooltipFreze(chart)
+              },
+            },
+          },
+        },
+
         scatter: {
           marker: {
             radius: 5,
@@ -131,48 +149,19 @@ const ReturnsVSHoldingPeriodChart: React.FC<Props> = ({ artistId }) => {
             //   <br/>
             //   `,
             pointFormatter() {
-              // @ts-ignore
-              const {
+              const props = (this as unknown) as tooltipTypes
+              const { url, artworkName, auctionHouseName, date, price, artworkId, x, y } = props
+
+              return getTooltipRvsHP({
                 url,
-                artworkId,
                 artworkName,
                 auctionHouseName,
                 date,
                 price,
+                artworkId,
                 x,
                 y,
-              }: {
-                url: string
-                artworkId: number
-                artworkName: string
-                auctionHouseName: string
-                date: Date
-                price: number
-                x: number
-                y: number
-              } = this
-              return `
-                <div style="display: table">
-                  <img
-                    src = "${url}"
-                    width="55"
-                    height="45"
-                    style="float:left;margin: 0 10px 10px 0"/>
-                  <div style="white-space: normal;width: 200px"><strong>${artworkName}</strong></div>
-                </div>
-                <strong>Auction house:</strong> <span>${auctionHouseName}</span>
-                <br/>
-                <strong>Sale date:</strong> <span>${moment(date).format('LL')}</span>
-                <br/>
-                <strong>Sold for:</strong> <span>${priceFormatter(price)}</span>
-                <br/>
-                <strong>Holding Period (Months):</strong> ${x}<span></span>
-                <br/>
-                <strong>Realized CAR (%):</strong> <span>${y}</span>
-                <br/>
-                <strong>Index:</strong> <span>${artworkId}</span>
-                <br/>
-              `
+              })
             },
           },
         },
