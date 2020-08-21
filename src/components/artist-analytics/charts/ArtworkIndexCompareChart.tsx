@@ -1,23 +1,20 @@
 /* eslint-disable react/no-this-in-sfc */
-import React, {
-  // useState,
-  // useEffect,
-} from 'react'
+import React, { useState, useCallback } from 'react' // useEffect, // useState,
 import _ from 'lodash'
 // import moment from 'moment'
-import Highcharts, {
-  // Dictionary,
-} from 'highcharts/highstock'
+import Highcharts from 'highcharts/highstock' // Dictionary,
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
-import { CircularProgress, Grid } from '@material-ui/core'
+import { CircularProgress, Grid, TextField } from '@material-ui/core'
 import { gql, useQuery } from '@apollo/client'
+import { useDebounce } from 'use-debounce'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 
 // import Event, {
 //   EventType,
 // } from '@models/Event';
-import Artist from '@models/Artist';
+import Artist from '@models/Artist'
 
 import {
   // useArtworkIndexChartAllData,
@@ -83,37 +80,27 @@ if (typeof Highcharts === 'object') {
   colors = Highcharts.getOptions().colors || []
 }
 
-// const GET_EVENTS = gql`
-//   query GetEvents($artistId: Int!) {
-//     events(artistId: $artistId) {
-//       id
-//       date
-//       type
-//       description
-//       year
-//       params
-//       imageUrl
-//     }
-//   }
-// `
-interface ArtistsData {
-  artists: Artist[];
-};
-
 const GET_ARTISTS = gql`
-  query GetArtists($query: String){
+  query GetArtists($query: String!) {
     artists(query: $query) {
       id
       name
       birth
       death
+      artworksCount
       qualifier
       lotsCost
-      artworksCount
-      lotsCount
     }
   }
-`;
+`
+
+type VariablesType = {
+  query: string
+}
+
+type ArtistsData = {
+  artists: Artist[]
+}
 
 // interface EventsData {
 //   events: Event[]
@@ -131,54 +118,58 @@ type Props = {
 // }
 
 const ArtworkIndexCompareChart: React.FC<Props> = () => {
-  const { data } = useQuery<ArtistsData, { query: string }>(GET_ARTISTS, {
-    variables: {
-      query: 'basq',
-    },
-  });
+  const [inputText, setInputText] = useState<string>('')
+  const [debouncedInputText] = useDebounce(inputText, 300)
+  const [selectedArtists, setSelectedArtists] = useState<Artist[]>([])
+  const onArtistsSelected = useCallback((_, value) => {
+    console.log('[INFO] onArtistsSelected', value)
+    setSelectedArtists(value)
+  }, [])
 
-  return data ? (
-    <ComparisonChart artists={data.artists} />
-  ): null;
-};
+  const { data: { artists = [] } = { artists: [] } } = useQuery<ArtistsData, VariablesType>(
+    GET_ARTISTS,
+    {
+      variables: { query: debouncedInputText },
+    }
+  )
 
+  const onInputChange = useCallback((_event, value) => {
+    setInputText(value)
+  }, [])
+
+  return (
+    <Grid container spacing={5} direction="column">
+      <Grid item>
+        <Autocomplete
+          multiple
+          id="tags-standard"
+          options={artists}
+          defaultValue={artists}
+          // getOptionValue={(option) => option.id}
+          getOptionLabel={(option) => option.name}
+          onInputChange={onInputChange}
+          onChange={onArtistsSelected}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="standard"
+              label="Artists"
+              placeholder="Select Artists to Compare"
+            />
+          )}
+        />
+      </Grid>
+      <Grid item>
+        {selectedArtists.length > 0 && <ComparisonChart artists={selectedArtists} />}
+      </Grid>
+    </Grid>
+  )
+}
 
 const ComparisonChart: React.FC<{ artists: Artist[] }> = ({ artists }) => {
   const classes = useStyles()
-  // const { data, isLoading, isError } = useArtworkIndexChartAllData(artistId, mediumList)
-  
-  const { data, isLoading, isError } = useArtworkIndexComparisonChartData(artists);
-
-  // const [flagData, setFlagData] = useState<Dictionary<FlagSerie[]>>()
-  // const { data: eventsData } = useQuery<EventsData, { artistId: number }>(GET_EVENTS, {
-  //   variables: { artistId },
-  // });
-
-  // const { data: artistsData } = useQuery<ArtistsData, { query: string }>(GET_ARTISTS, {
-  //   variables: {
-  //     query: 'basq',
-  //   },
-  // });
-
-
-  // useEffect(() => {
-  //   const foo =
-  //     eventsData?.events.map((event: Event) => {
-  //       const shapeData = getShapeByEventType(event.type as EventType)
-  //       return {
-  //         x: event.date
-  //           ? moment.utc(event.date)
-  //           : moment.utc(`${event.year}-07-01 12:00:00`).valueOf(),
-  //         title: shapeData.code,
-  //         ...event,
-  //       }
-  //     }) || []
-
-  //   // @ts-ignore
-  //   const bar: Dictionary<FlagSerie[]> = _.groupBy(foo, 'type')
-
-  //   setFlagData(bar)
-  // }, [eventsData])
+  console.log(`[INFO] ComparisonChart`, artists)
+  const { data, isLoading, isError } = useArtworkIndexComparisonChartData(artists)
 
   const seriesLine = data.map(({ name, data: items }, index) => {
     // console.log(`[INFO] line serie: line-${index}`)
@@ -195,50 +186,7 @@ const ComparisonChart: React.FC<{ artists: Artist[] }> = ({ artists }) => {
     }
   })
 
-  console.log(seriesLine);
-  // const columnLine = data
-  //   .filter((i) => !i.name.includes('all'))
-  //   .map(({ name, data: items }, index) => {
-  //     // console.log(`[INFO] column serie: line-${index}`)
-  //     return {
-  //       type: 'column',
-  //       // linkedTo: `line-${name}`,
-  //       enableMouseTracking: false,
-  //       showInLegend: false,
-  //       name: `${name} volume`,
-  //       data: items.map((item) => [new Date(item.date).getTime(), item.volume]),
-  //       yAxis: 1,
-  //       color: colors[index + 1], // getColorByName(name),
-  //     }
-  //   })
-
-  // const flagSeries = _.keys(flagData).map((flagType: string) => {
-  //   const flagSeriesData: FlagSerie[] = _.get(flagData, flagType, [])
-  //   const shapeData = getShapeByEventType(flagType as EventType)
-
-  //   return {
-  //     type: 'flags',
-  //     name: `${shapeData.code}: ${flagType}`,
-  //     data: flagSeriesData,
-  //     color: '#3d3d3d',
-  //     style: {
-  //       color: '#3d3d3d',
-  //     },
-  //     onSeries: 'line-all',
-
-  //     tooltip: {
-  //       pointFormatter(): string {
-  //         const { type, description } = this as Event & { pointFormatter(): string }
-  //         return type === 'Life Events' ||
-  //           type === 'Major Exhibitions' ||
-  //           type === 'Major Publications'
-  //           ? `<strong>${type}</strong><br/><div style="width: 200px;word-wrap: break-word; word-break: break-word; white-space: normal;">${description}</div>`
-  //           : formatFlagEventBubble(this as Event & { pointFormatter(): string })
-  //       },
-  //     },
-  //     shape: shapeData.shape,
-  //   }
-  // })
+  console.log('[INFO] seriesLine', seriesLine)
 
   let options: Highcharts.Options | null = null
 
@@ -263,7 +211,6 @@ const ComparisonChart: React.FC<{ artists: Artist[] }> = ({ artists }) => {
 
       yAxis: [
         {
-          min: 0,
           labels: {
             align: 'left',
           },
@@ -345,21 +292,23 @@ const ComparisonChart: React.FC<{ artists: Artist[] }> = ({ artists }) => {
   return (
     <>
       {isLoading ? (
-        <Grid container justify="center" alignItems="center" className={classes.loading}>
+        <Grid container item justify="center" alignItems="center" className={classes.loading}>
           <Grid item>
             <CircularProgress />
           </Grid>
         </Grid>
       ) : (
-          <HighchartsReact
-            containerProps={{ style: { height: 600 } }}
-            highcharts={Highcharts}
-            options={options}
-            constructorType="stockChart"
-          />
+          <Grid item>
+            <HighchartsReact
+              containerProps={{ style: { height: 600 } }}
+              highcharts={Highcharts}
+              options={options}
+              constructorType="stockChart"
+            />
+          </Grid>
         )}
     </>
   )
 }
 
-export default ArtworkIndexCompareChart;
+export default ArtworkIndexCompareChart

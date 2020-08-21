@@ -6,7 +6,7 @@ import mediumTypes from '@hooks/mediumTypes'
 
 // import ArtworkIndexChart from './charts/ArtworkIndexChart'
 import ArtworkIndexAllCharts from './charts/ArtworkIndexAllCharts'
-import ArtworkIndexCompareChart from './charts/ArtworkIndexCompareChart';
+import ArtworkIndexCompareChart from './charts/ArtworkIndexCompareChart'
 import ReturnsVSHoldingPeriodChart from './charts/ReturnsVSHoldingPeriodChart'
 import CompoundAnnualReturns from './charts/CompoundAnnualReturns'
 
@@ -32,11 +32,15 @@ const ArtistAnalytics: React.FC<Props> = ({ artistInfo, mediumList }) => {
       <Grid item>
         <ArtworkIndexAllCharts artistId={artistInfo.id} mediumList={mediumList} />
       </Grid>
-
+      <Grid item>
+        <Typography variant="h5" component="h2">
+          Artist Comparison
+        </Typography>
+      </Grid>
       <Grid item>
         <ArtworkIndexCompareChart artistId={artistInfo.id} mediumList={mediumList} />
       </Grid>
-      
+
       {/* <Grid item>
         <Typography variant="h5" component="h2">
           Artwork Index
