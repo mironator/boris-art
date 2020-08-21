@@ -300,7 +300,7 @@ const ComparisonChart: React.FC<{ artists: Artist[] }> = ({ artists }) => {
       ) : (
           <Grid item>
             <HighchartsReact
-              containerProps={{ style: { height: 600 } }}
+              containerProps={{ style: { height: 450 } }}
               highcharts={Highcharts}
               options={options}
               constructorType="stockChart"
