@@ -93,7 +93,7 @@ export const getTooltipArtworkIndexAll = (event: Event): string => {
     <div style="display: flex;">
       ${getTooltipImage(event.imageUrl)}
       <div style="white-space: normal;width: 300px">
-        <strong>BAR ${event.type}</strong>
+        <strong>${event.type}</strong>
         <br/>
         <strong>Name: </strong> ${getTooltipLink(artworkId, params.name as string)}
         <br/>
@@ -114,42 +114,27 @@ export const getTooltipArtworkIndexAll = (event: Event): string => {
 }
 
 // @ts-ignore
-export const freezeWorkaround = () => ({
-  freezeWorkaround: {
-    isFreezed: false,
-    clone: {
-      g: null,
-      div: null,
-    },
-  },
-})
-
-// @ts-ignore
-export const toggleTooltipFreze = (chart) => {
-  const gPlace = chart.container.firstChild
+export const frezeTooltip = (chart) => {
   const divPlace = chart.container
-  const currentG = chart.tooltip.label.element
-  const currentDiv = chart.tooltip.label.div
+  const gPlace = chart.container.firstChild
   const tooltipOptions = chart.options.tooltip
-  const { clone } = tooltipOptions.freezeWorkaround
 
   if (tooltipOptions.enabled) {
-    clone.g = currentG.cloneNode(true)
-    gPlace.appendChild(clone.g)
+    const cloneDiv = chart.tooltip.label.div.cloneNode(true)
+    const cloneG = chart.tooltip.label.element.cloneNode(true)
 
-    clone.div = currentDiv.cloneNode(true)
-    divPlace.appendChild(clone.div)
+    divPlace.appendChild(cloneDiv)
+    gPlace.appendChild(cloneG)
     tooltipOptions.enabled = false
-  } else {
-    debugger
-    if (clone.g) {
-      gPlace.removeChild(clone.g)
-    }
-    if (clone.div) {
-      divPlace.removeChild(clone.div)
+
+    const unfreezeTooltip = () => {
+      divPlace.removeEventListener('click', unfreezeTooltip)
+      gPlace.removeChild(cloneG)
+      divPlace.removeChild(cloneDiv)
+      tooltipOptions.enabled = true
     }
 
-    tooltipOptions.enabled = true
+    divPlace.addEventListener('click', unfreezeTooltip)
   }
 }
 
