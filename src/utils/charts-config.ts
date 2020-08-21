@@ -93,7 +93,7 @@ export const getTooltipArtworkIndexAll = (event: Event): string => {
     <div style="display: flex;">
       ${getTooltipImage(event.imageUrl)}
       <div style="white-space: normal;width: 300px">
-        <strong>BAR ${event.type}</strong>
+        <strong>${event.type}</strong>
         <br/>
         <strong>Name: </strong> ${getTooltipLink(artworkId, params.name as string)}
         <br/>
