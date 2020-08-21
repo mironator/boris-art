@@ -19,18 +19,4 @@ const theme = createMuiTheme({
   },
 })
 
-// const theme = createMuiTheme({
-//   palette: {
-//     primary: {
-//       main: '#212121',
-//     },
-//     secondary: {
-//       main: '#868e96',
-//     },
-//   },
-//   shape: {
-//     borderRadius: 0,
-//   },
-// })
-
 export default theme
