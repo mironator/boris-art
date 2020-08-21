@@ -10,7 +10,7 @@ import moment from 'moment'
 
 // import Event from '@models/Event'
 // import Artwork from '@models/Artwork'
-import { rangeSelector } from '@utils/charts-config'
+import { rangeSelector, frezeTooltip } from '@utils/charts-config'
 import { ArtworkValueChartValuesDatum, ArtworkValueChartSalesDatum } from '@interfaces/index'
 
 if (typeof Highcharts === 'object') {
@@ -123,6 +123,17 @@ const ArtworkValue: React.FC<Props> = ({ sales = [], values = [] }) => {
       plotOptions: {
         flags: {
           useHTML: true,
+        },
+        series: {
+          cursor: 'pointer',
+          point: {
+            events: {
+              click() {
+                const { chart } = this.series
+                frezeTooltip(chart)
+              },
+            },
+          },
         },
       },
 

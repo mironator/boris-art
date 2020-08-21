@@ -12,12 +12,7 @@ import { gql, useQuery } from '@apollo/client'
 import Event, { EventType } from '@models/Event'
 import { useArtworkIndexChartAllData } from '@hooks/useChartData'
 import mediumTypes from '@hooks/mediumTypes'
-import {
-  rangeSelector,
-  getTooltipArtworkIndexAll,
-  toggleTooltipFreze,
-  freezeWorkaround,
-} from '@utils/charts-config'
+import { rangeSelector, getTooltipArtworkIndexAll, frezeTooltip } from '@utils/charts-config'
 
 enum Shape {
   Flag = 'flag',
@@ -237,8 +232,6 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
       },
       tooltip: {
         useHTML: true,
-        // @ts-ignore
-        ...freezeWorkaround(),
       },
 
       title: {
@@ -286,7 +279,7 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
             events: {
               click() {
                 const { chart } = this.series
-                toggleTooltipFreze(chart)
+                frezeTooltip(chart)
               },
             },
           },
@@ -338,13 +331,13 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
           </Grid>
         </Grid>
       ) : (
-          <HighchartsReact
-            containerProps={{ style: { height: 600 } }}
-            highcharts={Highcharts}
-            options={options}
-            constructorType="stockChart"
-          />
-        )}
+        <HighchartsReact
+          containerProps={{ style: { height: 600 } }}
+          highcharts={Highcharts}
+          options={options}
+          constructorType="stockChart"
+        />
+      )}
     </>
   )
 }
