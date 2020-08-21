@@ -50,6 +50,14 @@ export type ArtworkIndexChartDatum = {
   date: Date
 }
 
+export type ArtworkIndexComparisonChartDatum = {
+  index: number;
+  medium: null;
+  volume: number;
+  date: Date;
+  artist_id: number;
+};
+
 export type CompoundAnnualReturnsChartDatum = {
   car: number
   date: Date
