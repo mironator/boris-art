@@ -2,6 +2,8 @@ import _ from 'lodash'
 import React, { useState } from 'react'
 import { CircularProgress, Grid, Container, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+
+import ResultBox from '@components/svg-icons/ResultBox'
 import SimilarArtworks from './SimilarArtworks'
 
 const useStyles = makeStyles(() => ({
@@ -24,6 +26,10 @@ const useStyles = makeStyles(() => ({
     fontFamily: 'Lato-Regular',
     fontSize: '18px',
   },
+
+  icon: {
+    fill: '#B8B8B8',
+  },
 }))
 
 const EmptyState: React.FC = () => {
@@ -31,6 +37,7 @@ const EmptyState: React.FC = () => {
 
   return (
     <>
+      <ResultBox className={classes.icon} />
       <Typography variant="subtitle1" component="span" className={classes.title1}>
         Your results will be here
       </Typography>

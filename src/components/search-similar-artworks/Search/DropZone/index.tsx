@@ -7,7 +7,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useDropzone } from 'react-dropzone'
 import { useForm } from 'react-final-form'
 
-const useStyles = makeStyles(() => ({
+import UploadCloud from '@components/svg-icons/UploadCloud'
+
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     border: 'none !important',
@@ -21,6 +23,8 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     flexDirection: 'column',
     border: '2px dashed rgb(184, 184, 184)',
+    cursor: 'pointer',
+
     '&.isActive': {
       backgroundColor: '#efefef',
     },
@@ -31,6 +35,11 @@ const useStyles = makeStyles(() => ({
     height: '100%',
     backgroundColor: '#eee',
     objectFit: 'scale-down',
+  },
+
+  icon: {
+    marginBottom: theme.spacing(1),
+    fill: '#222',
   },
 }))
 
@@ -97,16 +106,17 @@ const DropZone: React.FC<DropZoneProps> = (props) => {
       {image ? (
         <img className={classes.image} src={image} alt="for search" />
       ) : (
-          <div
-            {...getRootProps()}
-            className={clsx(classes.dropZone, isDragActive && 'isActive')}
-            onDragOver={(e) => e.preventDefault()}
-          >
-            <input {...getInputProps()} />
-            <Typography variant="subtitle1">Drag and drop an image</Typography>
-            <Typography variant="subtitle2">or browse to choose a file</Typography>
-          </div>
-        )}
+        <div
+          {...getRootProps()}
+          className={clsx(classes.dropZone, isDragActive && 'isActive')}
+          onDragOver={(e) => e.preventDefault()}
+        >
+          <input {...getInputProps()} />
+          <UploadCloud className={classes.icon} />
+          <Typography variant="subtitle1">Drag and drop an image</Typography>
+          <Typography variant="subtitle2">or browse to choose a file</Typography>
+        </div>
+      )}
     </div>
   )
 }
