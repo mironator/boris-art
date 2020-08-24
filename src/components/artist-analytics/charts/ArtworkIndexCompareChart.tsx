@@ -186,8 +186,6 @@ const ComparisonChart: React.FC<{ artists: Artist[] }> = ({ artists }) => {
     }
   })
 
-  console.log('[INFO] seriesLine', seriesLine)
-
   let options: Highcharts.Options | null = null
 
   if (data && !isLoading && !isError) {
@@ -202,36 +200,30 @@ const ComparisonChart: React.FC<{ artists: Artist[] }> = ({ artists }) => {
         timezone: 'Europe/London',
       },
       tooltip: {
-        useHTML: true,
+        pointFormat:
+          '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
+        valueDecimals: 2,
+        split: true,
       },
 
       title: {
         text: '',
       },
 
-      yAxis: [
-        {
-          labels: {
-            align: 'left',
-          },
-          // height: '70%',
-          resize: {
-            enabled: true,
+      yAxis: {
+        labels: {
+          formatter() {
+            return `${(this.value > 0 ? ' + ' : '') + this.value}%`
           },
         },
-        // {
-        //   labels: {
-        //     align: 'left',
-        //   },
-        //   top: '70%',
-        //   height: '30%',
-        //   offset: 0,
-        //   min: 0,
-        //   stackLabels: {
-        //     enabled: false,
-        //   },
-        // },
-      ],
+        plotLines: [
+          {
+            value: 0,
+            width: 2,
+            color: 'silver',
+          },
+        ],
+      },
 
       plotOptions: {
         column: {
@@ -246,31 +238,6 @@ const ComparisonChart: React.FC<{ artists: Artist[] }> = ({ artists }) => {
         series: {
           compare: 'percent',
           showInNavigator: true,
-          events: {
-            // legendItemClick() {
-            //   setTimeout(() => {
-            //     const series = this.chart.legend.allItems.filter(
-            //       (i) => !(i.name.includes('all') || i.name.includes(':')) && i.visible
-            //     )
-            //     console.log('[INFO] legendItemClick series.length', series.length, series)
-            //     if (series.length === 0) {
-            //       console.log('[INFO] setIsOnlyAllSeriesDisplayed', true)
-            //       setIsOnlyAllSeriesDisplayed(true)
-            //     } else {
-            //       console.log('[INFO] setIsOnlyAllSeriesDisplayed', false)
-            //       setIsOnlyAllSeriesDisplayed(false)
-            //     }
-            //   }, 300)
-            // },
-          },
-          states: {
-            // hover: {
-            //   lineWidth: 20,
-            //   halo: {
-            //     size: 5,
-            //   },
-            // },
-          },
         },
       },
 
@@ -281,11 +248,7 @@ const ComparisonChart: React.FC<{ artists: Artist[] }> = ({ artists }) => {
         layout: 'horizontal',
       },
 
-      series: [
-        ...seriesLine,
-        // ...columnLine,
-        // ...flagSeries,
-      ] as Highcharts.SeriesOptionsType[],
+      series: [...seriesLine] as Highcharts.SeriesOptionsType[],
     }
   }
 
