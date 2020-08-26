@@ -1,7 +1,4 @@
-import { useState, useEffect } from 'react'
-
 import useSWR from 'swr'
-import _ from 'lodash'
 
 import fetcher from '@utils/fetcher'
 import {
@@ -24,7 +21,6 @@ import CompoundAnnualReturnsChartDatum from '@models/CompoundAnnualReturnsChartD
 import ReturnsVsPeriodChartDatum from '@models/ReturnsVsPeriodChartDatum'
 import ComparablesChartDatum from '@models/ComparablesChartDatum'
 import ArtworkValueChartDatum from '@models/ArtworkValueChartDatum'
-import Artist from '@models/Artist'
 
 import mediumTypes from './mediumTypes'
 
@@ -175,62 +171,10 @@ export const useArtworkValueChartData: (artworkId: number) => ArtworkValueChartD
   }
 }
 
-export const useArtworkIndexComparisonChartData: (
-  artists: Artist[]
-) => ArtworkIndexComparisonChartData = (artists = []) => {
-  const [data, setData] = useState()
-  const error = false
-
-  const params = {
-    artwork_index_comparison_chart: artists.map((item) => ({
-      artist_id: item.id,
-      medium: null,
-    })),
-  }
-
-  useEffect(() => {
-    async function foo() {
-      const response = await fetch('/api/charts/artwork-index-comparison', {
-        method: 'POST',
-        body: JSON.stringify(params),
-      })
-
-      const data = await response.json()
-      setData(data)
-    }
-
-    foo()
-  }, [artists])
-
-  if (data) {
-    // @ts-ignore
-    const chartData = data?.payload
-      .artwork_index_comparison_chart as IArtworkIndexComparisonChartDatum[]
-    const groupedByName = _.groupBy(
-      chartData,
-      (item) => artists.find((artist) => artist.id === item.artist_id)?.name
-    )
-
-    return {
-      // @ts-ignore
-      data: _.map(groupedByName, (data, name) => ({ name, data })),
-      isLoading: false,
-      isError: error,
-    }
-  }
-
-  return {
-    data: [],
-    isLoading: !error && !data,
-    isError: error,
-  }
-}
-
 export default {
   usePriceMomentumAndVolumeChartData,
   useArtworkIndexChartData,
   useCompoundAnnualReturnsChartData,
   useReturnVsPeriodData,
   useComparablesChartData,
-  useArtworkIndexComparisonChartData,
 }
