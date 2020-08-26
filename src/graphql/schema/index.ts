@@ -1,8 +1,10 @@
 import { gql } from 'apollo-server-micro'
+import ComparisonChartTypes from './comparison-chart'
 
 const typeDefs = gql`
   scalar Date
   scalar JSON
+  scalar Timestamp
 
   type Query {
     users: [User!]!
@@ -19,6 +21,7 @@ const typeDefs = gql`
       depth: Int
       unit: String
     ): Valuation
+    snp500(from: Timestamp, to: Timestamp, interval: String): SNP500
   }
 
   type File {
@@ -100,6 +103,10 @@ const typeDefs = gql`
     sales: JSON
     values: JSON
   }
+
+  type SNP500 {
+    data: String
+  }
 `
 
-export default typeDefs
+export default [typeDefs, ComparisonChartTypes]
