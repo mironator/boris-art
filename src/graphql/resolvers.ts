@@ -6,6 +6,7 @@ import Event, { EventEntity } from '@models/Event'
 import { ArtistEntity, ArtworkEntity } from '@interfaces/index'
 import Artwork from '@models/Artwork'
 import queryString from 'query-string'
+import { resolvers as comparisonChartResolvers } from './schema/comparison-chart'
 
 const resolvers = {
   Date: DateResolver,
@@ -101,4 +102,4 @@ const resolvers = {
   },
 }
 
-export default resolvers
+export default _.merge(resolvers, comparisonChartResolvers)
