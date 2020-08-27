@@ -94,6 +94,7 @@ interface EventsData {
 type Props = {
   artistId: number
   mediumList: Array<keyof typeof mediumTypes>
+  type?: string
 }
 
 type FlagSerie = {
@@ -102,9 +103,9 @@ type FlagSerie = {
   text: string
 }
 
-const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList }) => {
+const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList, type }) => {
   const classes = useStyles()
-  const { data, isLoading, isError } = useArtworkIndexChartAllData(artistId, mediumList)
+  const { data, isLoading, isError } = useArtworkIndexChartAllData(artistId, mediumList, type)
   const [flagData, setFlagData] = useState<Dictionary<FlagSerie[]>>()
   const { data: eventsData } = useQuery<EventsData, { artistId: number }>(GET_EVENTS, {
     variables: { artistId },
