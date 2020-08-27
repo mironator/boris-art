@@ -138,7 +138,6 @@ async function SNP500({
   to?: number
   interval?: '1d' | '1wk' | '1mo'
 } = {}): Promise<string> {
-  console.log('[INFO] Querying SNP500')
   const snpData = await new Promise<string>(async (resolve, reject) => {
     const url = `https://query1.finance.yahoo.com/v7/finance/download/%5EGSPC?period1=${Math.floor(
       from / 1e3
