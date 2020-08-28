@@ -1,15 +1,3 @@
-enum mediumTypes {
-  all = 'all',
-  paintings = 'paintings',
-  prints = 'prints',
-  undetermined = 'undetermined',
-  photographs = 'photographs',
-  jewelry = 'jewelry',
-  sculpture = 'sculpture',
-  furniture = 'furniture',
-  ceramics = 'ceramics',
-  other = 'other',
-  worksOnPaper = 'works on paper',
-}
+import { MediumTypes } from '@interfaces/index'
 
-export default mediumTypes
+export default MediumTypes

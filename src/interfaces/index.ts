@@ -12,6 +12,20 @@ export type GenericList<T> = {
   data: T[]
 }
 
+export enum MediumTypes {
+  all = 'all',
+  paintings = 'paintings',
+  prints = 'prints',
+  undetermined = 'undetermined',
+  photographs = 'photographs',
+  jewelry = 'jewelry',
+  sculpture = 'sculpture',
+  furniture = 'furniture',
+  ceramics = 'ceramics',
+  other = 'other',
+  worksOnPaper = 'works on paper',
+}
+
 export type Artist = {
   id: number
   name: string
@@ -21,6 +35,7 @@ export type Artist = {
   lotsCost?: number
   artworksCount?: number
   lotsCount?: number
+  mediumList?: MediumTypes[]
 }
 
 export type ArtistEntity = {
@@ -51,12 +66,12 @@ export type ArtworkIndexChartDatum = {
 }
 
 export type ArtworkIndexComparisonChartDatum = {
-  index: number;
-  medium: null;
-  volume: number;
-  date: Date;
-  artist_id: number;
-};
+  index: number
+  medium: null
+  volume: number
+  date: Date
+  artist_id: number
+}
 
 export type CompoundAnnualReturnsChartDatum = {
   car: number
