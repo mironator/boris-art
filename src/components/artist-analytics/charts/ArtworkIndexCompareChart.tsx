@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import _ from 'lodash'
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import Highcharts from 'highcharts/highstock'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
@@ -6,7 +7,6 @@ import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { CircularProgress, Grid, TextField } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 
-import mediumTypes from '@hooks/mediumTypes'
 import useArtistSearch from '@hooks/useArtistSearch'
 import useArtworkIndexComparisonChartData from '@hooks/useArtworkIndexComparisonChartData'
 import Artist from '@models/Artist'
@@ -28,15 +28,15 @@ if (typeof Highcharts === 'object') {
 }
 
 type Props = {
-  artistId: number
-  mediumList: Array<keyof typeof mediumTypes>
+  artist: Artist
 }
 
 type ItemWithCategory = Partial<Artist> & { category: string } & { code?: string }
 
-const ArtworkIndexCompareChart: React.FC<Props> = () => {
+const ArtworkIndexCompareChart: React.FC<Props> = ({ artist }) => {
+  const selectedArtist = useMemo(() => ({ ...artist, category: 'Artists' }), [artist])
   const [options, setOptions] = useState<ItemWithCategory[]>([])
-  const [selectedArtists, setSelectedArtists] = useState<Artist[]>([])
+  const [selectedArtists, setSelectedArtists] = useState<{ id: number }[]>([{ id: artist.id }])
   const [selectedQuotes, setSelectedQuotes] = useState<{ code: string }[]>([])
 
   const onArtistsSelected = useCallback((_, value) => {
@@ -74,8 +74,8 @@ const ArtworkIndexCompareChart: React.FC<Props> = () => {
           multiple
           id="tags-standard"
           options={options}
-          defaultValue={options}
           // getOptionValue={(option) => option.id}
+          defaultValue={[selectedArtist]}
           getOptionLabel={(option) => option.name || ''}
           groupBy={(option) => option.category}
           onInputChange={onInputChange}
@@ -99,7 +99,7 @@ const ArtworkIndexCompareChart: React.FC<Props> = () => {
   )
 }
 
-const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[] }> = ({
+const ComparisonChart: React.FC<{ artists: { id: number }[]; finance: { code: string }[] }> = ({
   artists,
   finance,
 }) => {

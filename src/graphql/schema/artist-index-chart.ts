@@ -4,67 +4,46 @@ import https from 'https'
 import parse from 'csv-parse/lib/sync'
 
 import Artist from '@models/Artist'
-import { ArtistEntity } from '@interfaces/index'
+import { ArtistEntity, MediumTypes } from '@interfaces/index'
 
 export const typeDef = gql`
   extend type Query {
-    comparisonChartData(artists: [ArtistInput], finance: [FinanceInput]): ComparisonChartDatum
+    artistIndexChartData(artists: [ArtistInput], finance: [FinanceInput]): ArtistIndexChartData
   }
 
-  input ArtistInput {
-    id: Int
-  }
-
-  input FinanceInput {
-    code: String
-  }
-
-  type ArtistData {
+  type ArtistIndexData {
     artist: Artist
-    data: [IndexChartDatum]
+    data: JSON
   }
 
-  type SNPDatum {
-    date: Date
-    open: Float
-    high: Float
-    low: Float
-    close: Float
-    adjClose: Float
-    volume: Float
-    index: Float
-  }
+  # type DataByMedium {
+  #   all: [IndexChartDatum]
+  #   paintings: [IndexChartDatum]
+  #   prints: [IndexChartDatum]
+  #   undetermined: [IndexChartDatum]
+  #   photographs: [IndexChartDatum]
+  #   jewelry: [IndexChartDatum]
+  #   sculpture: [IndexChartDatum]
+  #   furniture: [IndexChartDatum]
+  #   ceramics: [IndexChartDatum]
+  #   other: [IndexChartDatum]
+  #   worksOnPaper: [IndexChartDatum]
+  # }
 
-  type Quote {
-    name: String
-  }
-
-  type FinanceData {
-    quote: Quote
-    data: [SNPDatum]
-  }
-
-  type ComparisonChartDatum {
-    artistData: [ArtistData]
+  type ArtistIndexChartData {
+    artistData: [ArtistIndexData]
     financeData: [FinanceData] @cacheControl(maxAge: 86400)
-  }
-
-  type IndexChartDatum {
-    date: Date
-    index: Float
-    medium: String
-    volume: Float
   }
 `
 
 export const resolvers = {
   Query: {
     // @ts-ignore
-    comparisonChartData: (_, { artists, finance }) => {
+    artistIndexChartData: (_, { artists, finance }) => {
       return {
         artistData: artists.map((artist: unknown) => ({
           artist,
-          data: [],
+          data: {},
         })),
         financeData: finance.map((quote: unknown) => ({
           quote,
@@ -74,7 +53,7 @@ export const resolvers = {
     },
   },
 
-  ArtistData: {
+  ArtistIndexData: {
     artist: async (parent: unknown): Promise<Artist | null> => {
       const artistId = _.get(parent, 'artist.id')
       const apiRes = await fetch(`http://54.156.225.113:8000/v1/artist/${artistId}`)
@@ -86,29 +65,35 @@ export const resolvers = {
 
     // @ts-ignore
     data: async (parent): Promise<unknown> => {
-      const {
-        artist: { id },
-      } = parent
+      const artistId = _.get(parent, 'artist.id')
 
-      console.log('[INFO] getting data', id)
-
-      const params = {
-        artwork_index_comparison_chart: [
-          {
-            artist_id: id,
-            medium: null,
-          },
-        ],
-      }
-
-      const apiRes = await fetch(`http://54.156.225.113:8000/v1/artwork-index-comparison-chart/`, {
-        method: 'POST',
-        body: JSON.stringify(params),
-      })
+      const apiRes = await fetch(
+        `http://54.156.225.113:8000/v1/artist-medium-list?artist_id[eq]=${artistId}`
+      )
       const data = await apiRes.json()
+      const mediumList = [
+        '',
+        ...(_.get(data, 'payload.artist_medium_list')?.map(
+          (item: { medium: MediumTypes }) => item.medium
+        ) as MediumTypes[]),
+      ]
 
-      // console.log('[INFO] data', data)
-      return _.get(data, 'payload.artwork_index_comparison_chart')
+      const foo = {}
+
+      await Promise.all(
+        mediumList.map(async (medium) => {
+          const res = await fetch(
+            `http://54.156.225.113:8000/v1/artwork-index-chart/?artist_id[eq]=${artistId}&medium[eq]=${medium}`
+          )
+          const chartData = await res.json()
+          const bar = _.get(chartData, 'payload.artwork_index_chart')
+          const baz = medium === '' ? 'all' : medium
+          // @ts-ignore
+          foo[baz] = bar
+          return bar
+        })
+      )
+      return foo
     },
   },
 

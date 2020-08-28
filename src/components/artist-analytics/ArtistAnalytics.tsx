@@ -38,7 +38,7 @@ const ArtistAnalytics: React.FC<Props> = ({ artistInfo, mediumList }) => {
         </Typography>
       </Grid>
       <Grid item>
-        <ArtworkIndexCompareChart artistId={artistInfo.id} mediumList={mediumList} />
+        <ArtworkIndexCompareChart artist={artistInfo} />
       </Grid>
 
       {/* <Grid item>
