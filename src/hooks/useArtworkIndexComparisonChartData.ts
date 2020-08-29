@@ -44,8 +44,10 @@ type ChartData = {
 const useArtworkIndexComparisonChartData = (artists, finance) => {
   const { loading, data, error } = useQuery<ChartData, VariablesType>(GET_COMPARISON_CHART_DATA, {
     variables: {
-      artists,
-      finance,
+      artists: artists.map((a: Artist) => ({
+        id: a.id,
+      })),
+      finance: finance.map((i: { code: string }) => ({ code: i.code })),
     },
   })
 
