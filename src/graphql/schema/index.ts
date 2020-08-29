@@ -1,5 +1,6 @@
 import { gql } from 'apollo-server-micro'
 import ComparisonChartTypes from './comparison-chart'
+import ArtistIndexChartTypes from './artist-index-chart'
 
 const typeDefs = gql`
   scalar Date
@@ -51,6 +52,7 @@ const typeDefs = gql`
     lotsCost: Int
     artworksCount: Int
     lotsCount: Int
+    mediumTypes: [String]
   }
 
   "Events either Artist Life or Artwork"
@@ -109,4 +111,4 @@ const typeDefs = gql`
   }
 `
 
-export default [typeDefs, ComparisonChartTypes]
+export default [typeDefs, ComparisonChartTypes, ArtistIndexChartTypes]

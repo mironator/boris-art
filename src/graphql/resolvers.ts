@@ -3,10 +3,11 @@ import { DateResolver } from 'graphql-scalars'
 // import { GraphQLUpload } from 'graphql-upload'
 import Artist from '@models/Artist'
 import Event, { EventEntity } from '@models/Event'
-import { ArtistEntity, ArtworkEntity } from '@interfaces/index'
+import { ArtistEntity, ArtworkEntity, MediumTypes } from '@interfaces/index'
 import Artwork from '@models/Artwork'
 import queryString from 'query-string'
-import { resolvers as comparisonChartResolvers } from './schema/comparison-chart'
+import { resolvers as ComparisonChartResolvers } from './schema/comparison-chart'
+import { resolvers as ArtistIndexChartResolvers } from './schema/artist-index-chart'
 
 const resolvers = {
   Date: DateResolver,
@@ -100,6 +101,24 @@ const resolvers = {
       return entity ? Artwork.fromEntity(entity) : null
     },
   },
+
+  Artist: {
+    mediumTypes: async (parent: Artist): Promise<MediumTypes[] | null> => {
+      // console.log('[INFO] Artist.mediumTypes', parent, args)
+
+      const { id } = parent
+
+      const apiRes = await fetch(
+        `http://54.156.225.113:8000/v1/artist-medium-list?artist_id[eq]=${id}`
+      )
+      const data = await apiRes.json()
+      const mediumList = _.get(data, 'payload.artist_medium_list')?.map(
+        (item: { medium: MediumTypes }) => item.medium
+      ) as MediumTypes[]
+
+      return mediumList || []
+    },
+  },
 }
 
-export default _.merge(resolvers, comparisonChartResolvers)
+export default _.merge(resolvers, ComparisonChartResolvers, ArtistIndexChartResolvers)

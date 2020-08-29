@@ -7,11 +7,16 @@ const handler: (_req: NextApiRequest, res: NextApiResponse) => Promise<void> = a
   res
 ) => {
   try {
-    const { artistId } = _req.query
+    const { artistId, type } = _req.query
+    const path = type ? `artwork-index-${type}-chart` : 'artwork-index-chart'
+    const query = {
+      'artist_id[eq]': artistId,
+      ..._.omit(_req.query, ['artistId', 'type']),
+    }
+    const url = `http://54.156.225.113:8000/v1/${path}/?${queryString.stringify(query)}`
 
-    const apiRes = await fetch(
-      `http://54.156.225.113:8000/v1/artwork-index-chart/?artist_id[eq]=${artistId}&${queryString.stringify(_.omit(_req.query, 'artistId'))}`
-    )
+    const apiRes = await fetch(url)
+
     const data = await apiRes.json()
 
     // {
@@ -23,8 +28,9 @@ const handler: (_req: NextApiRequest, res: NextApiResponse) => Promise<void> = a
     //         "volume": 1
     //       },
 
+    const chartName = path.replace(/-/g, '_')
     const {
-      payload: { artwork_index_chart: chartData },
+      payload: { [chartName]: chartData },
     } = data
 
     if (!Array.isArray(chartData)) {
