@@ -8,7 +8,11 @@ import { ArtistEntity, MediumTypes } from '@interfaces/index'
 
 export const typeDef = gql`
   extend type Query {
-    artistIndexChartData(artists: [ArtistInput], finance: [FinanceInput]): ArtistIndexChartData
+    artistIndexChartData(
+      algorithm: String
+      artists: [ArtistInput]
+      finance: [FinanceInput]
+    ): ArtistIndexChartData
   }
 
   type ArtistIndexData {
@@ -39,7 +43,8 @@ export const typeDef = gql`
 export const resolvers = {
   Query: {
     // @ts-ignore
-    artistIndexChartData: (_, { artists, finance }) => {
+    artistIndexChartData: (_, { algorithm, artists, finance }) => {
+      console.log('[INFO] artistIndexChartData', algorithm, artists, finance)
       return {
         artistData: artists.map((artist: unknown) => ({
           artist,
@@ -55,6 +60,7 @@ export const resolvers = {
 
   ArtistIndexData: {
     artist: async (parent: unknown): Promise<Artist | null> => {
+      console.log('[INFO] artist', parent)
       const artistId = _.get(parent, 'artist.id')
       const apiRes = await fetch(`http://54.156.225.113:8000/v1/artist/${artistId}`)
       const data = await apiRes.json()
@@ -64,8 +70,10 @@ export const resolvers = {
     },
 
     // @ts-ignore
-    data: async (parent): Promise<unknown> => {
+    data: async (parent, args, context, info): Promise<unknown> => {
       const artistId = _.get(parent, 'artist.id')
+      const algorithm = _.get(info, 'variableValues.algorithm')
+      console.log('[INFO] data.algorithm', info.variableValues.algorithm)
 
       const apiRes = await fetch(
         `http://54.156.225.113:8000/v1/artist-medium-list?artist_id[eq]=${artistId}`
@@ -83,10 +91,10 @@ export const resolvers = {
       await Promise.all(
         mediumList.map(async (medium) => {
           const res = await fetch(
-            `http://54.156.225.113:8000/v1/artwork-index-chart/?artist_id[eq]=${artistId}&medium[eq]=${medium}`
+            `http://54.156.225.113:8000/v1/${algorithm}-chart/?artist_id[eq]=${artistId}&medium[eq]=${medium}`
           )
           const chartData = await res.json()
-          const bar = _.get(chartData, 'payload.artwork_index_chart')
+          const bar = _.get(chartData, `payload.${algorithm.replace(/-/gi, '_')}_chart`)
           const baz = medium === '' ? 'all' : medium
           // @ts-ignore
           foo[baz] = bar

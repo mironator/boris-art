@@ -69,7 +69,6 @@ const ArtworkIndexCompareChart: React.FC = () => {
           multiple
           id="tags-standard"
           options={options}
-          defaultValue={options}
           // getOptionValue={(option) => option.id}
           getOptionLabel={(option) => option.name || ''}
           groupBy={(option) => option.category}
@@ -99,28 +98,74 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
   finance,
 }) => {
   const classes = useStyles()
-  const { data, loading, error } = useArtworkAllIndexComparisonChartData(artists, finance)
+  const { data, loading, error } = useArtworkAllIndexComparisonChartData(
+    'artwork-index',
+    artists,
+    finance
+  )
+  const {
+    data: dataHedonic,
+    loading: loadingHedonic,
+    error: errorHedonic,
+  } = useArtworkAllIndexComparisonChartData('artwork-index-hedonic', artists, finance)
+  const {
+    data: dataRepeatSales,
+    loading: loadingRepeatSales,
+    error: errorRepeatSales,
+  } = useArtworkAllIndexComparisonChartData('artwork-index-repeat-sales', artists, finance)
+  const {
+    data: dataRepeatSalesUnweighted,
+    loading: loadingRepeatSalesUnweighted,
+    error: errorRepeatSalesUnweighted,
+  } = useArtworkAllIndexComparisonChartData(
+    'artwork-index-repeat-sales-unweighted',
+    artists,
+    finance
+  )
 
   let options: Highcharts.Options | null = null
   const artistSeries: Highcharts.SeriesOptionsType[] = []
-  if (data && !loading && !error) {
+  if (
+    [
+      data,
+      dataHedonic,
+      dataRepeatSales,
+      dataRepeatSalesUnweighted,
+      !loading,
+      !loadingHedonic,
+      !loadingRepeatSales,
+      !loadingRepeatSalesUnweighted,
+      !error,
+      !errorHedonic,
+      !errorRepeatSales,
+      !errorRepeatSalesUnweighted,
+    ].every((i: boolean) => !!i)
+  ) {
     // @ts-ignore
-    data.artistData.forEach(({ artist: { name }, data: mediumItems }) => {
-      // console.log(`[INFO] line serie : l ine-${index}`)
+    ;[
+      { data, name: 'Index' },
+      { data: dataHedonic, name: 'Hedonic' },
+      { data: dataRepeatSales, name: 'Repeat Sales' },
+      { data: dataRepeatSalesUnweighted, name: 'Repeat Sales Unweighted' },
+    ].forEach(({ data: _data, name: algorithmName }) => {
+      // @ts-ignore
+      _data.artistData.forEach(({ artist: { name }, data: mediumItems }) => {
+        // console.log(`[INFO] line serie : l ine-${index}`)
 
-      Object.entries(mediumItems).forEach(([key, items]) => {
-        artistSeries.push({
-          type: 'line',
-          // @ts-ignore
-          name: `${name} ${MediumTypes[key]}`,
-          id: `line-${name}-${key}`,
-          // @ts-ignore
-          data: items.map((item) => [new Date(item.date).getTime(), item.index]),
-          tooltip: {
-            valueDecimals: 2,
-          },
-          // color: colors[index], // getColorByName(name),
-          showInNavigator: true,
+        Object.entries(mediumItems).forEach(([key, items]) => {
+          artistSeries.push({
+            type: 'line',
+            // @ts-ignore
+            name: `${name} ${MediumTypes[key]} ${algorithmName}`,
+            id: `line-${name}-${key}-${algorithmName}`,
+            // @ts-ignore
+            data: items.map((item) => [new Date(item.date).getTime(), item.index]),
+            tooltip: {
+              valueDecimals: 2,
+            },
+            // color: colors[index], // getColorByName(name),
+            showInNavigator: true,
+          })
         })
       })
     })
@@ -136,8 +181,7 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
         timezone: 'Europe/London',
       },
       tooltip: {
-        pointFormat:
-          '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
+        pointFormat: '<b>{point.y}</b> ({point.change}%)<br/>',
         valueDecimals: 2,
         split: true,
       },
@@ -188,7 +232,6 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
     }
   }
 
-  console.log('artistSeries', artistSeries)
   return (
     <>
       {loading ? (
@@ -198,15 +241,15 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
           </Grid>
         </Grid>
       ) : (
-        <Grid item>
-          <HighchartsReact
-            containerProps={{ style: { height: 450 } }}
-            highcharts={Highcharts}
-            options={options}
-            constructorType="stockChart"
-          />
-        </Grid>
-      )}
+          <Grid item>
+            <HighchartsReact
+              containerProps={{ style: { height: 850 } }}
+              highcharts={Highcharts}
+              options={options}
+              constructorType="stockChart"
+            />
+          </Grid>
+        )}
     </>
   )
 }

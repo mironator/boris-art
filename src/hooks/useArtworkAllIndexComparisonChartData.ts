@@ -3,8 +3,12 @@ import { gql, useQuery } from '@apollo/client'
 import { Artist } from '@interfaces/index'
 
 const GET_COMPARISON_CHART_DATA = gql`
-  query GET_COMPARISON_CHART_DATA($artists: [ArtistInput], $finance: [FinanceInput]) {
-    artistIndexChartData(artists: $artists, finance: $finance) {
+  query GET_COMPARISON_CHART_DATA(
+    $algorithm: String
+    $artists: [ArtistInput]
+    $finance: [FinanceInput]
+  ) {
+    artistIndexChartData(algorithm: $algorithm, artists: $artists, finance: $finance) {
       artistData {
         artist {
           id
@@ -18,6 +22,7 @@ const GET_COMPARISON_CHART_DATA = gql`
 `
 
 type VariablesType = {
+  algorithm: string
   artists: { id: number }[]
   finance: { code: string }[]
 }
@@ -30,9 +35,10 @@ type ChartData = {
 }
 
 // @ts-ignore
-const useArtworkAllIndexComparisonChartData = (artists, finance) => {
+const useArtworkAllIndexComparisonChartData = (algorithm, artists, finance) => {
   const { loading, data, error } = useQuery<ChartData, VariablesType>(GET_COMPARISON_CHART_DATA, {
     variables: {
+      algorithm,
       artists,
       finance,
     },
