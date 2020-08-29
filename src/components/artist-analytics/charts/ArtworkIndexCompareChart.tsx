@@ -40,28 +40,23 @@ const ArtworkIndexCompareChart: React.FC<Props> = ({ artist }) => {
   const [selectedQuotes, setSelectedQuotes] = useState<{ code: string }[]>([])
 
   const onArtistsSelected = useCallback((_, value) => {
-    setSelectedArtists(
-      value
-        .filter((item: ItemWithCategory) => item.category === 'Artists')
-        .map((i: Artist) => ({
-          id: i.id,
-        }))
-    )
-    setSelectedQuotes(
-      value
-        .filter((item: ItemWithCategory) => item.category === 'Finance')
-        .map((i: { code: string }) => ({ code: i.code }))
-    )
+    setSelectedArtists(value.filter((item: ItemWithCategory) => item.category === 'Artists'))
+    setSelectedQuotes(value.filter((item: ItemWithCategory) => item.category === 'Finance'))
   }, [])
 
   const { artists, setInputText } = useArtistSearch()
 
   useEffect(() => {
-    setOptions([
-      { name: 'S&P 500', code: 'snp500', category: 'Finance' },
-      ...selectedArtists.map((a) => ({ ...a, category: 'Artists' })),
-      ...artists.map((a) => ({ ...a, category: 'Artists' })),
-    ])
+    setOptions(
+      _.uniq(
+        [
+          { name: 'S&P 500', code: 'snp500', category: 'Finance' },
+          ...selectedArtists.map((a) => ({ ...a, category: 'Artists' })),
+          ...artists.map((a) => ({ ...a, category: 'Artists' })),
+        ],
+        'name'
+      )
+    )
   }, [artists.length])
 
   const onInputChange = useCallback((_event, value) => {

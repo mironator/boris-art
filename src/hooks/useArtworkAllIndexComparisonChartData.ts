@@ -42,7 +42,7 @@ const useArtworkAllIndexComparisonChartData = (algorithm, artists, finance) => {
       artists: artists.map((a: Artist) => ({
         id: a.id,
       })),
-      finance,
+      finance: finance.map((i: { code: string }) => ({ code: i.code })),
     },
   })
 

@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { useState, useCallback, useEffect } from 'react'
 import Highcharts from 'highcharts/highstock'
 import HighchartsExporting from 'highcharts/modules/exporting'
@@ -36,22 +37,22 @@ const ArtworkIndexCompareChart: React.FC = () => {
 
   const onArtistsSelected = useCallback((_, value) => {
     setSelectedArtists(value.filter((item: ItemWithCategory) => item.category === 'Artists'))
-    setSelectedQuotes(
-      value
-        .filter((item: ItemWithCategory) => item.category === 'Finance')
-        .map((i: { code: string }) => ({ code: i.code }))
-    )
+    setSelectedQuotes(value.filter((item: ItemWithCategory) => item.category === 'Finance'))
   }, [])
 
   const { artists, setInputText } = useArtistSearch()
 
   useEffect(() => {
-    console.log('[INFO] useEffect setOptions')
-    setOptions([
-      { name: 'S&P 500', code: 'snp500', category: 'Finance' },
-      ...selectedArtists.map((a) => ({ ...a, category: 'Artists' })),
-      ...artists.map((a) => ({ ...a, category: 'Artists' })),
-    ])
+    setOptions(
+      _.uniq(
+        [
+          { name: 'S&P 500', code: 'snp500', category: 'Finance' },
+          ...selectedArtists.map((a) => ({ ...a, category: 'Artists' })),
+          ...artists.map((a) => ({ ...a, category: 'Artists' })),
+        ],
+        'name'
+      )
+    )
   }, [artists.length])
 
   const onInputChange = useCallback((_event, value) => {
