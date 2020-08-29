@@ -50,6 +50,7 @@ const ArtworkIndexCompareChart: React.FC = () => {
           ...selectedArtists.map((a) => ({ ...a, category: 'Artists' })),
           ...artists.map((a) => ({ ...a, category: 'Artists' })),
         ],
+        // @ts-ignore
         'name'
       )
     )
