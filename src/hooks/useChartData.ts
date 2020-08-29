@@ -1,4 +1,5 @@
 import useSWR from 'swr'
+import queryString from 'query-string'
 
 import fetcher from '@utils/fetcher'
 import {
@@ -52,7 +53,7 @@ export type ArtworkValueChartData = ChartData<IArtworkValueChartDatum>
 const getMedium = (medium: string): string => {
   if (medium === mediumTypes.all) return ''
 
-  return `?medium[eq]=${medium}`
+  return medium
 }
 
 export const usePriceMomentumAndVolumeChartData: (
@@ -76,7 +77,14 @@ export const useArtworkIndexChartData: (
   medium: keyof typeof mediumTypes
 ) => ArtworkIndexChartData = (artistId, medium) => {
   const { data, error } = useSWR(
-    `/api/charts/artwork-index/${artistId}${getMedium(medium)}`,
+    `/api/charts/artwork-index/${artistId}?${queryString.stringify(
+      {
+        'medium[eq]': getMedium(medium),
+      },
+      {
+        skipEmptyString: true,
+      }
+    )}`,
     fetcher,
     {
       revalidateOnFocus: false,
@@ -94,12 +102,25 @@ export const useArtworkIndexChartData: (
 
 export const useArtworkIndexChartAllData: (
   artistId: number,
-  mediumList: Array<keyof typeof mediumTypes>
-) => ArtworkIndexChartAllData = (artistId, mediumList) => {
+  mediumList: Array<keyof typeof mediumTypes>,
+  type?: string
+) => ArtworkIndexChartAllData = (artistId, mediumList, type) => {
   const allData = ['all', ...mediumList].map((item) => ({
-    ...useSWR(`/api/charts/artwork-index/${artistId}${getMedium(item)}`, fetcher, {
-      revalidateOnFocus: false,
-    }),
+    ...useSWR(
+      `/api/charts/artwork-index/${artistId}?${queryString.stringify(
+        {
+          'medium[eq]': getMedium(item),
+          type,
+        },
+        {
+          skipEmptyString: true,
+        }
+      )}`,
+      fetcher,
+      {
+        revalidateOnFocus: false,
+      }
+    ),
     name: item,
   }))
 
