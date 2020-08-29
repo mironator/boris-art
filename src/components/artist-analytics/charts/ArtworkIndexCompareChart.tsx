@@ -59,9 +59,10 @@ const ArtworkIndexCompareChart: React.FC<Props> = ({ artist }) => {
   useEffect(() => {
     setOptions([
       { name: 'S&P 500', code: 'snp500', category: 'Finance' },
+      ...selectedArtists.map((a) => ({ ...a, category: 'Artists' })),
       ...artists.map((a) => ({ ...a, category: 'Artists' })),
     ])
-  }, [artists])
+  }, [artists.length])
 
   const onInputChange = useCallback((_event, value) => {
     setInputText(value)

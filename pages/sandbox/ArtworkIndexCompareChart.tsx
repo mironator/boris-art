@@ -35,13 +35,7 @@ const ArtworkIndexCompareChart: React.FC = () => {
   const [selectedQuotes, setSelectedQuotes] = useState<{ code: string }[]>([])
 
   const onArtistsSelected = useCallback((_, value) => {
-    setSelectedArtists(
-      value
-        .filter((item: ItemWithCategory) => item.category === 'Artists')
-        .map((i: Artist) => ({
-          id: i.id,
-        }))
-    )
+    setSelectedArtists(value.filter((item: ItemWithCategory) => item.category === 'Artists'))
     setSelectedQuotes(
       value
         .filter((item: ItemWithCategory) => item.category === 'Finance')
@@ -52,11 +46,13 @@ const ArtworkIndexCompareChart: React.FC = () => {
   const { artists, setInputText } = useArtistSearch()
 
   useEffect(() => {
+    console.log('[INFO] useEffect setOptions')
     setOptions([
       { name: 'S&P 500', code: 'snp500', category: 'Finance' },
+      ...selectedArtists.map((a) => ({ ...a, category: 'Artists' })),
       ...artists.map((a) => ({ ...a, category: 'Artists' })),
     ])
-  }, [artists])
+  }, [artists.length])
 
   const onInputChange = useCallback((_event, value) => {
     setInputText(value)
@@ -69,7 +65,6 @@ const ArtworkIndexCompareChart: React.FC = () => {
           multiple
           id="tags-standard"
           options={options}
-          // getOptionValue={(option) => option.id}
           getOptionLabel={(option) => option.name || ''}
           groupBy={(option) => option.category}
           onInputChange={onInputChange}
