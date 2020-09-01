@@ -1,5 +1,5 @@
 import React from 'react'
-import { AppBar, Grid, Tab, Tabs, Typography } from '@material-ui/core'
+import { Grid, Tab, Tabs, Typography } from '@material-ui/core'
 import classNames from 'classnames'
 
 import { Artist } from '@interfaces/index'
