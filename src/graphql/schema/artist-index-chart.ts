@@ -1,10 +1,9 @@
 import _ from 'lodash'
 import { gql } from 'apollo-server-micro'
-import https from 'https'
-import parse from 'csv-parse/lib/sync'
 
 import Artist from '@models/Artist'
 import { ArtistEntity, MediumTypes } from '@interfaces/index'
+import { INDICES, IndexName, SNP500, GOLD_PRICE, DOW_JONES, MSCI } from '@models/Stock'
 
 export const typeDef = gql`
   extend type Query {
@@ -20,20 +19,6 @@ export const typeDef = gql`
     data: JSON
   }
 
-  # type DataByMedium {
-  #   all: [IndexChartDatum]
-  #   paintings: [IndexChartDatum]
-  #   prints: [IndexChartDatum]
-  #   undetermined: [IndexChartDatum]
-  #   photographs: [IndexChartDatum]
-  #   jewelry: [IndexChartDatum]
-  #   sculpture: [IndexChartDatum]
-  #   furniture: [IndexChartDatum]
-  #   ceramics: [IndexChartDatum]
-  #   other: [IndexChartDatum]
-  #   worksOnPaper: [IndexChartDatum]
-  # }
-
   type ArtistIndexChartData {
     artistData: [ArtistIndexData]
     financeData: [FinanceData] @cacheControl(maxAge: 86400)
@@ -44,7 +29,7 @@ export const resolvers = {
   Query: {
     // @ts-ignore
     artistIndexChartData: (_, { algorithm, artists, finance }) => {
-      console.log('[INFO] artistIndexChartData', algorithm, artists, finance)
+      // console.log('[INFO] artistIndexChartData', algorithm, artists, finance)
       return {
         artistData: artists.map((artist: unknown) => ({
           artist,
@@ -60,7 +45,6 @@ export const resolvers = {
 
   ArtistIndexData: {
     artist: async (parent: unknown): Promise<Artist | null> => {
-      console.log('[INFO] artist', parent)
       const artistId = _.get(parent, 'artist.id')
       const apiRes = await fetch(`http://54.156.225.113:8000/v1/artist/${artistId}`)
       const data = await apiRes.json()
@@ -108,61 +92,29 @@ export const resolvers = {
   FinanceData: {
     quote: async (parent: unknown) => {
       // TODO: fetch more fields
-      return { name: _.get(parent, 'quote.code') }
+      const name = _.get(parent, 'quote.name') as IndexName
+      return INDICES[name]
     },
     data: async (parent: unknown): Promise<unknown> => {
-      const code = _.get(parent, 'quote.code')
+      const name = _.get(parent, 'quote.name') as IndexName
+      const { code } = INDICES[name]
 
-      if (code === 'snp500') {
-        return await SNP500()
+      if (code === INDICES.SNP500.code) {
+        return SNP500()
+      }
+      if (code === INDICES.GOLD.code) {
+        return GOLD_PRICE()
+      }
+      if (code === INDICES.DOW_JONES.code) {
+        return DOW_JONES()
+      }
+      if (code === INDICES.MSCI_WORLD_REAL_ESTATE.code) {
+        return MSCI()
       }
 
       return []
     },
   },
-}
-
-async function SNP500({
-  from = new Date(1957, 3, 4).getTime(),
-  to = new Date().getTime(),
-  interval = '1mo',
-}: {
-  from?: number
-  to?: number
-  interval?: '1d' | '1wk' | '1mo'
-} = {}): Promise<string> {
-  const snpData = await new Promise<string>(async (resolve, reject) => {
-    const url = `https://query1.finance.yahoo.com/v7/finance/download/%5EGSPC?period1=${Math.floor(
-      from / 1e3
-    )}&period2=${Math.floor(to / 1e3)}&interval=${interval}&events=history`
-
-    let data = ''
-    const request = https.get(url, (response) => {
-      if (response.statusCode !== 200) {
-        reject(new Error(`Failed to get '${url}' (${response.statusCode})`))
-        return
-      }
-
-      response.on('data', (chunk) => {
-        data += chunk
-      })
-
-      response.on('end', () => resolve(data))
-    })
-
-    request.on('error', () => {
-      reject()
-    })
-  })
-
-  const foo = parse(snpData, {
-    columns: ['date', 'open', 'high', 'low', 'close', 'adjClose', 'volume'],
-    trim: true,
-    fromLine: 2,
-    // @ts-ignore
-  }).map((i, _idx, arr) => ({ ...i, index: i.open / arr[0].open }))
-
-  return foo
 }
 
 export default typeDef
