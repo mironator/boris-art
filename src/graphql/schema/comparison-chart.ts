@@ -1,7 +1,5 @@
 import _ from 'lodash'
 import { gql } from 'apollo-server-micro'
-import https from 'https'
-import parse from 'csv-parse/lib/sync'
 
 import Artist from '@models/Artist'
 import { ArtistEntity } from '@interfaces/index'
@@ -16,7 +14,7 @@ export const typeDef = gql`
   }
 
   input FinanceInput {
-    code: String
+    name: String
   }
 
   type ArtistData {
@@ -37,6 +35,7 @@ export const typeDef = gql`
 
   type Quote {
     name: String
+    code: String
   }
 
   type FinanceData {
@@ -111,65 +110,6 @@ export const resolvers = {
       return _.get(data, 'payload.artwork_index_comparison_chart')
     },
   },
-
-  FinanceData: {
-    quote: async (parent: unknown) => {
-      // TODO: fetch more fields
-      return { name: _.get(parent, 'quote.code') }
-    },
-    data: async (parent: unknown): Promise<unknown> => {
-      const code = _.get(parent, 'quote.code')
-
-      if (code === 'snp500') {
-        return await SNP500()
-      }
-
-      return []
-    },
-  },
-}
-
-async function SNP500({
-  from = new Date(1957, 3, 4).getTime(),
-  to = new Date().getTime(),
-  interval = '1mo',
-}: {
-  from?: number
-  to?: number
-  interval?: '1d' | '1wk' | '1mo'
-} = {}): Promise<string> {
-  const snpData = await new Promise<string>(async (resolve, reject) => {
-    const url = `https://query1.finance.yahoo.com/v7/finance/download/%5EGSPC?period1=${Math.floor(
-      from / 1e3
-    )}&period2=${Math.floor(to / 1e3)}&interval=${interval}&events=history`
-
-    let data = ''
-    const request = https.get(url, (response) => {
-      if (response.statusCode !== 200) {
-        reject(new Error(`Failed to get '${url}' (${response.statusCode})`))
-        return
-      }
-
-      response.on('data', (chunk) => {
-        data += chunk
-      })
-
-      response.on('end', () => resolve(data))
-    })
-
-    request.on('error', () => {
-      reject()
-    })
-  })
-
-  const foo = parse(snpData, {
-    columns: ['date', 'open', 'high', 'low', 'close', 'adjClose', 'volume'],
-    trim: true,
-    fromLine: 2,
-    // @ts-ignore
-  }).map((i, _idx, arr) => ({ ...i, index: i.open / arr[0].open }))
-
-  return foo
 }
 
 export default typeDef

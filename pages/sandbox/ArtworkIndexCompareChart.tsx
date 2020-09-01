@@ -9,7 +9,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 
 import useArtistSearch from '@hooks/useArtistSearch'
 import MediumTypes from '@hooks/mediumTypes'
-import useArtworkAllIndexComparisonChartData from '@hooks/useArtworkAllIndexComparisonChartData'
+import useArtworkAllIndicesComparisonChartData from '@hooks/useArtworkAllIndicesComparisonChartData'
 import Artist from '@models/Artist'
 import { rangeSelector } from '@utils/charts-config'
 
@@ -46,7 +46,14 @@ const ArtworkIndexCompareChart: React.FC = () => {
     setOptions(
       _.uniq(
         [
-          { name: 'S&P 500', code: 'snp500', category: 'Finance' },
+          { name: 'S&P 500', code: 'SNP500', category: 'Finance' },
+          { name: 'COMEX Delayed Price', code: 'GOLD', category: 'Finance' },
+          { name: 'Dow Jones Industrial Average', code: 'DOW_JONES', category: 'Finance' },
+          {
+            name: 'Fidelity MSCI Real Estate Index ETF (FREL)',
+            code: 'MSCI_WORLD_REAL_ESTATE',
+            category: 'Finance',
+          },
           ...selectedArtists.map((a) => ({ ...a, category: 'Artists' })),
           ...artists.map((a) => ({ ...a, category: 'Artists' })),
         ],
@@ -90,52 +97,61 @@ const ArtworkIndexCompareChart: React.FC = () => {
   )
 }
 
+type FinanceRecord = {
+  quote: {
+    name: string
+  }
+  data: { date: string; index: number }[]
+}
+
 const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[] }> = ({
   artists,
   finance,
 }) => {
   const classes = useStyles()
-  const { data, loading, error } = useArtworkAllIndexComparisonChartData(
-    'artwork-index',
-    artists,
-    finance
-  )
+  const { data, loading, error } = useArtworkAllIndicesComparisonChartData('artwork-index', artists)
   const {
     data: dataHedonic,
     loading: loadingHedonic,
     error: errorHedonic,
-  } = useArtworkAllIndexComparisonChartData('artwork-index-hedonic', artists, finance)
+  } = useArtworkAllIndicesComparisonChartData('artwork-index-hedonic', artists)
   const {
     data: dataRepeatSales,
     loading: loadingRepeatSales,
     error: errorRepeatSales,
-  } = useArtworkAllIndexComparisonChartData('artwork-index-repeat-sales', artists, finance)
+  } = useArtworkAllIndicesComparisonChartData('artwork-index-repeat-sales', artists)
   const {
     data: dataRepeatSalesUnweighted,
     loading: loadingRepeatSalesUnweighted,
     error: errorRepeatSalesUnweighted,
-  } = useArtworkAllIndexComparisonChartData(
-    'artwork-index-repeat-sales-unweighted',
-    artists,
-    finance
-  )
+  } = useArtworkAllIndicesComparisonChartData('artwork-index-repeat-sales-unweighted', artists)
+
+  const {
+    data: financeData,
+    loading: financeLoading,
+    error: financeError,
+  } = useArtworkAllIndicesComparisonChartData('artwork-index-repeat-sales-unweighted', [], finance)
 
   let options: Highcharts.Options | null = null
   const artistSeries: Highcharts.SeriesOptionsType[] = []
+  const financeSeries: Highcharts.SeriesOptionsType[] = []
   if (
     [
       data,
       dataHedonic,
       dataRepeatSales,
       dataRepeatSalesUnweighted,
+      financeData,
       !loading,
       !loadingHedonic,
       !loadingRepeatSales,
       !loadingRepeatSalesUnweighted,
+      !financeLoading,
       !error,
       !errorHedonic,
       !errorRepeatSales,
       !errorRepeatSalesUnweighted,
+      !financeError,
     ].every((i: boolean) => !!i)
   ) {
     // @ts-ignore
@@ -164,6 +180,21 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
             showInNavigator: true,
           })
         })
+      })
+    })
+
+    financeData.financeData.forEach((financeItem: FinanceRecord) => {
+      financeSeries.push({
+        type: 'line',
+        // @ts-ignore
+        name: `${financeItem.quote.name}`,
+        // @ts-ignore
+        data: financeItem.data.map((item) => [new Date(item.date).getTime(), item.index]),
+        tooltip: {
+          valueDecimals: 2,
+        },
+        // color: colors[index], // getColorByName(name),
+        showInNavigator: true,
       })
     })
 
@@ -225,7 +256,7 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
         layout: 'horizontal',
       },
 
-      series: artistSeries,
+      series: [...artistSeries, ...financeSeries],
     }
   }
 

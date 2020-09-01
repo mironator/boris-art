@@ -2,8 +2,8 @@ import _ from 'lodash'
 import { gql, useQuery } from '@apollo/client'
 import { Artist } from '@interfaces/index'
 
-const GET_COMPARISON_CHART_DATA = gql`
-  query GET_COMPARISON_CHART_DATA($artists: [ArtistInput], $finance: [FinanceInput]) {
+const GET_ARTIST_INDEX_COMPARISON_CHART_DATA = gql`
+  query GET_ARTIST_INDEX_COMPARISON_CHART_DATA($artists: [ArtistInput], $finance: [FinanceInput]) {
     comparisonChartData(artists: $artists, finance: $finance) {
       artistData {
         artist {
@@ -30,7 +30,7 @@ const GET_COMPARISON_CHART_DATA = gql`
 
 type VariablesType = {
   artists: { id: number }[]
-  finance: { code: string }[]
+  finance: { name: string }[]
 }
 
 type ChartData = {
@@ -42,14 +42,18 @@ type ChartData = {
 
 // @ts-ignore
 const useArtworkIndexComparisonChartData = (artists, finance) => {
-  const { loading, data, error } = useQuery<ChartData, VariablesType>(GET_COMPARISON_CHART_DATA, {
-    variables: {
-      artists: artists.map((a: Artist) => ({
-        id: a.id,
-      })),
-      finance: finance.map((i: { code: string }) => ({ code: i.code })),
-    },
-  })
+  const { loading, data, error } = useQuery<ChartData, VariablesType>(
+    GET_ARTIST_INDEX_COMPARISON_CHART_DATA,
+    {
+      errorPolicy: 'ignore',
+      variables: {
+        artists: artists.map((a: Artist) => ({
+          id: a.id,
+        })),
+        finance: finance.map((i: { code: string }) => ({ name: i.code })),
+      },
+    }
+  )
 
   const chartData = _.get(data, 'comparisonChartData')
 

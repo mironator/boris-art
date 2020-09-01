@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { gql, useQuery } from '@apollo/client'
+import { gql, useQuery, QueryResult } from '@apollo/client'
 import { Artist } from '@interfaces/index'
 
 const GET_COMPARISON_CHART_DATA = gql`
@@ -16,6 +16,15 @@ const GET_COMPARISON_CHART_DATA = gql`
           mediumTypes
         }
         data
+      }
+      financeData {
+        quote {
+          name
+        }
+        data {
+          date
+          index
+        }
       }
     }
   }
@@ -35,14 +44,20 @@ type ChartData = {
 }
 
 // @ts-ignore
-const useArtworkAllIndexComparisonChartData = (algorithm, artists, finance) => {
+const useArtworkAllIndicesComparisonChartData: (
+  algorithm: string,
+  artists?: Artist[],
+  finance?: unknown[]
+) => QueryResult = (algorithm, artists = [], finance = []) => {
   const { loading, data, error } = useQuery<ChartData, VariablesType>(GET_COMPARISON_CHART_DATA, {
+    errorPolicy: 'ignore',
     variables: {
       algorithm,
       artists: artists.map((a: Artist) => ({
         id: a.id,
       })),
-      finance: finance.map((i: { code: string }) => ({ code: i.code })),
+      // @ts-ignore
+      finance: finance.map((i: { code: string }) => ({ name: i.code })),
     },
   })
 
@@ -51,4 +66,4 @@ const useArtworkAllIndexComparisonChartData = (algorithm, artists, finance) => {
   return { data: chartData, loading, error }
 }
 
-export default useArtworkAllIndexComparisonChartData
+export default useArtworkAllIndicesComparisonChartData
