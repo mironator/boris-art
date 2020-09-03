@@ -254,12 +254,14 @@ export type Artwork = {
   lotImageSize: number
   description: string
   lastPrice: number
+  lastSoldAuctionHouseName: string
 }
 
 export type ArtworkEntity = {
   creation_year: number
   date_last_sold: string
   place_last_sold: string
+  last_sold_auction_house_name: string
   size_notes: string
   lot_image_s3_key: string
   exhibited: unknown | null

@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React from 'react'
 import { gql, useQuery } from '@apollo/client'
 import {
@@ -5,6 +6,8 @@ import {
   ArtworkValueChartSalesDatumEntity,
   ArtworkValueChartValuesDatumEntity,
 } from '@interfaces/index'
+
+import ArtworkModel from '@models/Artwork'
 import { CircularProgress, Grid } from '@material-ui/core'
 
 import ArtworkValueChartSalesDatum from '@models/ArtworkValueChartSalesDatum'
@@ -43,6 +46,7 @@ const GET_VALUATION = gql`
         exhibited
         lastPrice
         placeLastSold
+        lastSoldAuctionHouseName
         dateLastSold
       }
       sales
@@ -96,6 +100,11 @@ const SimilarArtworks: React.FC<Props> = ({ values }) => {
     ArtworkValueChartValuesDatum.fromEntity(value)
   )
 
+  const artworks: ArtworkModel[] = _.get(data, 'valuation.artworks', []).map((a: Artwork) => ({
+    ...a,
+    dateLastSold: new Date(a.dateLastSold),
+  }))
+
   if (loading) {
     return (
       <Grid item style={{ textAlign: 'center' }}>
@@ -103,6 +112,7 @@ const SimilarArtworks: React.FC<Props> = ({ values }) => {
       </Grid>
     )
   }
+
   return (
     <Grid spacing={5} item direction="column" container>
       <Grid item style={{ height: 400 }}>
@@ -110,9 +120,9 @@ const SimilarArtworks: React.FC<Props> = ({ values }) => {
       </Grid>
       <Grid item>
         {/* <HighchartsReact highcharts={Highcharts} options={options} constructorType="stockChart" /> */}
-        {!data?.valuation?.artworks?.length && <p>No similar sales available for this artwork.</p>}
+        {!artworks.length && <p>No similar sales available for this artwork.</p>}
         <Grid container spacing={5}>
-          {data?.valuation?.artworks?.map((item) => (
+          {artworks.map((item) => (
             <Grid key={item.id} item container justify="center" xs={12} sm={6} md={4}>
               {/* 
             // @ts-ignore */}
