@@ -158,7 +158,7 @@ export default class ComparablesChartDatum implements IComparablesChartDatum {
       entity.lot_image_s3_key,
       entity.similarity,
       entity.last_price,
-      entity.date_last_sold,
+      new Date(entity.date_last_sold),
       entity.place_last_sold
     )
   }
