@@ -254,6 +254,7 @@ export type Artwork = {
   lotImageSize: number
   description: string
   lastPrice: number
+  lastSoldAuctionHouseName: string
 }
 
 export type ArtworkEntity = {
