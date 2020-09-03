@@ -188,6 +188,7 @@ export type ComparablesChartDatumEntity = {
   last_price: number
   lot_image_s3_key: string
   similarity: number
+  last_sold_auction_house_name: string
 }
 
 export type ArtworkValueChartDatumEntity = {
