@@ -54,7 +54,16 @@ interface OwnProps {
 type Props = OwnProps
 
 const LotCard: React.FC<Props> = ({
-  artwork: { id, name, lotImagePresignedUrl, markings, creationYear, lastPrice, placeLastSold },
+  artwork: {
+    id,
+    name,
+    lotImagePresignedUrl,
+    creationYear,
+    lastPrice,
+    placeLastSold,
+    dateLastSold,
+    lastSoldAuctionHouseName,
+  },
 }) => {
   const classes = useStyles()
   const [toggler, setToggler] = useState(false)
@@ -76,25 +85,15 @@ const LotCard: React.FC<Props> = ({
           component="img"
         />
         <CardContent>
-          <Typography gutterBottom variant="body1" component="h4">
-            {name}
+          <Typography gutterBottom variant="body1">
+            {`${name}, ${creationYear}`}
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            {markings}
+          <Typography variant="body1">Last recorded sale:</Typography>
+          <Typography variant="body1">
+            {`${priceFormatter(
+              lastPrice
+            )} at ${lastSoldAuctionHouseName}, ${placeLastSold} (${dateLastSold.getFullYear()})`}
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            {creationYear}
-          </Typography>
-          {lastPrice && (
-            <Typography variant="body1" component="p">
-              {`Price: ${priceFormatter(lastPrice)}`}
-            </Typography>
-          )}
-          {placeLastSold && (
-            <Typography variant="body1" component="p" style={{ bottom: 0 }}>
-              {`Auction: ${placeLastSold}`}
-            </Typography>
-          )}
         </CardContent>
       </CardActionArea>
       <CardActions>
@@ -117,25 +116,15 @@ const LotCard: React.FC<Props> = ({
               justify="flex-end"
               className={classes.imageContent}
             >
-              <Typography gutterBottom variant="body1" component="h4">
-                {name}
+              <Typography gutterBottom variant="body1">
+                {`${name}, ${creationYear}`}
               </Typography>
-              <Typography variant="body2" component="p">
-                {markings}
+              <Typography variant="body1">Last recorded sale:</Typography>
+              <Typography variant="body1">
+                {`${priceFormatter(
+                  lastPrice
+                )} at ${lastSoldAuctionHouseName}, ${placeLastSold} (${dateLastSold.getFullYear()})`}
               </Typography>
-              <Typography variant="body2" component="p">
-                {creationYear}
-              </Typography>
-              {lastPrice && (
-                <Typography variant="body1" component="h4">
-                  {`Price: ${priceFormatter(lastPrice)}`}
-                </Typography>
-              )}
-              {placeLastSold && (
-                <Typography variant="body1" component="h4">
-                  {`Auction: ${placeLastSold}`}
-                </Typography>
-              )}
             </Grid>
           </div>,
         ]}
