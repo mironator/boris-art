@@ -64,6 +64,8 @@ export default class ComparablesChartDatum implements IComparablesChartDatum {
 
   placeLastSold: string
 
+  lastSoldAuctionHouseName: string
+
   constructor(
     description: string,
     exhibited: unknown,
@@ -94,7 +96,8 @@ export default class ComparablesChartDatum implements IComparablesChartDatum {
     similarity: number,
     lastPrice: number,
     dateLastSold: Date,
-    placeLastSold: string
+    placeLastSold: string,
+    lastSoldAuctionHouseName: string
   ) {
     this.description = description
     this.exhibited = exhibited
@@ -126,6 +129,7 @@ export default class ComparablesChartDatum implements IComparablesChartDatum {
     this.lastPrice = lastPrice
     this.dateLastSold = dateLastSold
     this.placeLastSold = placeLastSold
+    this.lastSoldAuctionHouseName = lastSoldAuctionHouseName
   }
 
   static fromEntity(entity: ComparablesChartDatumEntity): ComparablesChartDatum {
@@ -159,7 +163,8 @@ export default class ComparablesChartDatum implements IComparablesChartDatum {
       entity.similarity,
       entity.last_price,
       new Date(entity.date_last_sold),
-      entity.place_last_sold
+      entity.place_last_sold,
+      entity.last_sold_auction_house_name
     )
   }
 }
