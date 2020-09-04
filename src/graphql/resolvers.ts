@@ -7,6 +7,7 @@ import { resolvers as EventResolvers } from './schema/event'
 import { resolvers as ComparisonChartResolvers } from './schema/comparison-chart'
 import { resolvers as ArtistIndexChartResolvers } from './schema/artist-index-chart'
 import { resolvers as ValuationChartResolvers } from './schema/valuation'
+import { resolvers as RegressionstResolvers } from './schema/regression'
 
 const resolvers = {
   Date: DateResolver,
@@ -20,5 +21,6 @@ export default _.merge(
   EventResolvers,
   ComparisonChartResolvers,
   ArtistIndexChartResolvers,
-  ValuationChartResolvers
+  ValuationChartResolvers,
+  RegressionstResolvers
 )

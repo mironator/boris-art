@@ -6,6 +6,7 @@ import Event from './event'
 import Valuation from './valuation'
 import ComparisonChartTypes from './comparison-chart'
 import ArtistIndexChartTypes from './artist-index-chart'
+import RegressionTypes from './regression'
 
 const typeDefs = gql`
   scalar Date
@@ -34,4 +35,5 @@ export default [
   Valuation,
   ComparisonChartTypes,
   ArtistIndexChartTypes,
+  RegressionTypes,
 ]

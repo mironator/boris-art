@@ -21,7 +21,7 @@ export default class ArtowrkDS extends RESTDataSource {
     if (!id) {
       return null
     }
-    const data = await this.get<ArtworkResponse>(`http://54.156.225.113:8000/v1/artwork/${id}`)
+    const data = await this.get<ArtworkResponse>(`/v1/artwork/${id}`)
     const entity = _.get(data, 'artwork[0]') as ArtworkEntity
 
     return Artwork.fromEntity(entity)
