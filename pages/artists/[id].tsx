@@ -19,6 +19,7 @@ interface Props {
 }
 
 const ArtistPage: NextPage<Props> = ({ artistEntity, mediumList }) => {
+  console.log('[INFO] ArtistPage', artistEntity)
   const artist = Artist.fromEntity(artistEntity)
 
   if (!artist) {

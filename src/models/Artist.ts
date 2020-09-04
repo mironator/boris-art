@@ -5,6 +5,8 @@ export default class Artist implements IArtist {
 
   name: string
 
+  bio?: string
+
   birth?: Date | undefined
 
   death?: Date | undefined
@@ -20,6 +22,7 @@ export default class Artist implements IArtist {
   constructor(
     id: number,
     name: string,
+    bio: string,
     birth: Date,
     death: Date,
     qualifier: string,
@@ -29,6 +32,7 @@ export default class Artist implements IArtist {
   ) {
     this.id = id
     this.name = name
+    this.bio = bio
     this.birth = birth
     this.death = death
     this.qualifier = qualifier
@@ -41,6 +45,7 @@ export default class Artist implements IArtist {
     return new Artist(
       entity.id,
       entity.name,
+      entity.bio,
       new Date(entity.birth, 0),
       new Date(entity.death, 0),
       entity.qualifier,

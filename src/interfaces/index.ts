@@ -30,6 +30,7 @@ export type Artist = {
   id: number
   name: string
   birth?: Date
+  bio?: string
   death?: Date
   qualifier?: string
   lotsCost?: number
@@ -42,6 +43,7 @@ export type ArtistEntity = {
   id: number
   name: string
   nationality: string
+  bio: string
   birth: number
   death: number
   qualifier: string | 'NULL'
