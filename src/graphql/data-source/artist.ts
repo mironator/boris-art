@@ -23,14 +23,14 @@ export default class ArtistDS extends RESTDataSource {
   }
 
   async getArtist(id: number): Promise<Artist> {
-    console.log('[INFO] ArtistDS.getArtist')
+    // console.log('[INFO] ArtistDS.getArtist')
     const data = await this.get<ArtistResponse>(`/artist/${id}`)
     const artistEntity = _.get(data, 'artist[0]') as ArtistEntity
     return Artist.fromEntity(artistEntity)
   }
 
   async getArtists({ query = '', limit = 10, offset = 0 }: ArtistListInput): Promise<Artist[]> {
-    console.log('[INFO] ArtistDS.getArtists')
+    // console.log('[INFO] ArtistDS.getArtists')
     const data = await this.get<ArtistResponse>(
       `/artist/?name[ilike]=${query}&limit=${limit}&offset=${offset}&sort=-lots_count`
     )
@@ -40,7 +40,7 @@ export default class ArtistDS extends RESTDataSource {
   }
 
   async getArtistMediumTypes(id: number): Promise<MediumTypes[]> {
-    console.log('[INFO] ArtistDS.getArtistMediumTypes')
+    // console.log('[INFO] ArtistDS.getArtistMediumTypes')
     const data = await this.get(`artist-medium-list?artist_id[eq]=${id}`)
     const mediumList = _.get(data, 'payload.artist_medium_list')?.map(
       (item: { medium: MediumTypes }) => item.medium

@@ -14,6 +14,7 @@ export const typeDef = gql`
   type Artist {
     id: Int!
     name: String
+    bio: String
     birth: Date
     death: Date
     qualifier: String
