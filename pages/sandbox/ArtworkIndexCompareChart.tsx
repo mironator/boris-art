@@ -46,14 +46,14 @@ const ArtworkIndexCompareChart: React.FC = () => {
     setOptions(
       _.uniq(
         [
-          { name: 'S&P 500', code: 'SNP500', category: 'Finance' },
-          { name: 'COMEX Delayed Price', code: 'GOLD', category: 'Finance' },
-          { name: 'Dow Jones Industrial Average', code: 'DOW_JONES', category: 'Finance' },
-          {
-            name: 'Fidelity MSCI Real Estate Index ETF (FREL)',
-            code: 'MSCI_WORLD_REAL_ESTATE',
-            category: 'Finance',
-          },
+          // { name: 'S&P 500', code: 'SNP500', category: 'Finance' },
+          // { name: 'COMEX Delayed Price', code: 'GOLD', category: 'Finance' },
+          // { name: 'Dow Jones Industrial Average', code: 'DOW_JONES', category: 'Finance' },
+          // {
+          //   name: 'Fidelity MSCI Real Estate Index ETF (FREL)',
+          //   code: 'MSCI_WORLD_REAL_ESTATE',
+          //   category: 'Finance',
+          // },
           ...selectedArtists.map((a) => ({ ...a, category: 'Artists' })),
           ...artists.map((a) => ({ ...a, category: 'Artists' })),
         ],
