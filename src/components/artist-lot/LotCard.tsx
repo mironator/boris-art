@@ -1,10 +1,9 @@
-import React, { useState, useCallback } from 'react'
-import Router from 'next/router'
+import React, { useState } from 'react'
 import FsLightbox from 'fslightbox-react'
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
-import Button from '@material-ui/core/Button'
+import Link from '@material-ui/core/Link'
 import CardActions from '@material-ui/core/CardActions'
 import CardActionArea from '@material-ui/core/CardActionArea'
 import CardContent from '@material-ui/core/CardContent'
@@ -68,13 +67,6 @@ const LotCard: React.FC<Props> = ({
   const classes = useStyles()
   const [toggler, setToggler] = useState(false)
 
-  const goToDetails = useCallback(
-    (artworkId: number) => () => {
-      Router.push(`/artworks/${artworkId}`)
-    },
-    [id]
-  )
-
   return (
     <Card className={classes.root} variant="outlined">
       <CardActionArea onClick={() => setToggler(!toggler)}>
@@ -100,9 +92,15 @@ const LotCard: React.FC<Props> = ({
         {/* <Button size="small" color="primary">
           Share
         </Button> */}
-        <Button size="small" color="primary" onClick={goToDetails(id)}>
+        <Link
+          href={`/artworks/${id}`}
+          target="_blank"
+          rel="noopener"
+          style={{ padding: 10, fontSize: 14 }}
+          title={name}
+        >
           Learn More
-        </Button>
+        </Link>
       </CardActions>
       <FsLightbox
         toggler={toggler}

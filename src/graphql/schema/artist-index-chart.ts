@@ -8,7 +8,7 @@ import { INDICES, IndexName, SNP500, GOLD_PRICE, DOW_JONES, MSCI } from '@models
 export const typeDef = gql`
   extend type Query {
     artistIndexChartData(
-      algorithm: String
+      algorithms: [String]
       artists: [ArtistInput]
       finance: [FinanceInput]
     ): ArtistIndexChartData
@@ -56,8 +56,8 @@ export const resolvers = {
     // @ts-ignore
     data: async (parent, args, context, info): Promise<unknown> => {
       const artistId = _.get(parent, 'artist.id')
-      const algorithm = _.get(info, 'variableValues.algorithm')
-      console.log('[INFO] data.algorithm', info.variableValues.algorithm)
+      const algorithms: string[] = _.get(info, 'variableValues.algorithms', [])
+      console.log('[INFO] data.algorithm', info.variableValues.algorithms)
 
       const apiRes = await fetch(
         `http://54.156.225.113:8000/v1/artist-medium-list?artist_id[eq]=${artistId}`
@@ -73,16 +73,23 @@ export const resolvers = {
       const foo = {}
 
       await Promise.all(
-        mediumList.map(async (medium) => {
-          const res = await fetch(
-            `http://54.156.225.113:8000/v1/${algorithm}-chart/?artist_id[eq]=${artistId}&medium[eq]=${medium}`
-          )
-          const chartData = await res.json()
-          const bar = _.get(chartData, `payload.${algorithm.replace(/-/gi, '_')}_chart`)
-          const baz = medium === '' ? 'all' : medium
+        algorithms.map(async (algorithm: string) => {
           // @ts-ignore
-          foo[baz] = bar
-          return bar
+          foo[algorithm] = {}
+
+          return Promise.all(
+            mediumList.map(async (medium) => {
+              const res = await fetch(
+                `http://54.156.225.113:8000/v1/${algorithm}-chart/?artist_id[eq]=${artistId}&medium[eq]=${medium}`
+              )
+              const chartData = await res.json()
+              const bar = _.get(chartData, `payload.${algorithm.replace(/-/gi, '_')}_chart`)
+              const baz = medium === '' ? 'all' : medium
+              // @ts-ignore
+              foo[algorithm][baz] = bar
+              return bar
+            })
+          )
         })
       )
       return foo
