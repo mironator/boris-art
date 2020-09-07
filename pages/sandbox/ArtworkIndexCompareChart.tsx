@@ -8,8 +8,8 @@ import { CircularProgress, Grid, TextField } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 
 import useArtistSearch from '@hooks/useArtistSearch'
-import MediumTypes from '@hooks/mediumTypes'
-import useArtworkAllIndicesComparisonChartData from '@hooks/useArtworkAllIndicesComparisonChartData'
+import useArtworkAllIndicesChartData from '@hooks/useArtworkAllIndicesChartData'
+import useRegressionsList from '@hooks/useRegressionsList'
 import Artist from '@models/Artist'
 import { rangeSelector } from '@utils/charts-config'
 
@@ -97,80 +97,37 @@ const ArtworkIndexCompareChart: React.FC = () => {
   )
 }
 
-type FinanceRecord = {
-  quote: {
-    name: string
-  }
-  data: { date: string; index: number }[]
-}
-
 const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[] }> = ({
   artists,
   finance,
 }) => {
   const classes = useStyles()
-  const { data, loading, error } = useArtworkAllIndicesComparisonChartData('artwork-index', artists)
-  const {
-    data: dataHedonic,
-    loading: loadingHedonic,
-    error: errorHedonic,
-  } = useArtworkAllIndicesComparisonChartData('artwork-index-hedonic', artists)
-  const {
-    data: dataRepeatSales,
-    loading: loadingRepeatSales,
-    error: errorRepeatSales,
-  } = useArtworkAllIndicesComparisonChartData('artwork-index-repeat-sales', artists)
-  const {
-    data: dataRepeatSalesUnweighted,
-    loading: loadingRepeatSalesUnweighted,
-    error: errorRepeatSalesUnweighted,
-  } = useArtworkAllIndicesComparisonChartData('artwork-index-repeat-sales-unweighted', artists)
-
-  const {
-    data: financeData,
-    loading: financeLoading,
-    error: financeError,
-  } = useArtworkAllIndicesComparisonChartData('artwork-index-repeat-sales-unweighted', [], finance)
+  const { data: regressionsTypes } = useRegressionsList()
+  const { data, loading, error } = useArtworkAllIndicesChartData(
+    regressionsTypes.map((item) => item.resourceName.replace(/_/g, '-')),
+    artists,
+    finance
+  )
 
   let options: Highcharts.Options | null = null
   const artistSeries: Highcharts.SeriesOptionsType[] = []
-  const financeSeries: Highcharts.SeriesOptionsType[] = []
-  if (
-    [
-      data,
-      dataHedonic,
-      dataRepeatSales,
-      dataRepeatSalesUnweighted,
-      financeData,
-      !loading,
-      !loadingHedonic,
-      !loadingRepeatSales,
-      !loadingRepeatSalesUnweighted,
-      !financeLoading,
-      !error,
-      !errorHedonic,
-      !errorRepeatSales,
-      !errorRepeatSalesUnweighted,
-      !financeError,
-    ].every((i: boolean) => !!i)
-  ) {
-    // @ts-ignore
-    ;[
-      { data, name: 'Index' },
-      { data: dataHedonic, name: 'Hedonic' },
-      { data: dataRepeatSales, name: 'Repeat Sales' },
-      { data: dataRepeatSalesUnweighted, name: 'Repeat Sales Unweighted' },
-    ].forEach(({ data: _data, name: algorithmName }) => {
-      // @ts-ignore
-      _data.artistData.forEach(({ artist: { name }, data: mediumItems }) => {
-        // console.log(`[INFO] line serie : l ine-${index}`)
 
+  if ([data, !loading, !error].every((i: boolean) => !!i)) {
+    // @ts-ignore
+    data.artistData.forEach(({ artist: { name }, data: regressionItems }) => {
+      // console.log(`[INFO] line serie : l ine-${index}`)
+      Object.entries(regressionItems).forEach(([regressionType, mediumItems]) => {
+        // @ts-ignore
         Object.entries(mediumItems).forEach(([key, items]) => {
           artistSeries.push({
             type: 'line',
             // @ts-ignore
-            name: `${name} ${MediumTypes[key]} ${algorithmName}`,
-            id: `line-${name}-${key}-${algorithmName}`,
+            name: `${name}, ${key}, ${
+              regressionsTypes.find(
+                (item) => item.resourceName === regressionType.replace(/-/g, '_')
+              )?.name
+            }`,
+            id: `line-${name}-${key}-${regressionType}`,
             // @ts-ignore
             data: items.map((item) => [new Date(item.date).getTime(), item.index]),
             tooltip: {
@@ -183,27 +140,22 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
       })
     })
 
-    financeData.financeData.forEach((financeItem: FinanceRecord) => {
-      financeSeries.push({
-        type: 'line',
-        // @ts-ignore
-        name: `${financeItem.quote.name}`,
-        // @ts-ignore
-        data: financeItem.data.map((item) => [new Date(item.date).getTime(), item.index]),
-        tooltip: {
-          valueDecimals: 2,
-        },
-        // color: colors[index], // getColorByName(name),
-        showInNavigator: true,
-      })
-    })
-
     // @ts-ignore
     options = {
       rangeSelector,
 
       chart: {
         zoomType: 'xy',
+
+        events: {
+          load() {
+            this.legend.allItems
+              .filter((item) => !item.name.includes(' all,'))
+              .forEach((item: any) => {
+                item.setVisible(false)
+              })
+          },
+        },
       },
       time: {
         timezone: 'Europe/London',
@@ -256,7 +208,7 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
         layout: 'horizontal',
       },
 
-      series: [...artistSeries, ...financeSeries],
+      series: [...artistSeries],
     }
   }
 
@@ -269,15 +221,15 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
           </Grid>
         </Grid>
       ) : (
-          <Grid item>
-            <HighchartsReact
-              containerProps={{ style: { height: 850 } }}
-              highcharts={Highcharts}
-              options={options}
-              constructorType="stockChart"
-            />
-          </Grid>
-        )}
+        <Grid item>
+          <HighchartsReact
+            containerProps={{ style: { height: 850 } }}
+            highcharts={Highcharts}
+            options={options}
+            constructorType="stockChart"
+          />
+        </Grid>
+      )}
     </>
   )
 }
