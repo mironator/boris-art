@@ -11,6 +11,15 @@ const GET_CHART_DATA = gql`
         }
         data
       }
+      financeData {
+        quote {
+          name
+        }
+        data {
+          date
+          index
+        }
+      }
     }
   }
 `

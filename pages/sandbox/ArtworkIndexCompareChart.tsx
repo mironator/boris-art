@@ -37,6 +37,13 @@ if (typeof Highcharts === 'object') {
 
 type ItemWithCategory = Partial<Artist> & { category: string } & { code?: string }
 
+type FinanceRecord = {
+  quote: {
+    name: string
+  }
+  data: { date: string; index: number }[]
+}
+
 const ArtworkIndexCompareChart: React.FC = () => {
   const [options, setOptions] = useState<ItemWithCategory[]>([])
   const [selectedArtists, setSelectedArtists] = useState<Artist[]>([])
@@ -53,14 +60,14 @@ const ArtworkIndexCompareChart: React.FC = () => {
     setOptions(
       _.uniq(
         [
-          // { name: 'S&P 500', code: 'SNP500', category: 'Finance' },
-          // { name: 'COMEX Delayed Price', code: 'GOLD', category: 'Finance' },
-          // { name: 'Dow Jones Industrial Average', code: 'DOW_JONES', category: 'Finance' },
-          // {
-          //   name: 'Fidelity MSCI Real Estate Index ETF (FREL)',
-          //   code: 'MSCI_WORLD_REAL_ESTATE',
-          //   category: 'Finance',
-          // },
+          { name: 'S&P 500', code: 'SNP500', category: 'Finance' },
+          { name: 'COMEX Delayed Price', code: 'GOLD', category: 'Finance' },
+          { name: 'Dow Jones Industrial Average', code: 'DOW_JONES', category: 'Finance' },
+          {
+            name: 'Fidelity MSCI Real Estate Index ETF (FREL)',
+            code: 'MSCI_WORLD_REAL_ESTATE',
+            category: 'Finance',
+          },
           ...selectedArtists.map((a) => ({ ...a, category: 'Artists' })),
           ...artists.map((a) => ({ ...a, category: 'Artists' })),
         ],
@@ -141,6 +148,24 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
   let options: Highcharts.Options | null = null
   let compareOptions: Highcharts.Options | null = null
   const artistSeries: Highcharts.SeriesOptionsType[] = []
+  const financeSeries: Highcharts.SeriesOptionsType[] = []
+
+  data?.financeData?.forEach((financeItem: FinanceRecord) => {
+    financeSeries.push({
+      type: 'line',
+      // @ts-ignore
+      name: `${financeItem.quote.name}`,
+      // @ts-ignore
+      data: financeItem.data.map((item) => [new Date(item.date).getTime(), item.index]),
+      tooltip: {
+        valueDecimals: 2,
+      },
+      // color: colors[index], // getColorByName(name),
+      showInNavigator: true,
+      // @ts-ignore
+      dataType: 'finance',
+    })
+  })
 
   if ([data, !loading, !error].every((i: boolean) => !!i)) {
     // @ts-ignore
@@ -180,10 +205,11 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
         events: {
           load() {
             this.legend.allItems
-              .filter((item) => !item.name.includes(' all,'))
-              .forEach((item: any) => {
-                item.setVisible(false)
-              })
+              .filter(
+                // @ts-ignore
+                (item) => !item.name.includes(' all,') && item.userOptions.dataType !== 'finance'
+              )
+              .forEach((item: any) => item.setVisible(false))
           },
         },
       },
@@ -237,17 +263,79 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
         layout: 'horizontal',
       },
 
-      series: [...artistSeries],
+      series: [...artistSeries, ...financeSeries],
     }
 
-    compareOptions = _.cloneDeep(options)
     // @ts-ignore
-    compareOptions.plotOptions.series.compare = 'percent'
-    // @ts-ignore
-    compareOptions.tooltip.pointFormat = '<b>{point.y}</b>  ({point.change}%)<br/>'
-    // @ts-ignore
-    compareOptions.yAxis.labels.formatter = function () {
-      return `${(this.value > 0 ? ' + ' : '') + this.value}%`
+    compareOptions = {
+      rangeSelector,
+
+      chart: {
+        zoomType: 'xy',
+
+        events: {
+          load() {
+            this.legend.allItems
+              .filter(
+                // @ts-ignore
+                (item) => !item.name.includes(' all,') && item.userOptions.dataType !== 'finance'
+              )
+              .forEach((item: any) => item.setVisible(false))
+          },
+        },
+      },
+      time: {
+        timezone: 'Europe/London',
+      },
+      tooltip: {
+        pointFormat: '<b>{point.y}</b>  ({point.change}%)<br/>',
+        valueDecimals: 2,
+        split: true,
+      },
+
+      title: {
+        text: '',
+      },
+
+      yAxis: {
+        labels: {
+          formatter() {
+            return `${(this.value > 0 ? ' + ' : '') + this.value}%`
+          },
+        },
+        plotLines: [
+          {
+            value: 0,
+            width: 2,
+            color: 'silver',
+          },
+        ],
+      },
+
+      plotOptions: {
+        column: {
+          stacking: 'normal',
+          dataLabels: {
+            enabled: false,
+          },
+        },
+        flags: {
+          useHTML: true,
+        },
+        series: {
+          compare: 'percent',
+          showInNavigator: true,
+        },
+      },
+
+      legend: {
+        enabled: true,
+        align: 'center',
+        verticalAlign: 'bottom',
+        layout: 'horizontal',
+      },
+
+      series: [...artistSeries, ...financeSeries],
     }
   }
 
