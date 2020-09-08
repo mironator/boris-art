@@ -1,3 +1,3 @@
-import { MediumTypes } from '@interfaces/index'
+import { MediumType } from '@interfaces/index'
 
-export default MediumTypes
+export default MediumType

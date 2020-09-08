@@ -111,6 +111,7 @@ const ComparisonChart: React.FC<{ artists: { id: number }[]; finance: { code: st
   const { data, loading, error } = useArtworkIndexComparisonChartData(artists, finance)
 
   let options: Highcharts.Options | null = null
+
   if (data && !loading && !error) {
     const artistSeries = data.artistData.map(({ artist: { name }, data: items }) => {
       // console.log(`[INFO] line serie: line-${index}`)

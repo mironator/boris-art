@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server-micro'
 
-import { MediumTypes } from '@interfaces/index'
+import { MediumType } from '@interfaces/index'
 import Artist from '@models/Artist'
 import ArtistDS from '@graphql/data-source/artist'
 
@@ -15,6 +15,8 @@ export const typeDef = gql`
     id: Int!
     name: String
     bio: String
+    photoS3Key: String
+    photoPresignedUrl: String
     birth: Date
     death: Date
     qualifier: String
@@ -49,7 +51,7 @@ export const resolvers = {
       { id }: Artist,
       _args: unknown,
       { dataSources }: Context
-    ): Promise<MediumTypes[]> => dataSources.Artist.getArtistMediumTypes(id),
+    ): Promise<MediumType[]> => dataSources.Artist.getArtistMediumTypes(id),
   },
 }
 
