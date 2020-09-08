@@ -80,10 +80,10 @@ export const resolvers = {
           return Promise.all(
             mediumList.map(async (medium) => {
               const res = await fetch(
-                `http://54.156.225.113:8000/v1/${algorithm}-chart/?artist_id[eq]=${artistId}&medium[eq]=${medium}`
+                `http://54.156.225.113:8000/v1/${algorithm}/?artist_id[eq]=${artistId}&medium[eq]=${medium}`
               )
               const chartData = await res.json()
-              const bar = _.get(chartData, `payload.${algorithm.replace(/-/gi, '_')}_chart`)
+              const bar = _.get(chartData, `payload.${algorithm.replace(/-/gi, '_')}`)
               const baz = medium === '' ? 'all' : medium
               // @ts-ignore
               foo[algorithm][baz] = bar
