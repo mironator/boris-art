@@ -132,6 +132,7 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
   )
 
   let options: Highcharts.Options | null = null
+  let compareOptions: Highcharts.Options | null = null
   const artistSeries: Highcharts.SeriesOptionsType[] = []
 
   if ([data, !loading, !error].every((i: boolean) => !!i)) {
@@ -183,7 +184,7 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
         timezone: 'Europe/London',
       },
       tooltip: {
-        pointFormat: '<b>{point.y}</b> ({point.change}%)<br/>',
+        pointFormat: '<b>{point.y}</b>',
         valueDecimals: 2,
         split: true,
       },
@@ -195,7 +196,7 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
       yAxis: {
         labels: {
           formatter() {
-            return `${(this.value > 0 ? ' + ' : '') + this.value}%`
+            return `${this.value}`
           },
         },
         plotLines: [
@@ -218,7 +219,6 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
           useHTML: true,
         },
         series: {
-          compare: 'percent',
           showInNavigator: true,
         },
       },
@@ -231,6 +231,16 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
       },
 
       series: [...artistSeries],
+    }
+
+    compareOptions = _.cloneDeep(options)
+    // @ts-ignore
+    compareOptions.plotOptions.series.compare = 'percent'
+    // @ts-ignore
+    compareOptions.tooltip.pointFormat = '<b>{point.y}</b>  ({point.change}%)<br/>'
+    // @ts-ignore
+    compareOptions.yAxis.labels.formatter = function () {
+      return `${(this.value > 0 ? ' + ' : '') + this.value}%`
     }
   }
 
@@ -259,6 +269,14 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
         </Grid>
       ) : (
         <>
+          <Grid item>
+            <HighchartsReact
+              containerProps={{ style: { height: 850 } }}
+              highcharts={Highcharts}
+              options={compareOptions}
+              constructorType="stockChart"
+            />
+          </Grid>
           <Grid item>
             <HighchartsReact
               containerProps={{ style: { height: 850 } }}
