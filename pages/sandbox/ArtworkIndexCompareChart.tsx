@@ -8,7 +8,7 @@ import { CircularProgress, Grid, TextField } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 
 import useArtistSearch from '@hooks/useArtistSearch'
-import MediumTypes from '@hooks/mediumTypes'
+import MediumType from '@hooks/mediumTypes'
 import useArtworkAllIndicesComparisonChartData from '@hooks/useArtworkAllIndicesComparisonChartData'
 import Artist from '@models/Artist'
 import { rangeSelector } from '@utils/charts-config'
@@ -169,7 +169,7 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
           artistSeries.push({
             type: 'line',
             // @ts-ignore
-            name: `${name} ${MediumTypes[key]} ${algorithmName}`,
+            name: `${name} ${MediumType[key]} ${algorithmName}`,
             id: `line-${name}-${key}-${algorithmName}`,
             // @ts-ignore
             data: items.map((item) => [new Date(item.date).getTime(), item.index]),

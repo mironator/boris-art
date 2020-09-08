@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { gql } from 'apollo-server-micro'
 
 import Artist from '@models/Artist'
-import { ArtistEntity, MediumTypes } from '@interfaces/index'
+import { ArtistEntity, MediumType } from '@interfaces/index'
 import { INDICES, IndexName, SNP500, GOLD_PRICE, DOW_JONES, MSCI } from '@models/Stock'
 
 export const typeDef = gql`
@@ -66,8 +66,8 @@ export const resolvers = {
       const mediumList = [
         '',
         ...(_.get(data, 'payload.artist_medium_list')?.map(
-          (item: { medium: MediumTypes }) => item.medium
-        ) as MediumTypes[]),
+          (item: { medium: MediumType }) => item.medium
+        ) as MediumType[]),
       ]
 
       const foo = {}

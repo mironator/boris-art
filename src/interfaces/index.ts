@@ -12,7 +12,7 @@ export type GenericList<T> = {
   data: T[]
 }
 
-export enum MediumTypes {
+export enum MediumType {
   all = 'all',
   paintings = 'paintings',
   prints = 'prints',
@@ -31,12 +31,14 @@ export type Artist = {
   name: string
   birth?: Date
   bio?: string
+  photoS3Key?: string
+  photoPresignedUrl?: string
   death?: Date
   qualifier?: string
   lotsCost?: number
   artworksCount?: number
   lotsCount?: number
-  mediumList?: MediumTypes[]
+  mediumTypes?: MediumType[]
 }
 
 export type ArtistEntity = {
@@ -50,6 +52,8 @@ export type ArtistEntity = {
   lots_cost: number
   artworks_count: number
   lots_count: number
+  photo_s3_key: string
+  photo_presigned_url: string
 }
 
 export type ArtistListEntity = ListEntity<ListMeta> & GenericList<ArtistEntity>

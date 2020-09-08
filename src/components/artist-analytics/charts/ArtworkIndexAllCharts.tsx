@@ -9,9 +9,9 @@ import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { CircularProgress, Grid } from '@material-ui/core'
 import { gql, useQuery } from '@apollo/client'
 
+import Artist from '@models/Artist'
 import Event, { EventType } from '@models/Event'
 import { useArtworkIndexChartAllData } from '@hooks/useChartData'
-import mediumTypes from '@hooks/mediumTypes'
 import { rangeSelector, getTooltipArtworkIndexAll, frezeTooltip } from '@utils/charts-config'
 
 enum Shape {
@@ -92,9 +92,7 @@ interface EventsData {
 }
 
 type Props = {
-  artistId: number
-  mediumList: Array<keyof typeof mediumTypes>
-  type?: string
+  artist: Artist
 }
 
 type FlagSerie = {
@@ -103,12 +101,12 @@ type FlagSerie = {
   text: string
 }
 
-const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList, type }) => {
+const ArtworkIndexChart: React.FC<Props> = ({ artist }) => {
   const classes = useStyles()
-  const { data, isLoading, isError } = useArtworkIndexChartAllData(artistId, mediumList, type)
+  const { data, isLoading, isError } = useArtworkIndexChartAllData(artist)
   const [flagData, setFlagData] = useState<Dictionary<FlagSerie[]>>()
   const { data: eventsData } = useQuery<EventsData, { artistId: number }>(GET_EVENTS, {
-    variables: { artistId },
+    variables: { artistId: artist.id },
   })
 
   useEffect(() => {
@@ -332,13 +330,13 @@ const ArtworkIndexChart: React.FC<Props> = ({ artistId, mediumList, type }) => {
           </Grid>
         </Grid>
       ) : (
-        <HighchartsReact
-          containerProps={{ style: { height: 600 } }}
-          highcharts={Highcharts}
-          options={options}
-          constructorType="stockChart"
-        />
-      )}
+          <HighchartsReact
+            containerProps={{ style: { height: 600 } }}
+            highcharts={Highcharts}
+            options={options}
+            constructorType="stockChart"
+          />
+        )}
     </>
   )
 }

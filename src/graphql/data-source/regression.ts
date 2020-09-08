@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { RESTDataSource } from 'apollo-datasource-rest'
 
 import Regression from '@models/Regression'

@@ -5,7 +5,7 @@ import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import withApollo from 'next-with-apollo'
 import { ApolloProvider } from '@apollo/react-hooks'
-import ApolloClient, { InMemoryCache } from 'apollo-boost'
+import { ApolloClient, InMemoryCache } from '@apollo/client'
 
 import theme from '@theme/theme'
 import { SERVER } from '@config/index'
@@ -41,7 +41,7 @@ const App: React.FC<Props> = (props) => {
     </>
   )
 }
-
+// @ts-ignore
 export default withApollo(({ initialState }) => {
   return new ApolloClient({
     uri: SERVER,
