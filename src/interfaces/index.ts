@@ -292,3 +292,15 @@ export type ArtworkEntity = {
   description: string
   last_price: number
 }
+
+export type Regression = {
+  name: string
+  endpoint: string
+  resourceName: string
+}
+
+export type RegressionEntity = {
+  name: string
+  endpoint: string
+  resource_name: string
+}

@@ -5,6 +5,7 @@ import resolvers from '@graphql/resolvers'
 import Artist from '@graphql/data-source/artist'
 import Event from '@graphql/data-source/event'
 import Artwork from '@graphql/data-source/artwork'
+import Regression from '@graphql/data-source/regression'
 
 const apolloServer = new ApolloServer({
   typeDefs,
@@ -13,6 +14,7 @@ const apolloServer = new ApolloServer({
     Artist: new Artist(),
     Event: new Event(),
     Artwork: new Artwork(),
+    Regression: new Regression(),
   }),
 })
 

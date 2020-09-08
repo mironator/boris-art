@@ -2,57 +2,42 @@ import _ from 'lodash'
 import { gql, useQuery, QueryResult } from '@apollo/client'
 import { Artist } from '@interfaces/index'
 
-const GET_COMPARISON_CHART_DATA = gql`
-  query GET_COMPARISON_CHART_DATA(
-    $algorithm: String
-    $artists: [ArtistInput]
-    $finance: [FinanceInput]
-  ) {
-    artistIndexChartData(algorithm: $algorithm, artists: $artists, finance: $finance) {
+const GET_CHART_DATA = gql`
+  query GET_CHART_DATA($algorithms: [String], $artists: [ArtistInput], $finance: [FinanceInput]) {
+    artistIndexChartData(algorithms: $algorithms, artists: $artists, finance: $finance) {
       artistData {
         artist {
-          id
           name
-          mediumTypes
         }
         data
-      }
-      financeData {
-        quote {
-          name
-        }
-        data {
-          date
-          index
-        }
       }
     }
   }
 `
 
 type VariablesType = {
-  algorithm: string
+  algorithms: string[]
   artists: { id: number }[]
   finance: { code: string }[]
 }
 
 type ChartData = {
-  comparisonChartData: {
+  chartData: {
     artistData: { artist: Artist; data: { date: string; index: number } }[]
     financeData: { quote: { name: string }; data: { date: string; index: number } }[]
   }
 }
 
 // @ts-ignore
-const useArtworkAllIndicesComparisonChartData: (
-  algorithm: string,
+const useArtworkAllIndicesChartData: (
+  algorithms: string[],
   artists?: Artist[],
   finance?: unknown[]
-) => QueryResult = (algorithm, artists = [], finance = []) => {
-  const { loading, data, error } = useQuery<ChartData, VariablesType>(GET_COMPARISON_CHART_DATA, {
+) => QueryResult = (algorithms, artists = [], finance = []) => {
+  const { loading, data, error } = useQuery<ChartData, VariablesType>(GET_CHART_DATA, {
     errorPolicy: 'ignore',
     variables: {
-      algorithm,
+      algorithms,
       artists: artists.map((a: Artist) => ({
         id: a.id,
       })),
@@ -66,4 +51,4 @@ const useArtworkAllIndicesComparisonChartData: (
   return { data: chartData, loading, error }
 }
 
-export default useArtworkAllIndicesComparisonChartData
+export default useArtworkAllIndicesChartData
