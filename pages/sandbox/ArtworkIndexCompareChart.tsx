@@ -261,6 +261,7 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
       series: [...artistSeries, ...financeSeries],
     }
 
+    // @ts-ignore
     compareOptions = {
       rangeSelector,
 
