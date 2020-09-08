@@ -205,7 +205,6 @@ const ArtworkIndexChart: React.FC<Props> = ({ artist }) => {
                 item.legendGroup.hide()
               })
 
-            // console.log('[FOO]', this.legend.allItems)
             this.legend.allItems
               .filter(
                 (item) =>

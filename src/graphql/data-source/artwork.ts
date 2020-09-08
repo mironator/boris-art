@@ -17,11 +17,10 @@ export default class ArtowrkDS extends RESTDataSource {
   }
 
   async getArtwork(id: number): Promise<Artwork | null> {
-    console.log('[INFO] ArtworkDS.getArtwork')
     if (!id) {
       return null
     }
-    const data = await this.get<ArtworkResponse>(`/v1/artwork/${id}`)
+    const data = await this.get<ArtworkResponse>(`/artwork/${id}`)
     const entity = _.get(data, 'artwork[0]') as ArtworkEntity
 
     return Artwork.fromEntity(entity)
