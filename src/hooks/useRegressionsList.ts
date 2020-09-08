@@ -14,9 +14,9 @@ const GET_REGRESSIONS_LIST = gql`
 type VariablesType = {}
 
 type Regression = {
-  name: String
-  endpoint: String
-  resourceName: String
+  name: string
+  endpoint: string
+  resourceName: string
 }
 
 type RegressionsListData = {

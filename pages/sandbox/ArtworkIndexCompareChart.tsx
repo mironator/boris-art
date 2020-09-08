@@ -4,7 +4,7 @@ import Highcharts from 'highcharts/highstock'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
-import { CircularProgress, Grid, TextField } from '@material-ui/core'
+import { CircularProgress, Grid, TextField, Checkbox, FormControlLabel } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 
 import useArtistSearch from '@hooks/useArtistSearch'
@@ -102,11 +102,33 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
   finance,
 }) => {
   const classes = useStyles()
-  const { data: regressionsTypes } = useRegressionsList()
+  const { data: regressionsTypes, loading: regressionLoading } = useRegressionsList()
+  const [algorithms, setAlgorithms] = useState<Record<string, boolean>>({})
+
   const { data, loading, error } = useArtworkAllIndicesChartData(
-    regressionsTypes.map((item) => item.resourceName.replace(/_/g, '-')),
+    regressionsTypes
+      .filter((item) => algorithms[item.resourceName])
+      .map((item) => item.resourceName.replace(/_/g, '-')),
     artists,
     finance
+  )
+
+  useEffect(() => {
+    if (regressionsTypes.length) {
+      setAlgorithms(
+        regressionsTypes.reduce((acc, item) => {
+          acc[item.resourceName] = true
+          return acc
+        }, {} as Record<string, boolean>)
+      )
+    }
+  }, [regressionsTypes])
+
+  const checkboxChange = useCallback(
+    (event) => {
+      setAlgorithms({ ...algorithms, [event.target.name]: event.target.checked })
+    },
+    [algorithms]
   )
 
   let options: Highcharts.Options | null = null
@@ -214,21 +236,39 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
 
   return (
     <>
-      {loading ? (
+      {loading || regressionLoading ? (
         <Grid container item justify="center" alignItems="center" className={classes.loading}>
           <Grid item>
             <CircularProgress />
           </Grid>
         </Grid>
       ) : (
-        <Grid item>
-          <HighchartsReact
-            containerProps={{ style: { height: 850 } }}
-            highcharts={Highcharts}
-            options={options}
-            constructorType="stockChart"
-          />
-        </Grid>
+        <>
+          <Grid item>
+            {regressionsTypes.map(({ resourceName, name }) => (
+              <FormControlLabel
+                key={resourceName}
+                control={
+                  <Checkbox
+                    checked={algorithms[resourceName]}
+                    onChange={checkboxChange}
+                    name={resourceName}
+                    color="primary"
+                  />
+                }
+                label={name}
+              />
+            ))}
+          </Grid>
+          <Grid item>
+            <HighchartsReact
+              containerProps={{ style: { height: 850 } }}
+              highcharts={Highcharts}
+              options={options}
+              constructorType="stockChart"
+            />
+          </Grid>
+        </>
       )}
     </>
   )
