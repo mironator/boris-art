@@ -3,14 +3,12 @@ import { Grid, Tab, Tabs, Typography } from '@material-ui/core'
 import classNames from 'classnames'
 
 import { Artist } from '@interfaces/index'
-import mediumTypes from '@hooks/mediumTypes'
 
 // import ArtworkIndexChart from './charts/ArtworkIndexChart'
 import ArtworkIndexAllCharts from './charts/ArtworkIndexAllCharts'
 import ArtworkIndexCompareChart from './charts/ArtworkIndexCompareChart'
 import ReturnsVSHoldingPeriodChart from './charts/ReturnsVSHoldingPeriodChart'
 import CompoundAnnualReturns from './charts/CompoundAnnualReturns'
-
 import useStyles from './ArtistAnalytics.styles'
 
 interface TabPanelProps {
@@ -20,8 +18,7 @@ interface TabPanelProps {
 }
 
 interface OwnProps {
-  artistInfo: Artist
-  mediumList: Array<keyof typeof mediumTypes>
+  artist: Artist
 }
 
 type Props = OwnProps
@@ -46,14 +43,14 @@ function TabPanel(props: TabPanelProps) {
   )
 }
 
-const ArtistAnalytics: React.FC<Props> = ({ artistInfo, mediumList }) => {
+const ArtistAnalytics: React.FC<Props> = ({ artist }) => {
   const [barValue, setBarValue] = React.useState(0)
 
   const handleBarChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
     setBarValue(newValue)
   }
 
-  if (!artistInfo.id) {
+  if (!artist.id) {
     return null
   }
 
@@ -66,10 +63,10 @@ const ArtistAnalytics: React.FC<Props> = ({ artistInfo, mediumList }) => {
         </Tabs>
       </Grid>
       <TabPanel value={barValue} index={0}>
-        <ArtworkIndexAllCharts artistId={artistInfo.id} mediumList={mediumList} />
+        <ArtworkIndexAllCharts artist={artist} />
       </TabPanel>
       <TabPanel value={barValue} index={1}>
-        <ArtworkIndexCompareChart artist={artistInfo} />
+        <ArtworkIndexCompareChart artist={artist} />
       </TabPanel>
       <Grid item>
         <Typography variant="h5" component="h2">
@@ -77,7 +74,7 @@ const ArtistAnalytics: React.FC<Props> = ({ artistInfo, mediumList }) => {
         </Typography>
       </Grid>
       <Grid item>
-        <ReturnsVSHoldingPeriodChart artistId={artistInfo.id} />
+        <ReturnsVSHoldingPeriodChart artistId={artist.id} />
       </Grid>
       <Grid item>
         <Typography variant="h5" component="h2">
@@ -85,7 +82,7 @@ const ArtistAnalytics: React.FC<Props> = ({ artistInfo, mediumList }) => {
         </Typography>
       </Grid>
       <Grid item>
-        <CompoundAnnualReturns artistId={artistInfo.id} />
+        <CompoundAnnualReturns artistId={artist.id} />
       </Grid>
     </Grid>
   )

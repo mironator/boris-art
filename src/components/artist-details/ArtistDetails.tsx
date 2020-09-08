@@ -1,7 +1,6 @@
 import React from 'react'
 import { Box, Tab, Tabs, Typography } from '@material-ui/core'
 
-import mediumTypes from '@hooks/mediumTypes'
 import { Artist } from '@interfaces/index'
 // import useStyles, { StyleProps } from './ArtistDetails.styles'
 import ArtistInfo from '../artist-info'
@@ -10,7 +9,6 @@ import ArtistAnalytics from '../artist-analytics'
 
 interface OwnProps {
   artist: Artist
-  mediumList: Array<keyof typeof mediumTypes>
 }
 
 interface TabPanelProps {
@@ -52,7 +50,7 @@ const ArtistDetails: React.FC<Props> = (props) => {
     setValue(newValue)
   }
 
-  const { artist, mediumList } = props
+  const { artist } = props
 
   return (
     <>
@@ -66,7 +64,7 @@ const ArtistDetails: React.FC<Props> = (props) => {
       </TabPanel>
       <TabPanel value={value} index={1}>
         <ArtistInfo artist={artist} />
-        <ArtistAnalytics artistInfo={artist} mediumList={mediumList} />
+        <ArtistAnalytics artist={artist} />
       </TabPanel>
     </>
   )

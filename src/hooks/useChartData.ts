@@ -15,6 +15,7 @@ import {
   ReturnsVsPeriodChartDatumEntity,
   ComparablesChartDatumEntity,
   ArtworkIndexComparisonChartDatum as IArtworkIndexComparisonChartDatum,
+  Artist,
 } from '@interfaces/index'
 import PriceMomentumChartDatum from '@models/PriceMomentumChartDatum'
 import ArtworkIndexChartDatum from '@models/ArtworkIndexChartDatum'
@@ -100,17 +101,17 @@ export const useArtworkIndexChartData: (
   }
 }
 
-export const useArtworkIndexChartAllData: (
-  artistId: number,
-  mediumList: Array<keyof typeof mediumTypes>,
-  type?: string
-) => ArtworkIndexChartAllData = (artistId, mediumList, type) => {
+export const useArtworkIndexChartAllData: (artist: Artist) => ArtworkIndexChartAllData = (
+  artist
+) => {
+  const { id: artistId, mediumTypes: mediumList } = artist
+
+  // @ts-ignore
   const allData = ['all', ...mediumList].map((item) => ({
     ...useSWR(
       `/api/charts/artwork-index/${artistId}?${queryString.stringify(
         {
           'medium[eq]': getMedium(item),
-          type,
         },
         {
           skipEmptyString: true,

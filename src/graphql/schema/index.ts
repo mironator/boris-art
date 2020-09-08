@@ -8,7 +8,7 @@ import ComparisonChartTypes from './comparison-chart'
 import ArtistIndexChartTypes from './artist-index-chart'
 import RegressionTypes from './regression'
 
-const typeDefs = gql`
+export const typeDefs = gql`
   scalar Date
   scalar JSON
   scalar Timestamp

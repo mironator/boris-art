@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { RESTDataSource } from 'apollo-datasource-rest'
 
-import { ArtistEntity, MediumTypes } from '@interfaces/index'
+import { ArtistEntity, MediumType } from '@interfaces/index'
 import Artist from '@models/Artist'
 
 type ArtistListInput = {
@@ -39,12 +39,12 @@ export default class ArtistDS extends RESTDataSource {
     return sampleUserData.map((d: ArtistEntity) => Artist.fromEntity(d))
   }
 
-  async getArtistMediumTypes(id: number): Promise<MediumTypes[]> {
+  async getArtistMediumTypes(id: number): Promise<MediumType[]> {
     // console.log('[INFO] ArtistDS.getArtistMediumTypes')
     const data = await this.get(`artist-medium-list?artist_id[eq]=${id}`)
     const mediumList = _.get(data, 'payload.artist_medium_list')?.map(
-      (item: { medium: MediumTypes }) => item.medium
-    ) as MediumTypes[]
+      (item: { medium: MediumType }) => item.medium
+    ) as MediumType[]
 
     return mediumList || []
   }
