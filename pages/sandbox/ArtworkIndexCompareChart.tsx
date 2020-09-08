@@ -236,6 +236,21 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
 
   return (
     <>
+      {Object.keys(algorithms).length !== 0 &&
+        regressionsTypes.map(({ resourceName, name }) => (
+          <FormControlLabel
+            key={resourceName}
+            control={
+              <Checkbox
+                checked={algorithms[resourceName]}
+                onChange={checkboxChange}
+                name={resourceName}
+                color="primary"
+              />
+            }
+            label={name}
+          />
+        ))}
       {loading || regressionLoading ? (
         <Grid container item justify="center" alignItems="center" className={classes.loading}>
           <Grid item>
@@ -244,22 +259,6 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
         </Grid>
       ) : (
         <>
-          <Grid item>
-            {regressionsTypes.map(({ resourceName, name }) => (
-              <FormControlLabel
-                key={resourceName}
-                control={
-                  <Checkbox
-                    checked={algorithms[resourceName]}
-                    onChange={checkboxChange}
-                    name={resourceName}
-                    color="primary"
-                  />
-                }
-                label={name}
-              />
-            ))}
-          </Grid>
           <Grid item>
             <HighchartsReact
               containerProps={{ style: { height: 850 } }}
