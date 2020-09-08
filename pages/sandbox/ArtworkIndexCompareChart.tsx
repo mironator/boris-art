@@ -162,6 +162,8 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
       },
       // color: colors[index], // getColorByName(name),
       showInNavigator: true,
+      // @ts-ignore
+      dataType: 'finance',
     })
   })
 
@@ -203,7 +205,10 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
         events: {
           load() {
             this.legend.allItems
-              .filter((item) => !item.name.includes(' all,'))
+              .filter(
+                // @ts-ignore
+                (item) => !item.name.includes(' all,') && item.userOptions.dataType !== 'finance'
+              )
               .forEach((item: any) => item.setVisible(false))
           },
         },
@@ -271,7 +276,10 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
         events: {
           load() {
             this.legend.allItems
-              .filter((item) => !item.name.includes(' all,'))
+              .filter(
+                // @ts-ignore
+                (item) => !item.name.includes(' all,') && item.userOptions.dataType !== 'finance'
+              )
               .forEach((item: any) => item.setVisible(false))
           },
         },
