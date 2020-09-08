@@ -4,7 +4,14 @@ import Highcharts from 'highcharts/highstock'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
-import { CircularProgress, Grid, TextField, Checkbox, FormControlLabel } from '@material-ui/core'
+import {
+  CircularProgress,
+  Grid,
+  TextField,
+  Checkbox,
+  FormControlLabel,
+  Typography,
+} from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 
 import useArtistSearch from '@hooks/useArtistSearch'
@@ -258,7 +265,7 @@ const ComparisonChart: React.FC<{ artists: Artist[]; finance: { code: string }[]
                 color="primary"
               />
             }
-            label={name}
+            label={<Typography variant="body2">{name}</Typography>}
           />
         ))}
       {loading || regressionLoading ? (
