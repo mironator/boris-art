@@ -262,6 +262,7 @@ export type Artwork = {
   description: string
   lastPrice: number
   lastSoldAuctionHouseName: string
+  similarity: number
 }
 
 export type ArtworkEntity = {
@@ -295,6 +296,7 @@ export type ArtworkEntity = {
   lot_image_size: number
   description: string
   last_price: number
+  similarity: number
 }
 
 export type Regression = {
