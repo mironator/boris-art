@@ -240,6 +240,8 @@ export type Artwork = {
   exhibited: unknown | null
   measurementsHeight: number
   lotImageHeight: number
+  lotIds: number[]
+  lots?: Lot[]
   markings: string
   literature: string
   imageLoadingStatus: string
@@ -274,6 +276,7 @@ export type ArtworkEntity = {
   lot_image_s3_key: string
   exhibited: unknown | null
   measurements_height: number
+  lot_ids: number[]
   lot_image_height: number
   markings: string
   literature: string
@@ -309,4 +312,84 @@ export type RegressionEntity = {
   name: string
   endpoint: string
   resource_name: string
+}
+
+export type LotEntity = {
+  price_estimate_min_usd_zeroied: number
+  auction_start_date: string
+  lot_image_load_error: string
+  lot_num: number
+  lot_image_presigned_url: string
+  price_kind: string
+  artist_id: number
+  artist_birth: number
+  auction_name: string
+  currency: string
+  artist_lots_count: number
+  lot_image_size: number
+  auction_house_name: string
+  raw_lot_id: number
+  image_loading_status: string
+  bought_in: number
+  lot_image_s3_key: string
+  raw_auction_id: number
+  catalog_notes: string
+  price_estimate_max_usd_zeroied: number
+  artist_name: string
+  artist_nationality: string
+  artist_qualifier: string
+  description_id: number
+  lot_image_width: number
+  price_estimate_max: number
+  lot_image_url: string
+  auction_location: string
+  price_estimate_min: number
+  price_sold: number
+  artist_death: number
+  artwork_id: number
+  medium_final: string
+  lot_image_height: number
+  is_multiple_objects: boolean
+  auction_num: string
+  price_usd_zeroied: number
+}
+
+export type Lot = {
+  priceEstimateMinUsdZeroied: number
+  auctionStartDate: string
+  lotImageLoadError: string
+  lotNum: number
+  lotImagePresignedUrl: string
+  priceKind: string
+  artistId: number
+  artistBirth: number
+  auctionName: string
+  currency: string
+  artistLotsCount: number
+  lotImageSize: number
+  auctionHouseName: string
+  rawLotId: number
+  imageLoadingStatus: string
+  boughtIn: number
+  lotImageS3Key: string
+  rawAuctionId: number
+  catalogNotes: string
+  priceEstimateMaxUsdZeroied: number
+  artistName: string
+  artistNationality: string
+  artistQualifier: string
+  descriptionId: number
+  lotImageWidth: number
+  priceEstimateMax: number
+  lotImageUrl: string
+  auctionLocation: string
+  priceEstimateMin: number
+  priceSold: number
+  artistDeath: number
+  artworkId: number
+  mediumFinal: string
+  lotImageHeight: number
+  isMultipleObjects: boolean
+  auctionNum: string
+  priceUsdZeroied: number
 }

@@ -7,6 +7,7 @@ import Valuation from './valuation'
 import ComparisonChartTypes from './comparison-chart'
 import ArtistIndexChartTypes from './artist-index-chart'
 import RegressionTypes from './regression'
+import LotTypes from './lot'
 
 export const typeDefs = gql`
   scalar Date
@@ -36,4 +37,5 @@ export default [
   ComparisonChartTypes,
   ArtistIndexChartTypes,
   RegressionTypes,
+  LotTypes,
 ]
