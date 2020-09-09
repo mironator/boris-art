@@ -1,6 +1,22 @@
 import { gql } from 'apollo-server-micro'
 
+import { Artwork } from '@interfaces/index'
+import Lot from '@models/Lot'
+import ArtworkDS from '@graphql/data-source/artwork'
+import LotDS from '@graphql/data-source/lot'
+
+type Context = {
+  dataSources: {
+    Artwork: ArtworkDS
+    Lot: LotDS
+  }
+}
+
 export const typeDef = gql`
+  extend type Query {
+    artwork(id: Int): Artwork
+  }
+
   type Artwork {
     id: Int!
     name: String
@@ -13,8 +29,10 @@ export const typeDef = gql`
     markings: String
     literature: String
     imageLoadingStatus: String
+    lotIds: [Int]
     lotImageWidth: Int
     lotImagePresignedUrl: String
+    lots: [Lot]
     measurementsUnit: String
     mediumFinal: String
     editionSize: Int
@@ -35,6 +53,19 @@ export const typeDef = gql`
   }
 `
 
-export const resolvers = {}
+export const resolvers = {
+  Query: {
+    artwork: async (
+      _root: unknown,
+      { id }: { id: number },
+      { dataSources }: Context
+    ): Promise<Artwork> => dataSources.Artwork.getArtwork(id),
+  },
+
+  Artwork: {
+    lots: async ({ lotIds }: Artwork, _args: unknown, { dataSources }: Context): Promise<Lot[]> =>
+      dataSources.Lot.getLots(lotIds),
+  },
+}
 
 export default typeDef

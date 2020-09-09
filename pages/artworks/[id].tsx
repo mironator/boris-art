@@ -1,27 +1,86 @@
+import _ from 'lodash'
 import React from 'react'
 import { NextPage, GetServerSideProps } from 'next'
 import Head from 'next/head'
 import DefaultErrorPage from 'next/error'
+import { gql, useQuery } from '@apollo/client'
 
 import Link from '@components/Link'
 import Layout from '@components/layout/Layout'
 import ArtworkDetails from '@components/artwork-details'
-import { ArtworkEntity } from '@interfaces/index'
-import { HTTP_SERVER } from 'src/config/index'
 import Artwork from '@models/Artwork'
 import ArtworkComparables from '@components/artwork-analytics/charts/artwork-comparables'
+import RepeatSales from '@components/artwork-analytics/charts/repeat-sales'
 import ArtworkValue from '@components/artwork-analytics/charts/artwork-value'
-import { Typography } from '@material-ui/core'
+import { CircularProgress, Grid, Typography } from '@material-ui/core'
 
 interface Props {
-  id: string
-  entity: ArtworkEntity
+  id: number
 }
 
-const ArtworkPage: NextPage<Props> = ({ entity }) => {
-  const artwork = Artwork.fromEntity(entity)
+const GET_ARTWORK = gql`
+  query GET_ARTWORK($id: Int) {
+    artwork(id: $id) {
+      id
+      name
+      creationYear
+      lotImagePresignedUrl
+      artistId
+      lastPrice
+      dateLastSold
+      description
+      materials
+      markings
+      lots {
+        priceEstimateMinUsdZeroied
+        auctionStartDate
+        lotImageLoadError
+        lotNum
+        lotImagePresignedUrl
+        priceKind
+        auctionName
+        currency
+        artistLotsCount
+        lotImageSize
+        auctionHouseName
+        rawLotId
+        imageLoadingStatus
+        boughtIn
+        lotImageS3Key
+        rawAuctionId
+        catalogNotes
+        priceEstimateMaxUsdZeroied
+        artistName
+        artistNationality
+        artistQualifier
+        descriptionId
+        lotImageWidth
+        priceEstimateMax
+        lotImageUrl
+        auctionLocation
+        priceEstimateMin
+        priceSold
+        artistDeath
+        artworkId
+        mediumFinal
+        lotImageHeight
+        isMultipleObjects
+        auctionNum
+        priceUsdZeroied
+      }
+    }
+  }
+`
 
-  if (!artwork) {
+const ArtworkPage: NextPage<Props> = ({ id }) => {
+  const { data, loading, error } = useQuery<Artwork, { id: number }>(GET_ARTWORK, {
+    variables: {
+      id,
+    },
+  })
+  const artwork = _.get(data, 'artwork')
+
+  if (!loading && !error && !artwork) {
     return (
       <>
         <Head>
@@ -29,6 +88,14 @@ const ArtworkPage: NextPage<Props> = ({ entity }) => {
         </Head>
         <DefaultErrorPage statusCode={404} />
       </>
+    )
+  }
+
+  if (loading) {
+    return (
+      <Grid item style={{ textAlign: 'center' }}>
+        <CircularProgress />
+      </Grid>
     )
   }
 
@@ -46,28 +113,19 @@ const ArtworkPage: NextPage<Props> = ({ entity }) => {
         Similar Sales
       </Typography>
       <ArtworkComparables artwork={artwork as Artwork} />
-      {/* <pre>{JSON.stringify(props, undefined, 2)}</pre> */}
+      <Typography variant="h4" component="h4" style={{ marginTop: 24, marginBottom: 24 }}>
+        Repeat Sales
+      </Typography>
+      <RepeatSales artwork={artwork as Artwork} />
     </Layout>
   )
 }
 
-// This gets called on every request
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  // Fetch artist data
+  //  Fetch artist data
   const { id } = context.params || {}
-  // Fetch data from external API
 
-  const res = await fetch(`${HTTP_SERVER}/api/artworks/${id}`)
-  const entity: ArtworkEntity = (await res.json()) as ArtworkEntity
-  // const artist = Artist.fromEntity(artistEntity)
-
-  if (!entity && context.res) {
-    context.res.statusCode = 404
-    return { props: { artist: null } }
-  }
-
-  // Pass data to the page via props
-  return { props: { entity } }
+  return { props: { id: +id } }
 }
 
 export default ArtworkPage

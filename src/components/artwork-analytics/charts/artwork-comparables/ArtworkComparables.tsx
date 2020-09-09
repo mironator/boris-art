@@ -7,7 +7,7 @@ import HighchartsExporting from 'highcharts/modules/exporting'
 import { useComparablesChartData } from '@hooks/useChartData'
 import Artwork from '@models/Artwork'
 
-import Lot from '@components/artwork-lot'
+import Lot from '@components/artist-lot'
 
 if (typeof Highcharts === 'object') {
   HighchartsExporting(Highcharts)
@@ -76,7 +76,7 @@ const ArtworkComparables: React.FC<Props> = ({ artwork }) => {
       {!data.length && !isLoading && <p>No similar sales available for this artwork.</p>}
       <Grid container item spacing={5}>
         {data.map((item) => (
-          <Grid key={item.id} item container justify="center" xs={12}>
+          <Grid key={item.id} item container justify="center" md={4} sm={6} xs={12}>
             {/* 
             // @ts-ignore */}
             <Lot artwork={item} />

@@ -37,6 +37,8 @@ export default class Artwork implements IArtwork {
 
   lotImageLoadError: null
 
+  lotIds: number[]
+
   measurementsDepth: null
 
   materials: string
@@ -75,6 +77,7 @@ export default class Artwork implements IArtwork {
     markings: string,
     literature: string,
     imageLoadingStatus: string,
+    lotIds: number[],
     lotImageWidth: number,
     lotImagePresignedUrl: string,
     measurementsUnit: string,
@@ -107,6 +110,7 @@ export default class Artwork implements IArtwork {
     this.markings = markings
     this.literature = literature
     this.imageLoadingStatus = imageLoadingStatus
+    this.lotIds = lotIds
     this.lotImageWidth = lotImageWidth
     this.lotImagePresignedUrl = lotImagePresignedUrl
     this.measurementsUnit = measurementsUnit
@@ -142,6 +146,7 @@ export default class Artwork implements IArtwork {
       entity.markings,
       entity.literature,
       entity.image_loading_status,
+      entity.lot_ids,
       entity.lot_image_width,
       entity.lot_image_presigned_url,
       entity.measurements_unit,
