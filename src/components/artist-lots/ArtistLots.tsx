@@ -1,3 +1,4 @@
+import moment from 'moment'
 import React, { useState, useCallback, useEffect } from 'react'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { CircularProgress, Grid, MenuItem, Select, Typography } from '@material-ui/core'
@@ -9,6 +10,7 @@ import sortTypes from '@models/SortTypes'
 import mediumTypes from '@hooks/mediumTypes'
 import { Artist, Artwork } from '@interfaces/index'
 import Lot from '@components/artist-lot'
+import ArtworksFilter from '@components/artworks-filter'
 
 const GET_ARTIST_LOTS = gql`
   query(
@@ -66,6 +68,9 @@ const useStyles = makeStyles(() =>
         marginRight: '15px',
       },
     },
+    filterContainer: {
+      margin: '20px 0',
+    },
   })
 )
 
@@ -75,7 +80,15 @@ interface OwnProps {
 
 type Props = OwnProps
 
-const ArtistLots: React.FC<Props> = ({ artist: { id } }) => {
+type Filter = {
+  maxDateSold: Date
+  minDateSold: Date
+  maxPriceSold: number
+  minPriceSold: number
+}
+
+const ArtistLots: React.FC<Props> = ({ artist }) => {
+  const { id } = artist
   const limit = 30
   const classes = useStyles()
   const [hasMoreItems, setHasMoreItems] = useState<boolean>(true)
@@ -90,6 +103,13 @@ const ArtistLots: React.FC<Props> = ({ artist: { id } }) => {
   //   medium,
   // })
 
+  const [filter, setFilterState] = useState<Filter>({
+    maxDateSold: artist.maxDateSold,
+    minDateSold: artist.minDateSold,
+    maxPriceSold: artist.maxPriceSold,
+    minPriceSold: artist.minPriceSold,
+  })
+
   type Foo = { artworksOfArtist: Artwork[] }
 
   const { data = { artworksOfArtist: [] }, loading, fetchMore } = useQuery<Foo>(GET_ARTIST_LOTS, {
@@ -99,10 +119,10 @@ const ArtistLots: React.FC<Props> = ({ artist: { id } }) => {
       limit: 10,
       sort,
       medium,
-      // priceSoldFrom: 384619,
-      // priceSoldTo: 384619,
-      // dateSoldFrom: '2000-12-03',
-      // dateSoldTo: '2010-12-03',
+      priceSoldFrom: filter.minPriceSold,
+      priceSoldTo: filter.maxPriceSold,
+      dateSoldFrom: moment(filter.minDateSold).format('YYYY-MM-DD'), // '2000-12-03',
+      dateSoldTo: moment(filter.maxDateSold).format('YYYY-MM-DD'), // '2010-12-03',
     },
   })
 
@@ -153,53 +173,64 @@ const ArtistLots: React.FC<Props> = ({ artist: { id } }) => {
 
   return (
     <Container>
-      <Grid container className={classes.heading} justify="space-between">
-        <Typography variant="h5" component="h2">
-          Artworks
-        </Typography>
+      <Grid container className={classes.heading} direction="column">
+        <Grid item container justify="space-between">
+          <Typography variant="h5" component="h2">
+            Artworks
+          </Typography>
 
-        <Grid item>
-          <Grid className={classes.filtersContainer} container direction="row" alignItems="center">
-            <Typography className={classes.sortLabel}>Medium:</Typography>
-            <Select value={medium} onChange={updateMedium}>
-              <MenuItem value={mediumTypes.all}>All</MenuItem>
-              <MenuItem value={mediumTypes.paintings}>Paintings</MenuItem>
-              <MenuItem value={mediumTypes.prints}>Prints</MenuItem>
-              <MenuItem value={mediumTypes.undetermined}>Undetermined</MenuItem>
-              <MenuItem value={mediumTypes.photographs}>Photographs</MenuItem>
-              <MenuItem value={mediumTypes.jewelry}>Jewelry</MenuItem>
-              <MenuItem value={mediumTypes.sculpture}>Sculpture</MenuItem>
-              <MenuItem value={mediumTypes.furniture}>Furniture</MenuItem>
-              <MenuItem value={mediumTypes.ceramics}>Ceramics</MenuItem>
-              <MenuItem value={mediumTypes.other}>Other</MenuItem>
-              <MenuItem value={mediumTypes.worksOnPaper}>Works on paper</MenuItem>
-            </Select>
+          <Grid item>
+            <Grid
+              className={classes.filtersContainer}
+              container
+              direction="row"
+              alignItems="center"
+            >
+              <Typography className={classes.sortLabel}>Medium:</Typography>
+              <Select value={medium} onChange={updateMedium}>
+                <MenuItem value={mediumTypes.all}>All</MenuItem>
+                <MenuItem value={mediumTypes.paintings}>Paintings</MenuItem>
+                <MenuItem value={mediumTypes.prints}>Prints</MenuItem>
+                <MenuItem value={mediumTypes.undetermined}>Undetermined</MenuItem>
+                <MenuItem value={mediumTypes.photographs}>Photographs</MenuItem>
+                <MenuItem value={mediumTypes.jewelry}>Jewelry</MenuItem>
+                <MenuItem value={mediumTypes.sculpture}>Sculpture</MenuItem>
+                <MenuItem value={mediumTypes.furniture}>Furniture</MenuItem>
+                <MenuItem value={mediumTypes.ceramics}>Ceramics</MenuItem>
+                <MenuItem value={mediumTypes.other}>Other</MenuItem>
+                <MenuItem value={mediumTypes.worksOnPaper}>Works on paper</MenuItem>
+              </Select>
 
-            <Typography className={classes.sortLabel}>Sort by:</Typography>
-            <Select value={sort} onChange={updateSort}>
-              <MenuItem value={sortTypes.featured}>Featured</MenuItem>
-              <MenuItem value={sortTypes.creationYearLowToHigh}>
-                Year created - Low to High
-              </MenuItem>
-              <MenuItem value={sortTypes.creationYearHighToLow}>
-                Year created - High to Low
-              </MenuItem>
-              <MenuItem value={sortTypes.lastPriceLowToHigh}>
-                Last price realized - Low to High
-              </MenuItem>
-              <MenuItem value={sortTypes.lastPriceHighToLow}>
-                Last price realized - High to Low
-              </MenuItem>
-              <MenuItem value={sortTypes.dateLastSoldLowToHigh}>
-                Date last sold - Low to High
-              </MenuItem>
-              <MenuItem value={sortTypes.dateLastSoldHighToLow}>
-                Date last sold - High to Low
-              </MenuItem>
-              <MenuItem value={sortTypes.nameLowToHigh}>Title - A to Z</MenuItem>
-              <MenuItem value={sortTypes.nameHighToLow}>Title - Z to A</MenuItem>
-            </Select>
+              <Typography className={classes.sortLabel}>Sort by:</Typography>
+              <Select value={sort} onChange={updateSort}>
+                <MenuItem value={sortTypes.featured}>Featured</MenuItem>
+                <MenuItem value={sortTypes.creationYearLowToHigh}>
+                  Year created - Low to High
+                </MenuItem>
+                <MenuItem value={sortTypes.creationYearHighToLow}>
+                  Year created - High to Low
+                </MenuItem>
+                <MenuItem value={sortTypes.lastPriceLowToHigh}>
+                  Last price realized - Low to High
+                </MenuItem>
+                <MenuItem value={sortTypes.lastPriceHighToLow}>
+                  Last price realized - High to Low
+                </MenuItem>
+                <MenuItem value={sortTypes.dateLastSoldLowToHigh}>
+                  Date last sold - Low to High
+                </MenuItem>
+                <MenuItem value={sortTypes.dateLastSoldHighToLow}>
+                  Date last sold - High to Low
+                </MenuItem>
+                <MenuItem value={sortTypes.nameLowToHigh}>Title - A to Z</MenuItem>
+                <MenuItem value={sortTypes.nameHighToLow}>Title - Z to A</MenuItem>
+              </Select>
+            </Grid>
           </Grid>
+        </Grid>
+
+        <Grid item className={classes.filterContainer}>
+          <ArtworksFilter artist={artist} onChange={setFilterState} />
         </Grid>
       </Grid>
       <Grid container>

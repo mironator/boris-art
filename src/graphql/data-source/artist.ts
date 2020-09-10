@@ -26,6 +26,7 @@ export default class ArtistDS extends RESTDataSource {
     // console.log('[INFO] ArtistDS.getArtist')
     const data = await this.get<ArtistResponse>(`/artist/${id}`)
     const artistEntity = _.get(data, 'artist[0]') as ArtistEntity
+
     return Artist.fromEntity(artistEntity)
   }
 

@@ -23,11 +23,11 @@ export const typeDef = gql`
     lotsCost: Int
     artworksCount: Int
     lotsCount: Int
-    mediumTypes: [String]
-    maxPriceSold: Int
-    minPriceSold: Int
     maxDateSold: Date
     minDateSold: Date
+    maxPriceSold: Int
+    minPriceSold: Int
+    mediumTypes: [String]
   }
 `
 
