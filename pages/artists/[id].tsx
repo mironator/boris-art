@@ -30,6 +30,10 @@ const GET_ARTIST = gql`
       artworksCount
       lotsCount
       mediumTypes
+      maxDateSold
+      minDateSold
+      maxPriceSold
+      minPriceSold
     }
   }
 `
@@ -41,6 +45,7 @@ const ArtistPage: NextPage<Props> = ({ id }) => {
     },
   })
   const artist = _.get(data, 'artist')
+  console.log('page artist', data)
 
   if (!loading && !error && !artist) {
     return (
@@ -54,7 +59,7 @@ const ArtistPage: NextPage<Props> = ({ id }) => {
   }
 
   if (artist) {
-    // It's pity, but one of GraphQL cons. 
+    // It's pity, but one of GraphQL cons.
     const fixedArtist = { ...artist, birth: new Date(artist.birth), death: new Date(artist.death) }
     return (
       <Layout>

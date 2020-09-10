@@ -25,6 +25,14 @@ export default class Artist implements IArtist {
 
   mediumTypes?: MediumType[]
 
+  maxDateSold: Date
+
+  minDateSold: Date
+
+  maxPriceSold: number
+
+  minPriceSold: number
+
   constructor(
     id: number,
     name: string,
@@ -37,6 +45,10 @@ export default class Artist implements IArtist {
     lotsCost: number,
     artworksCount: number,
     lotsCount: number,
+    maxDateSold: Date,
+    minDateSold: Date,
+    maxPriceSold: number,
+    minPriceSold: number,
     mediumTypes?: MediumType[]
   ) {
     this.id = id
@@ -50,6 +62,10 @@ export default class Artist implements IArtist {
     this.lotsCost = lotsCost
     this.artworksCount = artworksCount
     this.lotsCount = lotsCount
+    this.maxDateSold = maxDateSold
+    this.minDateSold = minDateSold
+    this.maxPriceSold = maxPriceSold
+    this.minPriceSold = minPriceSold
     this.mediumTypes = mediumTypes
   }
 
@@ -65,7 +81,11 @@ export default class Artist implements IArtist {
       entity.qualifier,
       entity.lots_cost,
       entity.artworks_count,
-      entity.lots_count
+      entity.lots_count,
+      new Date(entity.max_date_sold),
+      new Date(entity.min_date_sold),
+      entity.max_price_sold,
+      entity.min_price_sold
     )
   }
 }

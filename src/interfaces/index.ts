@@ -39,6 +39,10 @@ export type Artist = {
   artworksCount?: number
   lotsCount?: number
   mediumTypes?: MediumType[]
+  maxDateSold: Date
+  minDateSold: Date
+  maxPriceSold: number
+  minPriceSold: number
 }
 
 export type ArtistEntity = {
@@ -54,6 +58,10 @@ export type ArtistEntity = {
   lots_count: number
   photo_s3_key: string
   photo_presigned_url: string
+  max_date_sold: string
+  min_date_sold: string
+  max_price_sold: number
+  min_price_sold: number
 }
 
 export type ArtistListEntity = ListEntity<ListMeta> & GenericList<ArtistEntity>
