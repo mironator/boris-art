@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
-import { CircularProgress, Grid, MenuItem, Select, Typography, Button } from '@material-ui/core'
+import { CircularProgress, Grid, MenuItem, Select, Typography } from '@material-ui/core'
 import { Container } from 'next/app'
 import InfiniteScroll from 'react-infinite-scroller'
 
