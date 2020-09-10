@@ -126,39 +126,37 @@ const ArtistLots: React.FC<Props> = ({ artist }) => {
     },
   })
 
-  useEffect(() => {
-    if (!loading) {
-      fetchMore({
-        variables: { offset: page * limit },
-        updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult) return prev
+  const onLoadMore = useCallback(() => {
+    fetchMore({
+      variables: { offset: data.artworksOfArtist.length },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev
 
-          return {
-            ...prev,
-            artworksOfArtist: [...prev.artworksOfArtist, ...fetchMoreResult.artworksOfArtist],
-          }
-        },
-      })
-    }
-  }, [page])
+        return {
+          ...prev,
+          artworksOfArtist: [...prev.artworksOfArtist, ...fetchMoreResult.artworksOfArtist],
+        }
+      },
+    })
+  }, [data.artworksOfArtist.length])
 
-  useEffect(() => {
-    if (data && data.artworksOfArtist.length) {
-      // omit re-reder triggering on empty data delta
+  // useEffect(() => {
+  //   if (data && data.artworksOfArtist.length) {
+  //     // omit re-reder triggering on empty data delta
 
-      if (!loading && data.artworksOfArtist.length < limit) {
-        setHasMoreItems(false)
-      } else {
-        // setHasMoreItems(true)
-      }
-    }
-  }, [loading])
+  //     if (!loading && data.artworksOfArtist.length < limit) {
+  //       setHasMoreItems(false)
+  //     } else {
+  //       // setHasMoreItems(true)
+  //     }
+  //   }
+  // }, [loading])
 
-  const loadItems = useCallback(() => {
-    if (!loading) {
-      setPage(page + 1)
-    }
-  }, [page, loading])
+  // const loadItems = useCallback(() => {
+  //   if (!loading) {
+  //     setPage(page + 1)
+  //   }
+  // }, [page, loading])
 
   const updateSort = useCallback((event: any) => {
     setHasMoreItems(true)
@@ -234,12 +232,7 @@ const ArtistLots: React.FC<Props> = ({ artist }) => {
         </Grid>
       </Grid>
       <Grid container>
-        <InfiniteScroll
-          pageStart={0}
-          loadMore={loadItems}
-          hasMore={hasMoreItems && !loading}
-          initialLoad={false}
-        >
+        <InfiniteScroll pageStart={0} loadMore={onLoadMore} hasMore={!loading} initialLoad={false}>
           <Grid container item spacing={5}>
             {data.artworksOfArtist.map((artwork) => (
               <Grid key={artwork.id} item container justify="center" xs={12} sm={6} md={4}>
