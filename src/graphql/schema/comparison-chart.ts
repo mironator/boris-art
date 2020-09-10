@@ -89,7 +89,7 @@ export const resolvers = {
         artist: { id },
       } = parent
 
-      console.log('[INFO] getting data', id)
+      // console.log('[INFO] getting data', id)
 
       const params = {
         artwork_index_comparison_chart: [
@@ -106,7 +106,7 @@ export const resolvers = {
       })
       const data = await apiRes.json()
 
-      // console.log('[INFO] data', data)
+      // console.log('[INFO] comparisonChartData.data')
       return _.get(data, 'payload.artwork_index_comparison_chart')
     },
   },

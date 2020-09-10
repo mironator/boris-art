@@ -6,7 +6,7 @@ import { Artwork as IArtwork, ArtworkListEntity, ArtworkEntity } from '@interfac
 
 import Artwork from '@models/Artwork'
 
-import sortTypes from './sortTypes'
+import sortTypes from '../models/SortTypes'
 import mediumTypes from './mediumTypes'
 
 export type ChartData = {
