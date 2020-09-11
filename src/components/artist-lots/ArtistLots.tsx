@@ -68,8 +68,8 @@ const useStyles = makeStyles(() =>
         marginRight: '15px',
       },
     },
-    filterContainer: {
-      margin: '20px 0',
+    artworksLabel: {
+      marginBottom: '20px',
     },
   })
 )
@@ -172,11 +172,15 @@ const ArtistLots: React.FC<Props> = ({ artist }) => {
   return (
     <Container>
       <Grid container className={classes.heading} direction="column">
-        <Grid item container justify="space-between">
-          <Typography variant="h5" component="h2">
+        <Grid item>
+          <Typography className={classes.artworksLabel} variant="h4" component="h2">
             Artworks
           </Typography>
-
+        </Grid>
+        <Grid item container justify="space-between" alignItems="center">
+          <Grid item>
+            <ArtworksFilter artist={artist} onChange={setFilterState} />
+          </Grid>
           <Grid item>
             <Grid
               className={classes.filtersContainer}
@@ -225,10 +229,6 @@ const ArtistLots: React.FC<Props> = ({ artist }) => {
               </Select>
             </Grid>
           </Grid>
-        </Grid>
-
-        <Grid item className={classes.filterContainer}>
-          <ArtworksFilter artist={artist} onChange={setFilterState} />
         </Grid>
       </Grid>
       <Grid container>

@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useEffect } from 'react'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { Grid, Tooltip, Typography, Slider } from '@material-ui/core'
@@ -10,11 +9,18 @@ import { Artist } from '@interfaces/index'
 
 const useStyles = makeStyles(() =>
   createStyles({
-    root: {},
+    root: {
+      '& > *': {
+        marginRight: '30px',
+      },
+    },
     priceLabel: {
       color: 'rgba(0, 0, 0, 0.54)',
       padding: 0,
       fontSize: '12px',
+    },
+    datePicker: {
+      width: '125px',
     },
     fromDate: {
       position: 'absolute',
@@ -31,8 +37,9 @@ const useStyles = makeStyles(() =>
       right: 0,
     },
     sliderContainer: {
-      height: '61px',
-      width: '200px',
+      paddingTop: '10px',
+      height: '71px',
+      width: '150px',
       position: 'relative',
     },
   })
@@ -93,9 +100,10 @@ const ArtworksFilter: React.FC<Props> = ({
   }, [fromDate, toDate, price])
 
   return (
-    <Grid container justify="space-around" alignContent="center">
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <Grid className={classes.root} container alignContent="center">
         <DatePicker
+          className={classes.datePicker}
           autoOk
           label="From"
           orientation="landscape"
@@ -107,6 +115,7 @@ const ArtworksFilter: React.FC<Props> = ({
           onChange={setFromDate}
         />
         <DatePicker
+          className={classes.datePicker}
           autoOk
           label="To"
           orientation="landscape"
@@ -117,24 +126,24 @@ const ArtworksFilter: React.FC<Props> = ({
           // @ts-ignore
           onChange={setToDate}
         />
-      </MuiPickersUtilsProvider>
 
-      <Grid item className={classes.sliderContainer}>
-        <Typography className={classes.priceLabel}>Price range</Typography>
-        <Slider
-          ValueLabelComponent={ValueLabelComponent}
-          min={minPriceSold}
-          max={maxPriceSold}
-          value={sliderValue}
-          onChange={handleSliderChange}
-          onChangeCommitted={handlePriceChange}
-          valueLabelDisplay="auto"
-          aria-labelledby="range-slider"
-        />
-        <Typography className={classes.fromDate}>{priceFormatter(sliderValue[0])}</Typography>
-        <Typography className={classes.toDate}>{priceFormatter(sliderValue[1])}</Typography>
+        <Grid item className={classes.sliderContainer}>
+          <Typography className={classes.priceLabel}>Price range</Typography>
+          <Slider
+            ValueLabelComponent={ValueLabelComponent}
+            min={minPriceSold}
+            max={maxPriceSold}
+            value={sliderValue}
+            onChange={handleSliderChange}
+            onChangeCommitted={handlePriceChange}
+            valueLabelDisplay="auto"
+            aria-labelledby="range-slider"
+          />
+          <Typography className={classes.fromDate}>{priceFormatter(sliderValue[0])}</Typography>
+          <Typography className={classes.toDate}>{priceFormatter(sliderValue[1])}</Typography>
+        </Grid>
       </Grid>
-    </Grid>
+    </MuiPickersUtilsProvider>
   )
 }
 
