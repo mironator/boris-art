@@ -1,5 +1,5 @@
 import moment from 'moment'
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback } from 'react'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { CircularProgress, Grid, MenuItem, Select, Typography } from '@material-ui/core'
 import { Container } from 'next/app'
@@ -89,10 +89,10 @@ type Filter = {
 
 const ArtistLots: React.FC<Props> = ({ artist }) => {
   const { id } = artist
-  const limit = 30
+  // const limit = 30
   const classes = useStyles()
-  const [hasMoreItems, setHasMoreItems] = useState<boolean>(true)
-  const [page, setPage] = useState<number>(0)
+  // const [hasMoreItems, setHasMoreItems] = useState<boolean>(true)
+  // const [page, setPage] = useState<number>(0)
   const [sort, setSort] = useState<keyof typeof sortTypes>(sortTypes.featured)
   const [medium, setMedium] = useState<keyof typeof mediumTypes>(mediumTypes.all)
   // const { data, isLoading } = useArtworkListData({
@@ -159,13 +159,13 @@ const ArtistLots: React.FC<Props> = ({ artist }) => {
   // }, [page, loading])
 
   const updateSort = useCallback((event: any) => {
-    setHasMoreItems(true)
+    // setHasMoreItems(true)
     setSort(event.target.value)
-    setPage(0)
+    // setPage(0)
   }, [])
 
   const updateMedium = useCallback((event: any) => {
-    setHasMoreItems(true)
+    // setHasMoreItems(true)
     setMedium(event.target.value)
   }, [])
 
