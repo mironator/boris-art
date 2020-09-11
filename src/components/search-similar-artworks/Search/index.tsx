@@ -175,7 +175,7 @@ const Search: React.FC<Props> = ({ onSubmit, onReset }) => {
                   <TextField label="Height" placeholder="Height" type="number" name="height" />
                 </Grid>
                 <Grid item xs={4}>
-                  <TextField label="Weight" placeholder="Weight" type="number" name="width" />
+                  <TextField label="Width" placeholder="Width" type="number" name="width" />
                 </Grid>
                 <Grid item xs={4}>
                   <TextField label="Depth" placeholder="Depth" type="number" name="depth" />
