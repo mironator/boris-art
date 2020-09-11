@@ -1,13 +1,15 @@
 import { gql } from 'apollo-server-micro'
 
-import { Artwork, MediumType } from '@interfaces/index'
+import { Artwork, MediumType, Artist } from '@interfaces/index'
 import Lot from '@models/Lot'
 import ArtworkDS from '@graphql/data-source/artwork'
 import LotDS from '@graphql/data-source/lot'
+import ArtistDS from '@graphql/data-source/artist'
 import SortTypes from '@models/SortTypes'
 
 type Context = {
   dataSources: {
+    Artist: ArtistDS
     Artwork: ArtworkDS
     Lot: LotDS
   }
@@ -55,6 +57,7 @@ export const typeDef = gql`
     editionCurrent: Int
     conditionIn: String
     artistId: Int
+    artist: Artist
     measurementsWidth: Int
     lotImageSize: Int
     description: String
@@ -83,7 +86,7 @@ export const resolvers = {
       _root: unknown,
       { id }: { id: number },
       { dataSources }: Context
-    ): Promise<Artwork> => dataSources.Artwork.getArtwork(id),
+    ): Promise<Artwork | null> => dataSources.Artwork.getArtwork(id),
     artworksOfArtist: async (
       _root: unknown,
       props: ArtworkListProps,
@@ -94,6 +97,11 @@ export const resolvers = {
   Artwork: {
     lots: async ({ lotIds }: Artwork, _args: unknown, { dataSources }: Context): Promise<Lot[]> =>
       dataSources.Lot.getLots(lotIds),
+    artist: async (
+      { artistId }: Artwork,
+      _args: unknown,
+      { dataSources }: Context
+    ): Promise<Artist> => dataSources.Artist.getArtist(artistId),
   },
 }
 

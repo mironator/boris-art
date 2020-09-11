@@ -31,7 +31,10 @@ export default class ArtowrkDS extends RESTDataSource {
     this.baseURL = process.env.API_BASE_URL
   }
 
-  async getArtwork(id: number): Promise<Artwork> {
+  async getArtwork(id: number): Promise<Artwork | null> {
+    if (!id) {
+      return null
+    }
     const data = await this.get<ArtworkResponse>(`/artwork/${id}`)
     const entity = _.get(data, 'artwork[0]') as ArtworkEntity
 

@@ -1,7 +1,7 @@
+import _ from 'lodash'
 import React, { useState } from 'react'
-import { Box, Card, CardActionArea, CardMedia, Grid, Typography } from '@material-ui/core'
+import { Card, CardActionArea, CardMedia, Grid, Typography } from '@material-ui/core'
 import FsLightbox from 'fslightbox-react'
-import moment from 'moment'
 
 import { Artwork } from '@interfaces/index'
 import { priceFormatter } from '@utils/formatters'
@@ -12,6 +12,8 @@ interface OwnProps {
   artwork: Artwork
 }
 
+const NO_IMAGE_URL = '/images/no-image-available.png'
+
 type Props = OwnProps
 
 const ArtworkDetails: React.FC<Props> = ({ artwork }) => {
@@ -20,64 +22,65 @@ const ArtworkDetails: React.FC<Props> = ({ artwork }) => {
 
   return (
     <>
-      <Box display="flex" justifyContent="center" p={3}>
-        <Card className={classes.cardRoot} variant="outlined">
-          <CardActionArea onClick={() => setToggler(!toggler)}>
-            <CardMedia
-              className={classes.media}
-              image={artwork.lotImagePresignedUrl}
-              title={artwork.name}
-              component="img"
-            />
-          </CardActionArea>
-        </Card>
-      </Box>
-      <Box justifyContent="left">
-        <Grid
-          container
-          direction="column"
-          alignItems="flex-start"
-          justify="flex-start"
-          className={classes.imageDescription}
-          xs={12}
-          spacing={2}
-        >
-          <Grid item>
-            <Typography gutterBottom variant="body1" component="h4" className={classes.artworkName}>
-              {artwork.name} ({artwork.creationYear})
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="body2" component="p">
-              <strong>Artist ID:</strong> {artwork.artistId}
-            </Typography>
-          </Grid>
-          <Grid item container direction="row" className={classes.briefInfo}>
-            <Grid item container direction="column" sm={6}>
-              <Grid item>
-                <strong>Price:</strong>
-                {artwork.lastPrice && ` ${priceFormatter(artwork.lastPrice)}`}
-              </Grid>
+      <Grid container direction="row" spacing={4} style={{ paddingBottom: 60, marginTop: 0 }}>
+        <Grid item>
+          <Card className={classes.cardRoot}>
+            <CardActionArea onClick={() => setToggler(!toggler)}>
+              <CardMedia
+                image={artwork.lotImagePresignedUrl || NO_IMAGE_URL}
+                title={artwork.name}
+                component="img"
+              />
+            </CardActionArea>
+          </Card>
+        </Grid>
+        <Grid item>
+          <Grid container spacing={1} direction="column">
+            <Grid item>
+              <Typography variant="h5" component="h2">
+                {artwork.name} {artwork.creationYear ? artwork.creationYear : ''}
+              </Typography>
             </Grid>
-            <Grid item container direction="column" sm={6}>
-              <Grid item>
-                <strong>Date Last sold:</strong>
-                {artwork.dateLastSold && ` ${moment(artwork.dateLastSold).format('LL')}`}
+            {!!_.get(artwork, 'artist.name') && (
+              <Grid item style={{ marginBottom: 10, marginTop: 10, fontSize: 14 }}>
+                <Typography variant="h6" component="h6">
+                  {_.get(artwork, 'artist.name')}
+                </Typography>
               </Grid>
-            </Grid>
-          </Grid>
-          <Grid item>
-            <Typography variant="body2" component="div">
-              <strong>Description:</strong> {artwork.description}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="body2" component="p">
-              <strong>Materials:</strong> {artwork.materials}
-            </Typography>
+            )}
+            {!!artwork.lastPrice && (
+              <Grid item style={{ marginBottom: 10, marginTop: 10, fontSize: 14 }}>
+                <strong>Last record sale: </strong>
+                {`${priceFormatter(artwork.lastPrice)} at ${artwork.lastSoldAuctionHouseName}, ${
+                  artwork.placeLastSold
+                  } (${new Date(artwork.dateLastSold).getFullYear()})`}
+              </Grid>
+            )}
+            {!!artwork.materials && (
+              <Grid item>
+                <Typography variant="body2" component="p">
+                  <strong>Materials:</strong> {artwork.materials}
+                </Typography>
+              </Grid>
+            )}
+            {!!artwork.mediumFinal && (
+              <Grid item>
+                <Typography variant="body2" component="p">
+                  <strong>Medium:</strong> {artwork.mediumFinal}
+                </Typography>
+              </Grid>
+            )}
+            {!!artwork.description && (
+              <Grid item>
+                <Typography variant="body2" component="p">
+                  <strong>Description:</strong> {artwork.description}
+                </Typography>
+              </Grid>
+            )}
           </Grid>
         </Grid>
-      </Box>
+      </Grid>
+
       <FsLightbox
         toggler={toggler}
         customSources={[

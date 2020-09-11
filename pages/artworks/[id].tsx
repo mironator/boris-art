@@ -31,6 +31,11 @@ const GET_ARTWORK = gql`
       description
       materials
       markings
+      lastSoldAuctionHouseName
+      placeLastSold
+      artist {
+        name
+      }
       lots {
         priceEstimateMinUsdZeroied
         auctionStartDate
@@ -93,8 +98,17 @@ const ArtworkPage: NextPage<Props> = ({ id }) => {
 
   if (loading) {
     return (
-      <Grid item style={{ textAlign: 'center' }}>
-        <CircularProgress />
+      <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justify="center"
+        style={{ minHeight: '100vh' }}
+      >
+        <Grid item xs={3}>
+          <CircularProgress />
+        </Grid>
       </Grid>
     )
   }

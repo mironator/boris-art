@@ -111,6 +111,7 @@ const ArtworksFilter: React.FC<Props> = ({
           value={fromDate}
           minDate={minDateSold}
           maxDate={toDate}
+          format="MMM do, yyyy"
           // @ts-ignore
           onChange={setFromDate}
         />
@@ -123,6 +124,7 @@ const ArtworksFilter: React.FC<Props> = ({
           value={toDate}
           minDate={fromDate}
           maxDate={maxDateSold}
+          format="MMM do, yyyy"
           // @ts-ignore
           onChange={setToDate}
         />

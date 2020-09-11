@@ -4,6 +4,10 @@ import { makeStyles, createStyles } from '@material-ui/core/styles'
 const styles = () =>
   createStyles({
     root: {},
+    tabPanel: {
+      paddingLeft: 0,
+      paddginRight: 0,
+    },
   })
 
 export default makeStyles(styles, { name: 'ArtistDetails' })
