@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import Search from '@components/search-similar-artworks/Search'
 import Results from '@components/search-similar-artworks/Results'
+import Layout from '@components/layout/Layout'
 
 type Values = {
   artist: number
@@ -37,21 +38,23 @@ const Page: React.FC<unknown> = () => {
   const onReset = () => console.log('onReset')
 
   return (
-    <Container maxWidth="lg" className={classes.root}>
-      <Grid container spacing={2}>
-        <Grid item xs={5}>
-          {/* 
+    <Layout>
+      <Container maxWidth="lg" className={classes.root}>
+        <Grid container spacing={2}>
+          <Grid item xs={5}>
+            {/* 
           // @ts-ignore */}
-          <Search onSubmit={onSubmit} onReset={onReset} />
-        </Grid>
+            <Search onSubmit={onSubmit} onReset={onReset} />
+          </Grid>
 
-        <Grid item xs={7}>
-          {/* 
+          <Grid item xs={7}>
+            {/* 
           // @ts-ignore */}
-          <Results values={values} />
+            <Results values={values} />
+          </Grid>
         </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </Layout>
   )
 }
 

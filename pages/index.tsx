@@ -92,7 +92,7 @@ const Search: React.FC<unknown> = () => {
         direction="column"
         alignItems="center"
         justify="center"
-        style={{ minHeight: '100vh' }}
+        style={{ minHeight: 'calc(100vh - 84px)' }}
       >
         <Autocomplete
           id="autocomplete"

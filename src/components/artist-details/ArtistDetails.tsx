@@ -6,6 +6,7 @@ import { Artist } from '@interfaces/index'
 import ArtistInfo from '../artist-info'
 import ArtistLots from '../artist-lots'
 import ArtistAnalytics from '../artist-analytics'
+import useStyles from './ArtistDetails.styles'
 
 interface OwnProps {
   artist: Artist
@@ -23,6 +24,7 @@ type Props = OwnProps
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props
+  const classes = useStyles({})
 
   return (
     <div
@@ -30,11 +32,12 @@ function TabPanel(props: TabPanelProps) {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
+      style={{ padding: 0 }}
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...other}
     >
       {value === index && (
-        <Box p={3}>
+        <Box p={3} className={classes.tabPanel}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -54,7 +57,12 @@ const ArtistDetails: React.FC<Props> = (props) => {
 
   return (
     <>
-      <Tabs value={value} onChange={handleChange} aria-label="Artist Tabs">
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        aria-label="Artist Tabs"
+        style={{ marginTop: 10 }}
+      >
         <Tab label="Info" />
         <Tab label="Analytics" />
       </Tabs>

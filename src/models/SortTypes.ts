@@ -1,4 +1,4 @@
-enum sortTypes {
+enum SortTypes {
   featured = 'featured',
   priceLowToHigh = 'price',
   priceHighToLow = '-price',
@@ -12,4 +12,4 @@ enum sortTypes {
   nameHighToLow = '-name',
 }
 
-export default sortTypes
+export default SortTypes

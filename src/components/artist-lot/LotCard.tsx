@@ -84,7 +84,9 @@ const LotCard: React.FC<Props> = ({
           <Typography variant="body1">
             {`${priceFormatter(
               lastPrice
-            )} at ${lastSoldAuctionHouseName}, ${placeLastSold} (${dateLastSold.getFullYear()})`}
+            )} at ${lastSoldAuctionHouseName}, ${placeLastSold} (${new Date(
+              dateLastSold
+            ).getFullYear()})`}
           </Typography>
         </CardContent>
       </CardActionArea>
@@ -121,7 +123,9 @@ const LotCard: React.FC<Props> = ({
               <Typography variant="body1">
                 {`${priceFormatter(
                   lastPrice
-                )} at ${lastSoldAuctionHouseName}, ${placeLastSold} (${dateLastSold.getFullYear()})`}
+                )} at ${lastSoldAuctionHouseName}, ${placeLastSold} (${new Date(
+                  dateLastSold
+                ).getFullYear()})`}
               </Typography>
             </Grid>
           </div>,
