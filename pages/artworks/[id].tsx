@@ -37,6 +37,13 @@ const GET_ARTWORK = gql`
         name
       }
       lots {
+        artworkName
+        artist {
+          name
+        }
+        artwork {
+          creationYear
+        }
         priceEstimateMinUsdZeroied
         auctionStartDate
         lotImageLoadError

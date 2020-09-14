@@ -1,7 +1,9 @@
 import { gql } from 'apollo-server-micro'
 
 import LotDS from '@graphql/data-source/lot'
-import { Lot } from '@interfaces/index'
+import ArtworkDS from '@graphql/data-source/artwork'
+import ArtistDS from '@graphql/data-source/artist'
+import { Artist, Artwork, Lot } from '@interfaces/index'
 
 export const typeDef = gql`
   extend type Query {
@@ -16,6 +18,7 @@ export const typeDef = gql`
     lotImagePresignedUrl: String
     priceKind: String
     artistId: Int
+    artist: Artist
     artistBirth: Int
     auctionName: String
     currency: String
@@ -41,6 +44,8 @@ export const typeDef = gql`
     priceSold: Int
     artistDeath: Int
     artworkId: Int
+    artworkName: String
+    artwork: Artwork
     mediumFinal: String
     lotImageHeight: Int
     isMultipleObjects: Boolean
@@ -52,6 +57,8 @@ export const typeDef = gql`
 type Context = {
   dataSources: {
     Lot: LotDS
+    Artwork: ArtworkDS
+    Artist: ArtistDS
   }
 }
 
@@ -59,6 +66,18 @@ export const resolvers = {
   Query: {
     lot: async (_root: unknown, { id }: { id: number }, { dataSources }: Context): Promise<Lot> =>
       dataSources.Lot.getLot(id),
+  },
+  Lot: {
+    artwork: async (
+      { artworkId }: Lot,
+      _args: unknown,
+      { dataSources }: Context
+    ): Promise<Artwork | null> => dataSources.Artwork.getArtwork(artworkId),
+    artist: async (
+      { artistId }: Lot,
+      _args: unknown,
+      { dataSources }: Context
+    ): Promise<Artist | null> => dataSources.Artist.getArtist(artistId),
   },
 }
 

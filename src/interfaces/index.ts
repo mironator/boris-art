@@ -338,7 +338,7 @@ export type LotEntity = {
   auction_house_name: string
   raw_lot_id: number
   image_loading_status: string
-  bought_in: number
+  bought_in: boolean
   lot_image_s3_key: string
   raw_auction_id: number
   catalog_notes: string
@@ -355,6 +355,7 @@ export type LotEntity = {
   price_sold: number
   artist_death: number
   artwork_id: number
+  artwork_name: string
   medium_final: string
   lot_image_height: number
   is_multiple_objects: boolean
@@ -378,7 +379,7 @@ export type Lot = {
   auctionHouseName: string
   rawLotId: number
   imageLoadingStatus: string
-  boughtIn: number
+  boughtIn: boolean
   lotImageS3Key: string
   rawAuctionId: number
   catalogNotes: string
@@ -395,6 +396,8 @@ export type Lot = {
   priceSold: number
   artistDeath: number
   artworkId: number
+  artworkName: string
+  artwork: Artwork
   mediumFinal: string
   lotImageHeight: number
   isMultipleObjects: boolean

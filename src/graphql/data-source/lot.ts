@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import { RESTDataSource } from 'apollo-datasource-rest'
 
-import Lot from '@models/Lot'
-import { LotEntity } from '@interfaces/index'
+import { Lot, LotEntity } from '@interfaces/index'
+import LotModel from '@models/Lot'
 
 type LotResponse = {
   payload: {
@@ -20,7 +20,7 @@ export default class LotDS extends RESTDataSource {
     const data = await this.get<LotResponse>(`/lot/${id}`)
     const entity = _.get(data, 'lot[0]') as LotEntity
 
-    return Lot.fromEntity(entity)
+    return LotModel.fromEntity(entity) as Lot
   }
 
   async getLots(ids: number[]): Promise<Lot[]> {
