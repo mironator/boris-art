@@ -107,7 +107,7 @@ const Header: React.FC<unknown> = ({ children }) => {
         <Container maxWidth="md" style={{ padding: 0 }}>
           <Toolbar>
             <IconButton color="inherit" edge="start" href="/">
-              Logo
+              APH.ai
             </IconButton>
             {children || []}
             <div className={classes.grow} />
@@ -138,7 +138,7 @@ const Header: React.FC<unknown> = ({ children }) => {
                   [classes.activeHeaderLink]: /\/search-similar-artworks/.test(router.pathname),
                 })}
               >
-                Search Similar Artworks
+                Price Prediction
               </IconButton>
               <IconButton edge="end" href="/" color="inherit" className={classes.headerLink}>
                 <SearchIcon />
