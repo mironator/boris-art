@@ -99,7 +99,7 @@ const Search: React.FC<Props> = ({ onSubmit, onReset }) => {
         <form onSubmit={handleSubmit}>
           <Container>
             <Typography variant="h4" className={classes.title}>
-              Search Similar Artworks
+              Price Prediction
             </Typography>
 
             <Field name="image">
@@ -183,7 +183,7 @@ const Search: React.FC<Props> = ({ onSubmit, onReset }) => {
               </Grid>
 
               <Grid container item>
-                <Grid item xs={6} className={classes.singleSpacing}>
+                <Grid item xs={8} className={classes.singleSpacing}>
                   <TextField
                     label="Minimum similarity"
                     fullWidth
@@ -210,6 +210,7 @@ const Search: React.FC<Props> = ({ onSubmit, onReset }) => {
                   onReset()
                 }}
                 disabled={submitting || pristine}
+                style={{ marginRight: 0 }}
               >
                 Reset Search
               </Button>
