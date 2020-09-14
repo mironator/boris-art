@@ -34,7 +34,7 @@ const ArtworkDetails: React.FC<Props> = ({ artwork }) => {
             </CardActionArea>
           </Card>
         </Grid>
-        <Grid item>
+        <Grid item style={{ flex: 1 }}>
           <Grid container spacing={1} direction="column">
             <Grid item>
               <Typography variant="h5" component="h2">
@@ -50,9 +50,8 @@ const ArtworkDetails: React.FC<Props> = ({ artwork }) => {
             )}
             {!!artwork.lastPrice && (
               <Grid item style={{ marginBottom: 10, marginTop: 10, fontSize: 14 }}>
-                <strong>Last record sale: </strong>
-                {`${priceFormatter(artwork.lastPrice)} at ${artwork.lastSoldAuctionHouseName}, ${
-                  artwork.placeLastSold
+                <strong>Last recorded sale: </strong>
+                {`${priceFormatter(artwork.lastPrice)} at ${artwork.lastSoldAuctionHouseName}, ${artwork.placeLastSold
                   } (${new Date(artwork.dateLastSold).getFullYear()})`}
               </Grid>
             )}

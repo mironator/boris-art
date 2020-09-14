@@ -326,7 +326,7 @@ export type LotEntity = {
   price_estimate_min_usd_zeroied: number
   auction_start_date: string
   lot_image_load_error: string
-  lot_num: number
+  lot_num: string
   lot_image_presigned_url: string
   price_kind: string
   artist_id: number
@@ -366,7 +366,7 @@ export type Lot = {
   priceEstimateMinUsdZeroied: number
   auctionStartDate: string
   lotImageLoadError: string
-  lotNum: number
+  lotNum: string
   lotImagePresignedUrl: string
   priceKind: string
   artistId: number
