@@ -1,4 +1,4 @@
-import { Lot as ILot, LotEntity } from '@interfaces/index'
+import { Artist, Artwork, Lot as ILot, LotEntity } from '@interfaces/index'
 
 export default class Lot implements ILot {
   priceEstimateMinUsdZeroied: number
@@ -14,6 +14,8 @@ export default class Lot implements ILot {
   priceKind: string
 
   artistId: number
+
+  artist?: Artist
 
   artistBirth: number
 
@@ -31,7 +33,7 @@ export default class Lot implements ILot {
 
   imageLoadingStatus: string
 
-  boughtIn: number
+  boughtIn: boolean
 
   lotImageS3Key: string
 
@@ -65,6 +67,11 @@ export default class Lot implements ILot {
 
   artworkId: number
 
+  artworkName: string
+
+  // @ts-ignore
+  artwork?: Artwork
+
   mediumFinal: string
 
   lotImageHeight: number
@@ -91,7 +98,7 @@ export default class Lot implements ILot {
     auctionHouseName: string,
     rawLotId: number,
     imageLoadingStatus: string,
-    boughtIn: number,
+    boughtIn: boolean,
     lotImageS3Key: string,
     rawAuctionId: number,
     catalogNotes: string,
@@ -108,11 +115,14 @@ export default class Lot implements ILot {
     priceSold: number,
     artistDeath: number,
     artworkId: number,
+    artworkName: string,
     mediumFinal: string,
     lotImageHeight: number,
     isMultipleObjects: boolean,
     auctionNum: string,
-    priceUsdZeroied: number
+    priceUsdZeroied: number,
+    artwork?: Artwork,
+    artist?: Artist
   ) {
     this.priceEstimateMinUsdZeroied = priceEstimateMinUsdZeroied
     this.auctionStartDate = auctionStartDate
@@ -146,11 +156,14 @@ export default class Lot implements ILot {
     this.priceSold = priceSold
     this.artistDeath = artistDeath
     this.artworkId = artworkId
+    this.artworkName = artworkName
     this.mediumFinal = mediumFinal
     this.lotImageHeight = lotImageHeight
     this.isMultipleObjects = isMultipleObjects
     this.auctionNum = auctionNum
     this.priceUsdZeroied = priceUsdZeroied
+    this.artwork = artwork
+    this.artist = artist
   }
 
   static fromEntity(entity: LotEntity): Lot {
@@ -187,6 +200,7 @@ export default class Lot implements ILot {
       entity.price_sold,
       entity.artist_death,
       entity.artwork_id,
+      entity.artwork_name,
       entity.medium_final,
       entity.lot_image_height,
       entity.is_multiple_objects,

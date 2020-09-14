@@ -37,6 +37,13 @@ const GET_ARTWORK = gql`
         name
       }
       lots {
+        artworkName
+        artist {
+          name
+        }
+        artwork {
+          creationYear
+        }
         priceEstimateMinUsdZeroied
         auctionStartDate
         lotImageLoadError
@@ -128,7 +135,7 @@ const ArtworkPage: NextPage<Props> = ({ id }) => {
       </Typography>
       <ArtworkComparables artwork={artwork as Artwork} />
       <Typography variant="h4" component="h4" style={{ marginTop: 24, marginBottom: 24 }}>
-        Repeat Sales
+        Sales of this Artwork
       </Typography>
       <RepeatSales artwork={artwork as Artwork} />
     </Layout>

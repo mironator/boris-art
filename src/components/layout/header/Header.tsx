@@ -115,6 +115,7 @@ const Header: React.FC<unknown> = ({ children }) => {
               <IconButton
                 aria-label="show 4 new mails"
                 color="inherit"
+                href="#"
                 className={clsx(classes.headerLink, {
                   [classes.activeHeaderLink]: /\/artists/.test(router.pathname),
                 })}
@@ -124,6 +125,7 @@ const Header: React.FC<unknown> = ({ children }) => {
               <IconButton
                 aria-label="show 17 new notifications"
                 color="inherit"
+                href="#"
                 className={clsx(classes.headerLink, {
                   [classes.activeHeaderLink]: /\/artworks/.test(router.pathname),
                 })}
