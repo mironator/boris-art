@@ -4,6 +4,7 @@ import { NextPage, GetServerSideProps } from 'next'
 import Head from 'next/head'
 import DefaultErrorPage from 'next/error'
 import { gql, useQuery } from '@apollo/client'
+import { CircularProgress, Grid, Typography } from '@material-ui/core'
 
 import Link from '@components/Link'
 import Layout from '@components/layout/Layout'
@@ -12,7 +13,7 @@ import Artwork from '@models/Artwork'
 import ArtworkComparables from '@components/artwork-analytics/charts/artwork-comparables'
 import RepeatSales from '@components/artwork-analytics/charts/repeat-sales'
 import ArtworkValue from '@components/artwork-analytics/charts/artwork-value'
-import { CircularProgress, Grid, Typography } from '@material-ui/core'
+import Slider from '@components/slider'
 
 interface Props {
   id: number
@@ -119,9 +120,22 @@ const ArtworkPage: NextPage<Props> = ({ id }) => {
         &lt; Back to Artist
       </Link>
       <ArtworkDetails artwork={artwork as Artwork} />
-      <Typography variant="h4" component="h4" style={{ marginTop: 24, marginBottom: 24 }}>
-        Artwork Value
-      </Typography>
+      <Grid container direction="row" justify="space-between" alignItems="flex-end">
+        <Grid item>
+          <Typography variant="h4" component="h4" style={{ marginTop: 24, marginBottom: 24 }}>
+            Artwork Value
+          </Typography>
+        </Grid>
+        <Grid item style={{ maxWidth: '400px', marginRight: '10px' }}>
+          <Slider
+            min={0}
+            max={100}
+            defaultValue={80}
+            label="Similarity:"
+            onChange={(value: number) => console.log(value)}
+          />
+        </Grid>
+      </Grid>
       <ArtworkValue artwork={artwork as Artwork} />
       <Typography variant="h4" component="h4" style={{ marginTop: 24, marginBottom: 24 }}>
         Similar Sales
