@@ -2,48 +2,84 @@ import { Lot as ILot, LotEntity } from '@interfaces/index'
 
 export default class Lot implements ILot {
   priceEstimateMinUsdZeroied: number
+
   auctionStartDate: string
+
   lotImageLoadError: string
-  lotNum: number
+
+  lotNum: string
+
   lotImagePresignedUrl: string
+
   priceKind: string
+
   artistId: number
+
   artistBirth: number
+
   auctionName: string
+
   currency: string
+
   artistLotsCount: number
+
   lotImageSize: number
+
   auctionHouseName: string
+
   rawLotId: number
+
   imageLoadingStatus: string
+
   boughtIn: number
+
   lotImageS3Key: string
+
   rawAuctionId: number
+
   catalogNotes: string
+
   priceEstimateMaxUsdZeroied: number
+
   artistName: string
+
   artistNationality: string
+
   artistQualifier: string
+
   descriptionId: number
+
   lotImageWidth: number
+
   priceEstimateMax: number
+
   lotImageUrl: string
+
   auctionLocation: string
+
   priceEstimateMin: number
+
   priceSold: number
+
   artistDeath: number
+
   artworkId: number
+
   mediumFinal: string
+
   lotImageHeight: number
+
   isMultipleObjects: boolean
+
   auctionNum: string
+
   priceUsdZeroied: number
 
   constructor(
     priceEstimateMinUsdZeroied: number,
     auctionStartDate: string,
     lotImageLoadError: string,
-    lotNum: number,
+    lotNum: string,
     lotImagePresignedUrl: string,
     priceKind: string,
     artistId: number,

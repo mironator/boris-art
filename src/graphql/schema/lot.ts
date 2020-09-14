@@ -12,7 +12,7 @@ export const typeDef = gql`
     priceEstimateMinUsdZeroied: Int
     auctionStartDate: String
     lotImageLoadError: String
-    lotNum: Int
+    lotNum: String
     lotImagePresignedUrl: String
     priceKind: String
     artistId: Int
