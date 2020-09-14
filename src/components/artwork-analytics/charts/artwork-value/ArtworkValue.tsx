@@ -120,7 +120,7 @@ const ArtworkValue: React.FC<Props> = ({ artwork }) => {
           color: '#e08604ae',
         },
         {
-          name: 'Similar Sales',
+          name: 'Similar Artworks',
           color: '#e08604',
           data: soldForSeriesData,
           type: 'line',
@@ -152,7 +152,7 @@ const ArtworkValue: React.FC<Props> = ({ artwork }) => {
           },
         },
         {
-          name: 'Repeat Sales',
+          name: 'This Artwork',
           color: '#2d04e0',
           data: similarSalesSeriesData,
           type: 'line',
